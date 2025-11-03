@@ -13,7 +13,8 @@ The video game industry represents a significant market segment where major game
 
 2. **Analysis Framework**
    - Event study methodology to calculate abnormal returns
-   - OLS regression analysis: `CARi = α + β1Salesi + β2EventTypei + β3Franchisei + β4Publisheri + β5VIXi + εi`
+   - OLS regression analysis: 
+   `CARi = α + β1Salesi + β2EventTypei + β3Franchisei + β4Publisheri + β5VIXi + εi`
    - Python packages: pandas, statsmodels, scipy
 
 3. **Implementation**
@@ -52,7 +53,6 @@ The video game industry represents a significant market segment where major game
 3. Extension to other gaming markets
 4. Options market data integration
 
-Word count: 347
 
 
 
