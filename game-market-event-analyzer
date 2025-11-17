@@ -1,0 +1,375 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "b189542e",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "/tmp/ipykernel_293/206410022.py:8: FutureWarning: YF.download() has changed argument auto_adjust default to True\n",
+      "  data = yf.download(ticker, start=start_date, end=end_date)\n",
+      "[*********************100%***********************]  1 of 1 completed"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "✅ File saved as TTWO_2010_2024.csv\n",
+      "Price       Adj Close\n",
+      "Date                 \n",
+      "2010-01-04      10.40\n",
+      "2010-01-05      10.47\n",
+      "2010-01-06      10.44\n",
+      "2010-01-07      10.39\n",
+      "2010-01-08      10.42\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "import yfinance as yf\n",
+    "\n",
+    "ticker = \"TTWO\"\n",
+    "start_date = \"2010-01-01\"\n",
+    "end_date   = \"2024-12-31\"\n",
+    "\n",
+    "# Download (auto_adjust=True by default, so 'Close' is already adj price)\n",
+    "data = yf.download(ticker, start=start_date, end=end_date)\n",
+    "\n",
+    "# Flatten multi-index columns if they exist\n",
+    "data.columns = data.columns.droplevel(1) if isinstance(data.columns, tuple) or len(data.columns.names) > 1 else data.columns\n",
+    "\n",
+    "# Keep only adjusted close (stored under 'Close')\n",
+    "data = data[[\"Close\"]]\n",
+    "\n",
+    "# Rename column to make it clear\n",
+    "data = data.rename(columns={\"Close\": \"Adj Close\"})\n",
+    "\n",
+    "# Export CSV\n",
+    "data.to_csv(\"TTWO_2010_2024.csv\")\n",
+    "\n",
+    "print(\"✅ File saved as TTWO_2010_2024.csv\")\n",
+    "print(data.head())"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "27e006ad",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "/tmp/ipykernel_293/358620798.py:9: FutureWarning: YF.download() has changed argument auto_adjust default to True\n",
+      "  data = yf.download(tickers, start=start_date, end=end_date)\n",
+      "[*********************100%***********************]  4 of 5 completed\n",
+      "\n",
+      "1 Failed download:\n",
+      "['ATVI']: YFTzMissingError('possibly delisted; no timezone found')\n",
+      "[*********************100%***********************]  4 of 5 completed"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "✅ CSV saved: GameStocks_SP500_2015_2024.csv\n",
+      "            EA       ATVI    UBI.PA   NTDOY        ^GSPC\n",
+      "Date                                                    \n",
+      "2015-01-02 NaN  45.614056  2.575542  15.200  2058.199951\n",
+      "2015-01-05 NaN  45.322094  2.506413  15.025  2020.579956\n",
+      "2015-01-06 NaN  44.728443  2.443210  15.505  2002.609985\n",
+      "2015-01-07 NaN  45.555664  2.470861  15.525  2025.900024\n",
+      "2015-01-08 NaN  46.840290  2.528139  16.055  2062.139893\n"
+     ]
+    }
+   ],
+   "source": [
+    "import yfinance as yf\n",
+    "import pandas as pd\n",
+    "\n",
+    "tickers = [\"EA\", \"ATVI\", \"UBI.PA\", \"NTDOY\", \"^GSPC\"]\n",
+    "start_date = \"2015-01-01\"\n",
+    "end_date   = \"2024-12-31\"\n",
+    "\n",
+    "# Download all tickers\n",
+    "data = yf.download(tickers, start=start_date, end=end_date)\n",
+    "\n",
+    "# Flatten multi-index columns if they exist\n",
+    "if isinstance(data.columns, pd.MultiIndex):\n",
+    "    data.columns = data.columns.droplevel(1)\n",
+    "\n",
+    "# Keep only adjusted close prices (stored under 'Close')\n",
+    "data = data[[\"Close\"]].copy()\n",
+    "\n",
+    "# Rename column to avoid confusion\n",
+    "data = data.rename(columns={\"Close\": \"Adj Close\"})\n",
+    "\n",
+    "# If multiple tickers were downloaded, \"Adj Close\" is now a single column name repeated\n",
+    "# We need to restore each ticker name from the original dataset:\n",
+    "data.columns = tickers  # assign ticker names as columns\n",
+    "\n",
+    "# Export to CSV\n",
+    "data.to_csv(\"GameStocks_SP500_2015_2024.csv\")\n",
+    "\n",
+    "print(\"✅ CSV saved: GameStocks_SP500_2015_2024.csv\")\n",
+    "print(data.head())\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "b216c1f3",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "/tmp/ipykernel_293/3071332321.py:8: FutureWarning: YF.download() has changed argument auto_adjust default to True\n",
+      "  df = yf.download(ticker, start=start, end=end)\n",
+      "[*********************100%***********************]  1 of 1 completed"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "✅ Saved as EA_2015_2024.csv\n",
+      "Price       Adj Close\n",
+      "Ticker             EA\n",
+      "Date                 \n",
+      "2015-01-02  45.614056\n",
+      "2015-01-05  45.322094\n",
+      "2015-01-06  44.728443\n",
+      "2015-01-07  45.555664\n",
+      "2015-01-08  46.840290\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "import yfinance as yf\n",
+    "\n",
+    "ticker = \"EA\"\n",
+    "start = \"2015-01-01\"\n",
+    "end   = \"2024-12-31\"\n",
+    "\n",
+    "# Download data (adjusted close is stored in 'Close' because auto_adjust=True by default)\n",
+    "df = yf.download(ticker, start=start, end=end)\n",
+    "\n",
+    "# Keep only the adjusted close\n",
+    "df = df[[\"Close\"]]\n",
+    "\n",
+    "# Rename for clarity\n",
+    "df = df.rename(columns={\"Close\": \"Adj Close\"})\n",
+    "\n",
+    "# Save to CSV\n",
+    "df.to_csv(\"EA_2015_2024.csv\")\n",
+    "\n",
+    "print(\"✅ Saved as EA_2015_2024.csv\")\n",
+    "print(df.head())"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "80d0a793",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "/tmp/ipykernel_293/1337652321.py:11: FutureWarning: YF.download() has changed argument auto_adjust default to True\n",
+      "  df = yf.download(ticker, start=start_date, end=end_date, progress=False)\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Saved: VIX_2015_2024.csv\n",
+      "Rows: 2515\n",
+      "Head:\n",
+      "Price             VIX\n",
+      "Date                 \n",
+      "2015-01-02  17.790001\n",
+      "2015-01-05  19.920000\n",
+      "2015-01-06  21.120001\n",
+      "2015-01-07  19.309999\n",
+      "2015-01-08  17.010000\n",
+      "Tail:\n",
+      "Price             VIX\n",
+      "Date                 \n",
+      "2024-12-23  16.780001\n",
+      "2024-12-24  14.270000\n",
+      "2024-12-26  14.730000\n",
+      "2024-12-27  15.950000\n",
+      "2024-12-30  17.400000\n"
+     ]
+    }
+   ],
+   "source": [
+    "# requirements: pip install yfinance pandas\n",
+    "import yfinance as yf\n",
+    "import pandas as pd\n",
+    "\n",
+    "ticker = \"^VIX\"\n",
+    "start_date = \"2015-01-01\"\n",
+    "end_date   = \"2024-12-31\"\n",
+    "outfile = \"VIX_2015_2024.csv\"\n",
+    "\n",
+    "# Download\n",
+    "df = yf.download(ticker, start=start_date, end=end_date, progress=False)\n",
+    "\n",
+    "# Flatten MultiIndex columns if present\n",
+    "if isinstance(df.columns, pd.MultiIndex):\n",
+    "    df.columns = df.columns.droplevel(1)\n",
+    "\n",
+    "# VIX daily value is in 'Close' (yfinance may auto-adjust; for indices Close is the actual index value)\n",
+    "# Keep only Close and rename to \"VIX\"\n",
+    "if \"Close\" in df.columns:\n",
+    "    out = df[[\"Close\"]].rename(columns={\"Close\": \"VIX\"})\n",
+    "else:\n",
+    "    # fallback: if the returned frame only has one column (rare), use it\n",
+    "    if df.shape[1] == 1:\n",
+    "        out = df.copy()\n",
+    "        out.columns = [\"VIX\"]\n",
+    "    else:\n",
+    "        raise RuntimeError(f\"Could not find 'Close' column in VIX data. Available columns: {list(df.columns)}\")\n",
+    "\n",
+    "# Ensure Date is the index and sorted\n",
+    "out.index.name = \"Date\"\n",
+    "out = out.sort_index()\n",
+    "\n",
+    "# Save CSV\n",
+    "out.to_csv(outfile, index=True)\n",
+    "\n",
+    "# Quick diagnostics\n",
+    "print(f\"Saved: {outfile}\")\n",
+    "print(\"Rows:\", len(out))\n",
+    "print(\"Head:\")\n",
+    "print(out.head())\n",
+    "print(\"Tail:\")\n",
+    "print(out.tail())"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "883fa930",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "/files/.venv/lib/python3.12/site-packages/tqdm/auto.py:21: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html\n",
+      "  from .autonotebook import tqdm as notebook_tqdm\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Path to dataset files: /home/datahub/.cache/kagglehub/datasets/patkle/video-game-sales-data-from-vgchartzcom/versions/1\n"
+     ]
+    }
+   ],
+   "source": [
+    "import kagglehub\n",
+    "\n",
+    "# Download latest version\n",
+    "path = kagglehub.dataset_download(\"patkle/video-game-sales-data-from-vgchartzcom\")\n",
+    "\n",
+    "print(\"Path to dataset files:\", path)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "6e34d39f",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Downloading from https://www.kaggle.com/api/v1/datasets/download/anandshaw2001/video-game-sales?dataset_version_number=1...\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "100%|██████████| 381k/381k [00:00<00:00, 813kB/s]"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Extracting files...\n",
+      "Path to dataset files: /home/datahub/.cache/kagglehub/datasets/anandshaw2001/video-game-sales/versions/1\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "import kagglehub\n",
+    "\n",
+    "# Download latest version\n",
+    "path = kagglehub.dataset_download(\"anandshaw2001/video-game-sales\")\n",
+    "\n",
+    "print(\"Path to dataset files:\", path)"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": ".venv",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.12.3"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}

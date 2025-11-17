@@ -1,0 +1,271 @@
+% Advanced Programming 2025 - Project Report Template
+% HEC Lausanne / UNIL
+\documentclass[11pt,a4paper]{article}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{biblatex}
+\addbibresource{references.bib} % Create this file for your references
+
+% Code listing settings
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{pythonstyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    language=Python
+}
+
+\lstset{style=pythonstyle}
+
+% Header and footer
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Advanced Programming 2025}
+\lhead{Project Report}
+\rfoot{Page \thepage}
+
+% Title page information - MODIFY THESE
+\title{%
+    \Large \textbf{Advanced Programming 2025} \\
+    \vspace{0.5cm}
+    \LARGE \textbf{Your Project Title Here} \\
+    \vspace{0.3cm}
+    \large Final Project Report
+}
+\author{
+    Your Name \\
+    \texttt{your.email@unil.ch} \\
+    Student ID: 12345678
+}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+\begin{abstract}
+\noindent
+Provide a concise summary (150-200 words) of your project. Include:
+\begin{itemize}
+    \item The problem you're solving
+    \item Your approach/methodology
+    \item Key results/findings
+    \item Main contributions
+\end{itemize}
+\end{abstract}
+
+\vspace{0.5cm}
+\noindent\textbf{Keywords:} data science, Python, machine learning, [add your keywords]
+
+\newpage
+\tableofcontents
+\newpage
+
+% ================== MAIN CONTENT ==================
+
+\section{Introduction}
+\label{sec:introduction}
+
+Introduce your project and its context. This section should include:
+\begin{itemize}
+    \item Background and motivation
+    \item Problem statement
+    \item Objectives and goals
+    \item Report organization
+\end{itemize}
+
+\section{Literature Review / Related Work}
+\label{sec:literature}
+
+Discuss relevant prior work, existing solutions, or theoretical background. For data science projects, this might include:
+\begin{itemize}
+    \item Previous approaches to similar problems
+    \item Relevant algorithms or methodologies
+    \item Datasets used in related studies
+\end{itemize}
+
+\section{Methodology}
+\label{sec:methodology}
+
+\subsection{Data Description}
+Describe your dataset(s):
+\begin{itemize}
+    \item Source and collection method
+    \item Size and characteristics
+    \item Features/variables
+    \item Data quality issues
+\end{itemize}
+
+\subsection{Approach}
+Detail your technical approach:
+\begin{itemize}
+    \item Algorithms used
+    \item Data preprocessing steps
+    \item Model architecture (if applicable)
+    \item Evaluation metrics
+\end{itemize}
+
+\subsection{Implementation}
+Discuss the implementation details:
+\begin{itemize}
+    \item Programming languages and libraries
+    \item System architecture
+    \item Key code components
+\end{itemize}
+
+Example code snippet:
+\begin{lstlisting}[caption={Example data preprocessing function}]
+def preprocess_data(df):
+    """
+    Preprocess the input dataframe.
+    
+    Args:
+        df: Input pandas DataFrame
+    
+    Returns:
+        Preprocessed DataFrame
+    """
+    # Remove missing values
+    df = df.dropna()
+    
+    # Normalize numerical features
+    scaler = StandardScaler()
+    df[numerical_cols] = scaler.fit_transform(df[numerical_cols])
+    
+    return df
+\end{lstlisting}
+
+\section{Results}
+\label{sec:results}
+
+Present your findings with appropriate visualizations and tables.
+
+\subsection{Experimental Setup}
+Describe your experimental environment:
+\begin{itemize}
+    \item Hardware specifications
+    \item Software versions
+    \item Hyperparameters
+\end{itemize}
+
+\subsection{Performance Evaluation}
+
+\begin{table}[H]
+\centering
+\caption{Model Performance Metrics}
+\label{tab:performance}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} \\
+\hline
+Baseline & 0.75 & 0.72 & 0.78 \\
+Your Model & 0.85 & 0.83 & 0.87 \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Visualizations}
+
+Include relevant plots and figures. For example:
+
+\begin{figure}[H]
+\centering
+% \includegraphics[width=0.8\textwidth]{figures/results_plot.png}
+\caption{Your results visualization}
+\label{fig:results}
+\end{figure}
+
+\section{Discussion}
+\label{sec:discussion}
+
+Analyze and interpret your results:
+\begin{itemize}
+    \item What worked well?
+    \item What were the challenges?
+    \item How do your results compare to expectations?
+    \item Limitations of your approach
+\end{itemize}
+
+\section{Conclusion and Future Work}
+\label{sec:conclusion}
+
+\subsection{Summary}
+Summarize your key findings and contributions.
+
+\subsection{Future Directions}
+Suggest potential improvements or extensions:
+\begin{itemize}
+    \item Methodological improvements
+    \item Additional experiments
+    \item Real-world applications
+\end{itemize}
+
+% ================== REFERENCES ==================
+\newpage
+\section*{References}
+\addcontentsline{toc}{section}{References}
+
+% If using biblatex (recommended)
+% \printbibliography[heading=none]
+
+% Or manually:
+\begin{enumerate}
+    \item Author, A. (2024). \textit{Title of Article}. Journal Name, 10(2), 123-145.
+    \item Smith, B. \& Jones, C. (2023). \textit{Book Title}. Publisher.
+    \item Dataset Source. (2024). Dataset Name. Available at: \url{https://example.com}
+\end{enumerate}
+
+% ================== APPENDICES ==================
+\newpage
+\appendix
+\section{Additional Figures}
+\label{app:figures}
+
+Include supplementary figures or tables that support but aren't essential to the main narrative.
+
+\section{Code Repository}
+\label{app:code}
+
+\noindent
+\textbf{GitHub Repository:} \url{https://github.com/yourusername/project-repo}
+
+\noindent
+Provide information about:
+\begin{itemize}
+    \item Repository structure
+    \item Installation instructions
+    \item How to reproduce results
+\end{itemize}
+
+\end{document}
