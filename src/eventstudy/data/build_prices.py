@@ -16,7 +16,7 @@ print(f"Data raw exists: {DATA_RAW.exists()}")
 
 
 def load_ea():
-    path = DATA_RAW / "EA_2015_2024.csv"
+    path = DATA_RAW / "EA_2010_2025.csv"
     df = pd.read_csv(path, skiprows=3, header=None, names=['date', 'adj_close'])
     df["date"] = pd.to_datetime(df["date"])
     df["ticker"] = "EA"
@@ -25,8 +25,8 @@ def load_ea():
 
 def load_ttwo():
     """TTWO has normal headers - use them"""
-    path = DATA_RAW / "TTWO_2010_2024.csv"
-    df = pd.read_csv(path)  # No skiprows! Use the header row
+    path = DATA_RAW / "TTWO_2010_2025.csv"
+    df = pd.read_csv(path, skiprows=3, header=None, names=['date', 'adj_close'])
     df = df.rename(columns={"Date": "date", "Adj Close": "adj_close"})
     df["date"] = pd.to_datetime(df["date"])
     df["ticker"] = "TTWO"
@@ -35,14 +35,14 @@ def load_ttwo():
 
 def load_gamestocks():
     """GameStocks has normal headers"""
-    path = DATA_RAW / "GameStocks_SP500_2015_2024.csv"
+    path = DATA_RAW / "GameStocks_SP500_2010_2025.csv"
     df = pd.read_csv(path)
     df["Date"] = pd.to_datetime(df["Date"])
     
-    # Skip EA column (it's empty), use only: ATVI, UBI.PA, NTDOY, ^GSPC
+    # Skip EA column (it's empty), use only: ATVI, UBSFY, NTDOY, ^GSPC
     long_df = df.melt(
         id_vars=["Date"],
-        value_vars=["ATVI", "UBI.PA", "NTDOY", "^GSPC"],  # Removed EA
+        value_vars=["ATVI", "UBSFY", "NTDOY", "^GSPC"],  # Removed EA
         var_name="ticker",
         value_name="adj_close",
     )
