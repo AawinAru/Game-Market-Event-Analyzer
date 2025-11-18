@@ -58,8 +58,12 @@ def load_prices():
 # === MERGE EVENTS WITH NEAREST TRADING DAY ================================== #
 
 def merge_events_with_prices(events: pd.DataFrame, prices: pd.DataFrame) -> pd.DataFrame:
-    events_sorted = events.sort_values(["ticker", "event_date"])
-    prices_sorted = prices.sort_values(["ticker", "trading_date"])
+    # ✅ Rename date columns FIRST
+    events = events.rename(columns={"date": "event_date"})
+    prices = prices.rename(columns={"date": "trading_date"})
+    
+    events_sorted = events.sort_values(["ticker", "event_date"]).reset_index(drop=True)
+    prices_sorted = prices.sort_values(["ticker", "trading_date"]).reset_index(drop=True)
 
     merged_list = []
 
@@ -81,7 +85,7 @@ def merge_events_with_prices(events: pd.DataFrame, prices: pd.DataFrame) -> pd.D
             p.sort_values("trading_date"),
             left_on="event_date",
             right_on="trading_date",
-            direction="nearest"           # Nearest trading day to event_date
+            direction="backward"
         )
 
         merged_list.append(tmp)
