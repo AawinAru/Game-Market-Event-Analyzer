@@ -186,8 +186,14 @@ def main():
     
     print("\n📁 Saving results...")
     out_path = DATA_PROCESSED / "events_with_car.csv"
-    events.to_csv(out_path, index=False)
+    
+    # ✅ Keep all columns EXCEPT source_url and notes
+    cols_to_drop = ["source_url", "notes"]
+    cols_to_save = [col for col in events.columns if col not in cols_to_drop]
+    events[cols_to_save].to_csv(out_path, sep=";", index=False)
+    
     print(f"✅ Saved: {out_path}")
+    print(f"   Columns saved: {cols_to_save}")
     
     # Also save prices with AR
     prices_out = DATA_PROCESSED / "prices_with_ar.csv"

@@ -99,14 +99,12 @@ def merge_events_with_prices(events: pd.DataFrame, prices: pd.DataFrame) -> pd.D
     print(f"\n✅ Merged {len(merged)} rows")
     print("Columns:", merged.columns.tolist())
     
-    # ✅ Keep only needed columns
+    # ✅ Keep only needed columns (exclude source_url and notes)
     cols_to_keep = [
-        "event_id", "event_date", "trading_date", "ticker", "is_rockstar", 
-        "event_type", "sentiment", "impact_expectation_manual", 
-        "adj_close", "return", "market_return"
+        "event_id", "event_date", "trading_date", "ticker", "publisher", "studio",
+        "is_rockstar", "game", "franchise", "event_type", "sentiment", 
+        "impact_expectation_manual", "adj_close", "return", "market_return"
     ]
-
-    #event_id;date;publisher;ticker;studio;is_rockstar;game;franchise;event_type;sentiment;impact_expectation_manual;source_url;notes
     merged = merged[[col for col in cols_to_keep if col in merged.columns]]
 
     print(f"\nFinal columns: {merged.columns.tolist()}")
