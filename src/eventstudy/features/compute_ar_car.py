@@ -28,7 +28,7 @@ def load_prices():
 
 
 def load_events():
-    events = pd.read_csv(DATA_PROCESSED / "events_with_returns.csv")
+    events = pd.read_csv(DATA_PROCESSED / "events_with_returns.csv", sep=";")  # ✅ ADD sep=";"
     print("Columns in events_with_returns.csv:", events.columns.tolist())
     print(events.head())
     

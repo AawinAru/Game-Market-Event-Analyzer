@@ -15,8 +15,9 @@ print("DATA_PROCESSED exists:", DATA_PROCESSED.exists())
 # === LOAD EVENTS =========================================================== #
 
 def load_events():
-    events_path = DATA_RAW / "events.csv"  # ✅ Already correct
-    events = pd.read_csv(events_path, sep=";", encoding="latin-1")
+    # ✅ Use utf-8-sig to remove BOM
+    events = pd.read_csv(DATA_RAW / "events.csv", sep=";", encoding="utf-8-sig")
+    events.columns = events.columns.str.strip()  # Remove extra spaces
     
     print("Columns:", events.columns.tolist())
     print(f"✅ Loaded {len(events)} events")
@@ -37,8 +38,7 @@ def load_events():
 # === LOAD PRICES =========================================================== #
 
 def load_prices():
-    prices_path = DATA_PROCESSED / "prices_with_returns.csv"
-    prices = pd.read_csv(prices_path)
+    prices = pd.read_csv(DATA_PROCESSED / "prices_with_returns.csv")
     
     # Convert date to datetime
     prices["date"] = pd.to_datetime(prices["date"])
@@ -80,9 +80,13 @@ def merge_events_with_prices(events: pd.DataFrame, prices: pd.DataFrame) -> pd.D
             merged_list.append(e)
             continue
 
+        # ✅ Ensure dates are datetime before merge
+        e["event_date"] = pd.to_datetime(e["event_date"])
+        p["trading_date"] = pd.to_datetime(p["trading_date"])
+
         tmp = pd.merge_asof(
             e.sort_values("event_date"),
-            p.sort_values("trading_date"),
+            p[["trading_date", "adj_close", "return", "market_return"]].sort_values("trading_date"),
             left_on="event_date",
             right_on="trading_date",
             direction="backward"
@@ -91,6 +95,28 @@ def merge_events_with_prices(events: pd.DataFrame, prices: pd.DataFrame) -> pd.D
         merged_list.append(tmp)
 
     merged = pd.concat(merged_list, ignore_index=True)
+    
+    print(f"\n✅ Merged {len(merged)} rows")
+    print("Columns:", merged.columns.tolist())
+    
+    # ✅ Keep only needed columns
+    cols_to_keep = [
+        "event_id", "event_date", "trading_date", "ticker", "is_rockstar", 
+        "event_type", "sentiment", "impact_expectation_manual", 
+        "adj_close", "return", "market_return"
+    ]
+
+    #event_id;date;publisher;ticker;studio;is_rockstar;game;franchise;event_type;sentiment;impact_expectation_manual;source_url;notes
+    merged = merged[[col for col in cols_to_keep if col in merged.columns]]
+
+    print(f"\nFinal columns: {merged.columns.tolist()}")
+    print(merged.head(10))
+
+    # ✅ Save with semicolon separator
+    out_path = DATA_PROCESSED / "events_with_returns.csv"
+    merged.to_csv(out_path, sep=";", index=False)
+    print(f"\n✅ Saved: {out_path}")
+    
     return merged
 
 
@@ -100,15 +126,11 @@ def main():
     print("Loading events...")
     events = load_events()
 
-    print("Loading prices...")
+    print("\nLoading prices...")
     prices = load_prices()
 
-    print("Merging...")
+    print("\nMerging...")
     merged = merge_events_with_prices(events, prices)
-
-    out_path = DATA_PROCESSED / "events_with_returns.csv"
-    merged.to_csv(out_path, index=False)
-    print(f"Saved: {out_path}")
 
 
 if __name__ == "__main__":
