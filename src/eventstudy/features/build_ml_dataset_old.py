@@ -10,68 +10,52 @@ print("BASE_DIR:", BASE_DIR)
 print("DATA_RAW exists:", DATA_RAW.exists())
 print("DATA_PROCESSED exists:", DATA_PROCESSED.exists())
 
-
 def build_ml_dataset() -> None:
     """
     Build a clean ML-ready dataset from events_labeled.csv.
 
     Steps:
-    - Load data/processed/events_labeled.csv (sep=';')
-    - Normalize sentiment / event_type / publisher
-    - Create franchise_gta (1 if franchise == 'gta', else 0)
+    - Locate project root from this file's path
+    - Load data/processed/events_labeled.csv
+    - Normalize text fields (e.g. sentiment)
     - Select useful features
-    - One-hot encode publisher, event_type, sentiment
-    - Map impact_label -> numeric labels (low=0, medium=1, high=2)
-    - Save data/processed/ml_dataset.csv (sep=';')
+    - One-hot encode categorical variables
+    - Map impact_label -> numeric labels
+    - Save data/processed/ml_dataset.csv
     """
 
+    # ---- Paths ----
     in_path = DATA_PROCESSED / "events_labeled.csv"
     if not in_path.exists():
         raise FileNotFoundError(f"Input file not found: {in_path}")
 
-    # Read with ';' separator
+    # ✅ ADD sep=";" to load correctly
     df = pd.read_csv(in_path, sep=";")
     print("Loaded events_labeled.csv with shape:", df.shape)
     print("Columns:", df.columns.tolist())
 
-    # --------- Normalisation ---------
-    # sentiment: lowercase
+    # ---- Basic normalization ----
+    # ONLY lowercase sentiment
     if "sentiment" in df.columns:
-        df["sentiment"] = (
-            df["sentiment"]
-            .astype(str)
-            .str.strip()
-            .str.lower()
-            .replace("nan", "")
-        )
-
-    # event_type / publisher / franchise: just strip spaces + lowercase
-    for col in ["event_type", "publisher", "franchise"]:
+        df["sentiment"] = df["sentiment"].astype(str).str.strip().str.lower()
+    
+    # Keep other columns as-is (just strip whitespace)
+    for col in ["event_type", "franchise", "publisher", "studio"]:
         if col in df.columns:
-            df[col] = (
-                df[col]
-                .astype(str)
-                .str.strip()
-                .str.lower()
-                .replace("nan", "")
-            )
+            df[col] = df[col].astype(str).str.strip()
 
-    # Create binary franchise_gta = 1 if franchise == 'gta', else 0
-    if "franchise" in df.columns:
-        df["franchise_gta"] = (df["franchise"] == "gta").astype(int)
-    else:
-        df["franchise_gta"] = 0
-
-    # --------- Target column ---------
+    # ---- Target column ----
     target_col = "impact_label"
     if target_col not in df.columns:
         raise KeyError(
             f"Column '{target_col}' not found in {in_path}. "
-            f"Available columns: {df.columns.tolist()}"
+            "Available columns: " + str(df.columns.tolist())
         )
 
-    # Normalize impact_label and map to numbers
+    # Normalize impact_label case just in case
     df[target_col] = df[target_col].astype(str).str.strip().str.lower()
+
+    # Map labels to numbers: low=0, medium=1, high=2
     label_map = {"low": 0, "medium": 1, "high": 2}
     df["impact_label_num"] = df[target_col].map(label_map)
 
@@ -81,16 +65,23 @@ def build_ml_dataset() -> None:
             f"Some impact_label values are not in {list(label_map.keys())}: {bad_vals}"
         )
 
-    # --------- Feature selection ---------
-    # NOTE: we deliberately do NOT use studio or full franchise
+    # ---- Candidate features ----
     base_features = [
         "publisher",
+        "studio",
         "is_rockstar",
         "event_type",
+        "franchise",
         "sentiment",
+        # market context / returns
         "market_return",
         "AR_event",
-        "franchise_gta",
+        # CAR windows
+        "CAR_0_1",
+        "CAR_m1_p1",
+        "CAR_0_3",
+        "CAR_0_5",
+        "CAR_m5_p5",
     ]
 
     present_features = [col for col in base_features if col in df.columns]
@@ -102,38 +93,40 @@ def build_ml_dataset() -> None:
             f"Available columns are: {list(df.columns)}"
         )
 
-    # Clean is_rockstar into 0/1
+    # ---- Handle is_rockstar as int (0/1) if present ----
     if "is_rockstar" in present_features:
+        # ✅ Strip whitespace, replace empty strings with 0, then convert to int
         df["is_rockstar"] = (
             df["is_rockstar"]
             .astype(str)
-            .str.strip()
-            .replace("", "0")
-            .replace("nan", "0")
+            .str.strip()  # Remove leading/trailing spaces
+            .replace("", "0")  # Replace empty strings with 0
+            .replace("nan", "0")  # Replace 'nan' strings with 0
             .astype(int)
         )
-        print("is_rockstar unique values after cleaning:", df["is_rockstar"].unique())
+        print(f"is_rockstar unique values after cleaning: {df['is_rockstar'].unique()}")
 
     # Build ML dataframe (features + targets)
     df_ml = df[present_features + [target_col, "impact_label_num"]].copy()
 
-    # --------- One-hot encode categorical columns ---------
+    # ---- One-hot encode categorical columns ----
     cat_cols = [
         col
-        for col in ["publisher", "event_type", "sentiment"]
+        for col in ["publisher", "studio", "event_type", "franchise", "sentiment"]
         if col in present_features
     ]
+
     print("Categorical columns to encode:", cat_cols)
 
     df_ml_encoded = pd.get_dummies(df_ml, columns=cat_cols, drop_first=True)
 
-    # Drop rows with missing label (should be none after mapping)
+    # Drop rows with missing label
     before = len(df_ml_encoded)
     df_ml_encoded = df_ml_encoded.dropna(subset=["impact_label_num"])
     after = len(df_ml_encoded)
     print(f"Dropped {before - after} rows with missing labels.")
 
-    # --------- Final checks ---------
+    # ---- Final feature/target structure ----
     feature_cols = [
         c for c in df_ml_encoded.columns if c not in [target_col, "impact_label_num"]
     ]
@@ -143,9 +136,9 @@ def build_ml_dataset() -> None:
     print("Label distribution (impact_label_num):")
     print(df_ml_encoded["impact_label_num"].value_counts().sort_index())
 
-    # --------- Save ---------
+    # ---- Save final ML dataset ----
     out_path = DATA_PROCESSED / "ml_dataset.csv"
-    df_ml_encoded.to_csv(out_path, sep=";", index=False)
+    df_ml_encoded.to_csv(out_path, sep=";", index=False)  # ✅ Also save with sep=";"
     print(f"✅ Saved ML dataset to: {out_path}")
 
 
