@@ -1,100 +1,314 @@
-"""Classify event impact magnitude using ML."""
+"""Train classification models on ml_dataset.csv (Multi-class: Low/Medium/High)"""
 
 import pandas as pd
-import joblib
+import numpy as np
 from pathlib import Path
-from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import (
+    accuracy_score,
+    f1_score,
+    confusion_matrix,
+    classification_report,
+)
+from sklearn.model_selection import train_test_split, StratifiedKFold, cross_val_score
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from sklearn.neural_network import MLPClassifier
+import matplotlib.pyplot as plt
+import seaborn as sns
 
+# ---- Setup paths ----
 BASE_DIR = Path(__file__).resolve().parents[3]
 DATA_PROCESSED = BASE_DIR / "data" / "processed"
-MODEL_PATH = DATA_PROCESSED / "best_model.pkl"
 
-# ✅ Check if model exists, if not train it
-if MODEL_PATH.exists():
-    print(f"✅ Loading existing model from {MODEL_PATH}")
-    best_model = joblib.load(MODEL_PATH)
-else:
-    print("⚠️ Model not found. Training now...")
+print(f"BASE_DIR: {BASE_DIR}")
+print(f"DATA_PROCESSED: {DATA_PROCESSED}\n")
+
+
+def load_data():
+    """Load ml_dataset.csv"""
+    df = pd.read_csv(DATA_PROCESSED / "ml_dataset.csv", sep=";")
+    print(f"✅ Loaded ml_dataset.csv: {df.shape}")
+    print(f"   Columns: {df.columns.tolist()}\n")
+    return df
+
+
+def prepare_features(df):
+    """Prepare features and target"""
+    target = "impact_label_num"
     
-    # Load and train
-    ml_data = pd.read_csv(DATA_PROCESSED / "ml_dataset.csv", sep=";")
-    X = ml_data.drop(columns=["impact_label", "impact_label_num"])
-    y = ml_data["impact_label_num"]
+    X = df.drop(columns=["impact_label", "impact_label_num"])
+    y = df[target]
     
+    print(f"Feature matrix X shape: {X.shape}")
+    print(f"Target y shape: {y.shape}\n")
+    
+    return X, y
+
+
+def split_data(X, y):
+    """Split data into train/test"""
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.25, random_state=42, stratify=y
+        X, y,
+        test_size=0.25,
+        random_state=42,
+        stratify=y
     )
     
-    best_model = GradientBoostingClassifier(
-        n_estimators=100,
-        learning_rate=0.1,
-        max_depth=5,
+    print(f"Train size: {X_train.shape}")
+    print(f"Test size: {X_test.shape}\n")
+    
+    return X_train, X_test, y_train, y_test
+
+
+def evaluate_model(model, X_test, y_test, name="Model"):
+    """Evaluate model and display results"""
+    y_pred = model.predict(X_test)
+    
+    acc = accuracy_score(y_test, y_pred)
+    f1 = f1_score(y_test, y_pred, average="macro")
+    cm = confusion_matrix(y_test, y_pred)
+    
+    print(f"\n{'='*70}")
+    print(f"=== {name} ===")
+    print(f"{'='*70}")
+    print(f"Accuracy: {round(acc, 3)}")
+    print(f"F1-score (macro): {round(f1, 3)}")
+    print(f"\nClassification Report:\n{classification_report(y_test, y_pred)}")
+    
+    # Plot confusion matrix
+    plt.figure(figsize=(5, 4))
+    sns.heatmap(
+        cm,
+        annot=True,
+        fmt="d",
+        cmap="Blues",
+        xticklabels=["Low", "Med", "High"],
+        yticklabels=["Low", "Med", "High"]
+    )
+    plt.title(f"{name} - Confusion Matrix")
+    plt.xlabel("Predicted")
+    plt.ylabel("True")
+    plt.tight_layout()
+    plt.savefig(
+        DATA_PROCESSED / f"{name.lower().replace(' ', '_')}_confusion_matrix.png",
+        dpi=300,
+        bbox_inches='tight'
+    )
+    plt.show()
+    
+    return acc, f1
+
+
+def train_logistic_regression(X_train, X_test, y_train, y_test):
+    """Train Logistic Regression"""
+    print("\n🤖 Training Logistic Regression...")
+    # ✅ Removed multi_class="multinomial"
+    log_reg = LogisticRegression(max_iter=5000)
+    log_reg.fit(X_train, y_train)
+    acc, f1 = evaluate_model(log_reg, X_test, y_test, name="Logistic Regression")
+    return log_reg, acc, f1
+
+
+def train_random_forest(X_train, X_test, y_train, y_test):
+    """Train Random Forest"""
+    print("\n🤖 Training Random Forest...")
+    rf = RandomForestClassifier(n_estimators=300, max_depth=None, random_state=42)
+    rf.fit(X_train, y_train)
+    acc, f1 = evaluate_model(rf, X_test, y_test, name="Random Forest")
+    return rf, acc, f1
+
+
+def train_gradient_boosting(X_train, X_test, y_train, y_test):
+    """Train Gradient Boosting"""
+    print("\n🤖 Training Gradient Boosting...")
+    gb = GradientBoostingClassifier(
+        learning_rate=0.05,
+        n_estimators=300,
         random_state=42
     )
-    best_model.fit(X_train, y_train)
-    
-    # Save for future use
-    joblib.dump(best_model, MODEL_PATH)
-    print(f"✅ Model trained and saved to {MODEL_PATH}")
+    gb.fit(X_train, y_train)
+    acc, f1 = evaluate_model(gb, X_test, y_test, name="Gradient Boosting")
+    return gb, acc, f1
 
 
-def classify_event_impact(
-    market_return: float,
-    ar_event: float,
-    car_0_1: float,
-    car_m1_p1: float,
-    car_0_3: float,
-    car_0_5: float,
-    car_m5_p5: float,
-    is_rockstar: int = 0,
-    sentiment_negative: int = 0,
-    sentiment_neutral: int = 0,
-    publisher_ea: int = 0,
-    event_type_release: int = 0,
-    franchise_gta: int = 0
-) -> dict:
-    """Predict event market impact using trained Gradient Boosting model."""
+def train_neural_network(X_train, X_test, y_train, y_test):
+    """Train Neural Network (MLP)"""
+    print("\n🤖 Training Neural Network (MLP)...")
+    # ✅ Increased max_iter + early stopping
+    mlp = MLPClassifier(
+        hidden_layer_sizes=(64, 32),
+        activation='relu',
+        solver='adam',
+        max_iter=2000,  # ✅ Changed from 500
+        random_state=42,
+        early_stopping=True,  # ✅ Stop early if no improvement
+        validation_fraction=0.1,  # ✅ Use 10% for validation
+        n_iter_no_change=50,  # ✅ Stop after 50 iterations with no improvement
+        verbose=0  # Set to 1 to see training progress
+    )
+    mlp.fit(X_train, y_train)
+    acc, f1 = evaluate_model(mlp, X_test, y_test, name="Neural Network (MLP)")
+    return mlp, acc, f1
+
+
+def compare_models(models, X_test, y_test):
+    """Compare all models"""
+    results = []
     
-    features = [[
-        market_return, ar_event, car_0_1, car_m1_p1, car_0_3, car_0_5, car_m5_p5,
-        is_rockstar, sentiment_negative, sentiment_neutral, publisher_ea,
-        event_type_release, franchise_gta
-    ]]
+    for name, model in models.items():
+        y_pred = model.predict(X_test)
+        acc = accuracy_score(y_test, y_pred)
+        f1 = f1_score(y_test, y_pred, average="macro")
+        results.append({"Model": name, "Accuracy": acc, "F1-score (macro)": f1})
     
-    prediction = best_model.predict(features)[0]
-    probabilities = best_model.predict_proba(features)[0]
+    results_df = pd.DataFrame(results)
     
-    impact_labels = ["LOW", "MEDIUM", "HIGH"]
+    print("\n" + "="*70)
+    print("📊 MODEL COMPARISON")
+    print("="*70)
+    print(results_df.to_string(index=False))
     
+    # Plot comparison
+    fig, ax = plt.subplots(figsize=(10, 6))
+    x = np.arange(len(results_df))
+    width = 0.35
+    
+    ax.bar(x - width/2, results_df["Accuracy"], width, label="Accuracy", alpha=0.8)
+    ax.bar(x + width/2, results_df["F1-score (macro)"], width, label="F1-score", alpha=0.8)
+    
+    ax.set_xlabel("Model")
+    ax.set_ylabel("Score")
+    ax.set_title("Model Comparison: Accuracy vs F1-score")
+    ax.set_xticks(x)
+    ax.set_xticklabels(results_df["Model"], rotation=45, ha='right')
+    ax.legend()
+    ax.grid(True, alpha=0.3)
+    
+    plt.tight_layout()
+    plt.savefig(
+        DATA_PROCESSED / "model_comparison.png",
+        dpi=300,
+        bbox_inches='tight'
+    )
+    plt.show()
+    
+    return results_df
+
+
+def check_overfitting(model, X_train, X_test, y_train, y_test, name="Model"):
+    """Check for overfitting"""
+    y_train_pred = model.predict(X_train)
+    y_test_pred = model.predict(X_test)
+    
+    train_acc = accuracy_score(y_train, y_train_pred)
+    test_acc = accuracy_score(y_test, y_test_pred)
+    overfitting_risk = train_acc - test_acc
+    
+    print(f"\n{'='*70}")
+    print(f"🔍 OVERFITTING CHECK: {name}")
+    print(f"{'='*70}")
+    print(f"Train Accuracy: {train_acc:.3f}")
+    print(f"Test Accuracy:  {test_acc:.3f}")
+    print(f"Overfitting risk: {overfitting_risk:.3f}")
+    
+    if overfitting_risk > 0.10:
+        print("⚠️  WARNING: Possible overfitting (gap > 0.10)")
+    else:
+        print("✅ Good generalization (gap <= 0.10)")
+    
+    return train_acc, test_acc, overfitting_risk
+
+def cross_validate_model(model, X, y, name="Model"):
+    """5-fold stratified cross-validation on the FULL dataset."""
+    cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+
+    acc_scores = cross_val_score(model, X, y, cv=cv, scoring="accuracy")
+    f1_scores = cross_val_score(model, X, y, cv=cv, scoring="f1_macro")
+
+    print(f"\n📊 {name} – 5-fold CV:")
+    print(f"  Accuracy: {acc_scores.mean():.3f} ± {acc_scores.std():.3f}")
+    print(f"  F1-macro: {f1_scores.mean():.3f} ± {f1_scores.std():.3f}")
+
+    return acc_scores.mean(), f1_scores.mean()
+
+def main():
+    """Main execution"""
+    
+    # Load data
+    df = load_data()
+    
+    # Prepare features
+    X, y = prepare_features(df)
+    
+    # Split data
+    X_train, X_test, y_train, y_test = split_data(X, y)
+    
+    # ---- Train models ----
+    log_reg, lr_acc, lr_f1 = train_logistic_regression(X_train, X_test, y_train, y_test)
+    rf, rf_acc, rf_f1 = train_random_forest(X_train, X_test, y_train, y_test)
+    gb, gb_acc, gb_f1 = train_gradient_boosting(X_train, X_test, y_train, y_test)
+    mlp, mlp_acc, mlp_f1 = train_neural_network(X_train, X_test, y_train, y_test)
+
+    # ---- Compare models on TEST set ----
+    models = {
+        "Logistic Regression": log_reg,
+        "Random Forest": rf,
+        "Gradient Boosting": gb,
+        "Neural Network (MLP)": mlp
+    }
+
+    results_df = compare_models(models, X_test, y_test)
+
+    # ---- Overfitting checks for ALL models ----
+    for name, model in models.items():
+        check_overfitting(model, X_train, X_test, y_train, y_test, name=name)
+
+    # ---- 5-fold cross-validation on FULL dataset ----
+    print("\n" + "="*70)
+    print("🔁 5-FOLD STRATIFIED CROSS-VALIDATION (on full dataset)")
+    print("="*70)
+
+    cv_results = []
+    for name, model in models.items():
+        # Create a fresh clone (to avoid leakage)
+        if name == "Logistic Regression":
+            m = LogisticRegression(max_iter=5000, multi_class="multinomial")
+        elif name == "Random Forest":
+            m = RandomForestClassifier(n_estimators=300, max_depth=None, random_state=42)
+        elif name == "Gradient Boosting":
+            m = GradientBoostingClassifier(learning_rate=0.05, n_estimators=300, random_state=42)
+        else:
+            m = MLPClassifier(hidden_layer_sizes=(64, 32), activation='relu',
+                              solver='adam', max_iter=500, random_state=42)
+
+        cv_acc, cv_f1 = cross_validate_model(m, X, y, name=name)
+        cv_results.append({
+            "Model": name,
+            "CV_Accuracy_mean": cv_acc,
+            "CV_F1_macro_mean": cv_f1
+        })
+
+    cv_df = pd.DataFrame(cv_results)
+    print("\n📄 Cross-validation summary:")
+    print(cv_df.to_string(index=False))
+
+    # Save outputs
+    results_df.to_csv(DATA_PROCESSED / "model_results_testset.csv", index=False)
+    cv_df.to_csv(DATA_PROCESSED / "model_results_cv.csv", index=False)
+    print("\n✅ Saved test-set results to: model_results_testset.csv")
+    print("✅ Saved CV results to:       model_results_cv.csv")
+
     return {
-        "impact": impact_labels[int(prediction)],
-        "confidence": round(float(probabilities[int(prediction)]) * 100, 2),
-        "probabilities": {
-            "low": round(float(probabilities[0]) * 100, 2),
-            "medium": round(float(probabilities[1]) * 100, 2),
-            "high": round(float(probabilities[2]) * 100, 2)
-        }
+        "models": models,
+        "results_test": results_df,
+        "results_cv": cv_df,
+        "X_train": X_train,
+        "X_test": X_test,
+        "y_train": y_train,
+        "y_test": y_test
     }
 
 
 if __name__ == "__main__":
-    result = classify_event_impact(
-        market_return=0.015,
-        ar_event=0.041,
-        car_0_1=0.071,
-        car_m1_p1=0.071,
-        car_0_3=0.110,
-        car_0_5=0.110,
-        car_m5_p5=0.105,
-        is_rockstar=1,
-        event_type_release=1,
-        franchise_gta=1
-    )
-    
-    print("🎮 Event Impact Prediction:")
-    print(f"   Predicted Impact: {result['impact']}")
-    print(f"   Confidence: {result['confidence']}%")
-    print(f"   Probabilities: {result['probabilities']}")
-
-
+    results = main()

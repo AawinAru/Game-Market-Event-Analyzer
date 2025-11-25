@@ -290,6 +290,8 @@ def build_ml_dataset() -> None:
         if c not in ["impact_label", "impact_label_num", "impact_high"]
     ]
 
+    df_ml_encoded = df_ml_encoded.replace({True: 1, False: 0})
+    
     print("\n✅ ML DATASET SUMMARY")
     print("=" * 70)
     print(f"Feature columns: {len(feature_cols)}")
