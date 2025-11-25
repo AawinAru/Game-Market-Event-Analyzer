@@ -65,8 +65,9 @@ def evaluate_model(model, X_test, y_test, name="Model"):
     """Evaluate model and display results"""
     y_pred = model.predict(X_test)
     
+    # ✅ Added zero_division=0 to f1_score
     acc = accuracy_score(y_test, y_pred)
-    f1 = f1_score(y_test, y_pred, average="macro")
+    f1 = f1_score(y_test, y_pred, average="macro", zero_division=0)
     cm = confusion_matrix(y_test, y_pred)
     
     print(f"\n{'='*70}")
@@ -74,7 +75,8 @@ def evaluate_model(model, X_test, y_test, name="Model"):
     print(f"{'='*70}")
     print(f"Accuracy: {round(acc, 3)}")
     print(f"F1-score (macro): {round(f1, 3)}")
-    print(f"\nClassification Report:\n{classification_report(y_test, y_pred)}")
+    # ✅ Added zero_division=0 to classification_report
+    print(f"\nClassification Report:\n{classification_report(y_test, y_pred, zero_division=0)}")
     
     # Plot confusion matrix
     plt.figure(figsize=(5, 4))
@@ -90,12 +92,14 @@ def evaluate_model(model, X_test, y_test, name="Model"):
     plt.xlabel("Predicted")
     plt.ylabel("True")
     plt.tight_layout()
-    plt.savefig(
-        DATA_PROCESSED / f"{name.lower().replace(' ', '_')}_confusion_matrix.png",
-        dpi=300,
-        bbox_inches='tight'
-    )
-    plt.show()
+    
+    # ✅ Save instead of show
+    filepath = DATA_PROCESSED / f"{name.lower().replace(' ', '_')}_confusion_matrix.png"
+    plt.savefig(filepath, dpi=300, bbox_inches='tight')
+    print(f"   📊 Plot saved to: {filepath}")
+    
+    # ✅ Close figure to free memory
+    plt.close()
     
     return acc, f1
 
@@ -159,7 +163,8 @@ def compare_models(models, X_test, y_test):
     for name, model in models.items():
         y_pred = model.predict(X_test)
         acc = accuracy_score(y_test, y_pred)
-        f1 = f1_score(y_test, y_pred, average="macro")
+        # ✅ Added zero_division=0
+        f1 = f1_score(y_test, y_pred, average="macro", zero_division=0)
         results.append({"Model": name, "Accuracy": acc, "F1-score (macro)": f1})
     
     results_df = pd.DataFrame(results)
@@ -186,12 +191,13 @@ def compare_models(models, X_test, y_test):
     ax.grid(True, alpha=0.3)
     
     plt.tight_layout()
-    plt.savefig(
-        DATA_PROCESSED / "model_comparison.png",
-        dpi=300,
-        bbox_inches='tight'
-    )
-    plt.show()
+    # ✅ Save instead of show
+    filepath = DATA_PROCESSED / "model_comparison.png"
+    plt.savefig(filepath, dpi=300, bbox_inches='tight')
+    print(f"   📊 Plot saved to: {filepath}")
+    
+    # ✅ Close figure
+    plt.close()
     
     return results_df
 
@@ -273,14 +279,24 @@ def main():
     for name, model in models.items():
         # Create a fresh clone (to avoid leakage)
         if name == "Logistic Regression":
-            m = LogisticRegression(max_iter=5000, multi_class="multinomial")
+            # ✅ REMOVED multi_class="multinomial"
+            m = LogisticRegression(max_iter=5000)
         elif name == "Random Forest":
             m = RandomForestClassifier(n_estimators=300, max_depth=None, random_state=42)
         elif name == "Gradient Boosting":
             m = GradientBoostingClassifier(learning_rate=0.05, n_estimators=300, random_state=42)
-        else:
-            m = MLPClassifier(hidden_layer_sizes=(64, 32), activation='relu',
-                              solver='adam', max_iter=500, random_state=42)
+        else:  # MLP
+            # ✅ Also increased max_iter and added early stopping
+            m = MLPClassifier(
+                hidden_layer_sizes=(64, 32),
+                activation='relu',
+                solver='adam',
+                max_iter=2000,  # ✅ Increased
+                random_state=42,
+                early_stopping=True,  # ✅ Added
+                validation_fraction=0.1,  # ✅ Added
+                n_iter_no_change=50  # ✅ Added
+            )
 
         cv_acc, cv_f1 = cross_validate_model(m, X, y, name=name)
         cv_results.append({
