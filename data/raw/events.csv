@@ -11,7 +11,6 @@ TTWO_2015_GTA5_PC_RELEASE;14.04.15;Take-Two;TTWO;Rockstar Games;1;GTA V;GTA;Rele
 TTWO_2016_RDR2_ANNOUNCEMENT;18.10.16;Take-Two;TTWO;Rockstar Games;1;Red Dead Redemption 2;Red Dead;Trailer/Reveal;Positive;High;https://www.rockstargames.com/newswire/article/50802;Teaser announcement and first trailer for Red Dead Redemption 2.
 RDR2_2016_TRAILER1;20.10.16;Take-Two;TTWO;Rockstar;1;RDR2;Red Dead;Trailer/Reveal;positive;medium;https://www.rockstargames.com;RDR2 Trailer #1
 RDR2_2017_DELAY;01.02.17;Take-Two;TTWO;Rockstar;1;RDR2;Red Dead;Delay;negative;medium;https://www.rockstargames.com;Delay to 2018
-NTDOY_2017_ZELDA_BOTW_RELEASE;03.03.17;Nintendo;NTDOY;Nintendo EPD;0;The Legend of Zelda: Breath of the Wild;Zelda;Release;Positive;High;https://www.nintendo.com/;Flagship Zelda launch alongside Nintendo Switch with broad critical acclaim.
 NTDOY_2017_SWITCH_LAUNCH;03.03.17;Nintendo;NTDOY;Nintendo;0;Nintendo Switch;Switch;Release;Positive;High;https://www.nintendo.com/switch/;Global launch of the Nintendo Switch console.
 RDR2_2017_SCREENSHOTS;03.05.17;Take-Two;TTWO;Rockstar;1;RDR2;Red Dead;Trailer/Reveal;neutral;low;https://www.rockstargames.com;New screenshots
 TTWO_2017_RDR2_DELAY;22.05.17;Take-Two;TTWO;Rockstar Games;1;Red Dead Redemption 2;Red Dead;Delay;Negative;Medium;https://www.rockstargames.com/newswire/article/60276;Announcement that RDR2 release is delayed into the following year.
@@ -34,7 +33,6 @@ EA_2020_FIFA_ULTIMATETEAM_REVENUE;05.05.20;EA;EA;EA Sports;0;FIFA Ultimate Team;
 UBI_2020_SKULLBONES_DELAY;12.07.20;Ubisoft;UBSFY;Ubisoft Singapore;0;Skull and Bones;Skull and Bones;Delay;negative;medium;https://www.ubisoft.com;Another delay announcement
 TTWO_2020_CODEMASTERS_LOSS;06.11.20;Take-Two;TTWO;; ; ;TTWO;Corporate Event;negative;high;https://ir.take2games.com;Lost Codemasters bid to EA (-23%)
 UBI_2020_AC_VALHALLA_RELEASE;10.11.20;Ubisoft;UBSFY;Ubisoft Montreal;0;Assassin's Creed Valhalla;Assassin's Creed;Release;Positive;Medium;https://news.ubisoft.com/;Major Assassin's Creed franchise entry and cross-gen launch title.
-TTWO_2021_TTWO_EARNINGS_GTAONLINE;08.02.21;Take-Two;TTWO;Take-Two;0;Multiple titles;Portfolio;Earnings;Positive;Medium;https://ir.take2games.com/;Quarterly earnings highlighting GTA Online and recurrent consumer spending.
 NTDOY_2021_SWITCH_OLED_ANN;06.07.21;Nintendo;NTDOY;Nintendo;0;Nintendo Switch OLED;Switch;Major Announcement;Neutral;Medium;https://www.nintendo.com/switch/oled-model/;Announcement of the Switch OLED model with improved screen but no power upgrade.
 ATVI_2021_LAWSUIT;20.07.21;Activision Blizzard;ATVI;;0;;Activision;Controversy;negative;high;https://www.bloomberg.com;California lawsuit (-10%)
 ATVI_2021_DIABLO2_RESURRECTED;23.09.21;Activision Blizzard;ATVI;Blizzard;0;Diablo II: Resurrected;Diablo;Release;Neutral;Medium;https://news.blizzard.com/;Launch of D2R with mixed expectations and some technical issues.
@@ -49,118 +47,107 @@ GTA6_2022_LEAK;18.09.22;Take-Two;TTWO;Rockstar;1;GTA VI;GTA;Leak;negative;high;h
 UBI_2022_SKULL_AND_BONES_DELAY;28.09.22;Ubisoft;UBSFY;Ubisoft Singapore;0;Skull and Bones;Skull and Bones;Delay;Negative;Medium;https://news.ubisoft.com/;Further delay of Skull and Bones after multiple postponements.
 EA_2022_FIFA23_RELEASE;30.09.22;EA;EA;EA Sports;0;FIFA 23;FIFA;Release;Positive;Medium;https://www.ea.com/games/fifa/fifa-23;Annual FIFA release with strong sales forecast.
 NTDOY_2022_POKEMON_SV_RELEASE;18.11.22;Nintendo;NTDOY;Game Freak;0;Pokémon Scarlet and Violet;Pokémon;Release;Positive;Medium;https://www.nintendo.com/;Launch of Pokémon Scarlet/Violet with strong sales but technical criticisms.
-TTWO_2023_STRONG_Q4;06.02.23;Take-Two;TTWO;; ; ;TTWO;Earnings;positive;high;https://ir.take2games.com;Strong Q4 + Zynga integration (+41%)
-EA_EARN_2023Q4;09.05.23;Electronic Arts;EA;Earnings;0;;;Earnings;;;https://ir.ea.com/news-releases/news-release-details/electronic-arts-reports-q4-fy23-financial-results;Q4 FY2023 Earnings Release
-NTDOY_EARN_FY2023;09.05.23;Nintendo;NTDOY;Earnings;0;;;Earnings;;;https://www.nintendo.co.jp/ir/en/;Full-Year 2022–2023 Earnings
 NTDOY_2023_ZELDA_TOTK_RELEASE;12.05.23;Nintendo;NTDOY;Nintendo;0;The Legend of Zelda: Tears of the Kingdom;Zelda;Release;positive;high;https://www.nintendo.com;TOTK launch success
 UBI_EARN_FY2023;16.05.23;Ubisoft;UBSFY;Earnings;0;;;Earnings;;;https://www.ubisoft.com/en-us/company/investors/earnings;Full-Year 2022–2023 Results
-TTWO_EARN_2023Q4;17.05.23;Take-Two;TTWO;Earnings;1;;;Earnings;;;https://ir.take2games.com/news-releases/news-release-details/take-two-interactive-software-inc-reports-results-fourth-quarter;FY 2023 Q4 Earnings
-ATVI_EARN_2023Q2;19.07.23;Activision Blizzard;ATVI;Earnings;0;;;Earnings;;;https://investor.activisionblizzard.com/news-releases/news-release-details/activision-blizzard-announces-second-quarter-2023-financial;Q2 2023 Earnings
 ATVI_EARN_2023Q3;04.10.23;Activision Blizzard;ATVI;Earnings;0;;;Earnings;;;https://investor.activisionblizzard.com/news-releases/news-release-details/activision-blizzard-announces-third-quarter-2023-financial;Q3 2023 Earnings
 UBI_2023_ASSASSINSMIRAGE_RELEASE;05.10.23;Ubisoft;UBSFY;Ubisoft Montreal;0;Assassin's Creed Mirage;Assassin's Creed;Release;positive;medium;https://www.ubisoft.com;Mirage launch reception
 UBI_EARN_H1_2024;07.11.23;Ubisoft;UBSFY;Earnings;0;;;Earnings;;;https://www.ubisoft.com/en-us/company/investors/earnings;H1 2023–2024 Results
 NTDOY_EARN_2023Q2;07.11.23;Nintendo;NTDOY;Earnings;0;;;Earnings;;;https://www.nintendo.co.jp/ir/en/;Q2 FY2023 Earnings Release
 TTWO_2023_GTA6_TRAILER1;05.12.23;Take-Two;TTWO;Rockstar Games;1;GTA VI;GTA;Trailer/Reveal;Positive;High;https://www.youtube.com/watch?v=QdBZY2fkU-0;Official GTA VI trailer release generating global hype.
-EA_EARN_2024Q3;30.01.24;Electronic Arts;EA;Earnings;0;;;Earnings;;;https://ir.ea.com/news-releases/news-release-details/electronic-arts-reports-q3-fy24-financial-results;Q3 FY2024 Earnings Release
-TTWO_EARN_2024Q3;08.02.24;Take-Two;TTWO;Earnings;1;;;Earnings;;;https://ir.take2games.com/news-releases/news-release-details/take-two-interactive-software-inc-reports-results-third-quarter;FY 2024 Q3 Earnings
-EA_EARN_2024Q4;07.05.24;Electronic Arts;EA;Earnings;0;;;Earnings;;;https://ir.ea.com/news-releases/news-release-details/electronic-arts-reports-q4-fy24-financial-results;Q4 FY2024 Earnings Release
-NTDOY_EARN_FY2024;07.05.24;Nintendo;NTDOY;Earnings;0;;;Earnings;;;https://www.nintendo.co.jp/ir/en/;Full-Year 2023–2024 Earnings
-UBI_EARN_FY2024;16.05.24;Ubisoft;UBSFY;Earnings;0;;;Earnings;;;https://www.ubisoft.com/en-us/company/investors/earnings;Full-Year 2023–2024 Results
-TTWO_2024_STRONG_RESULTS_GTA6_HYPE;16.05.24;Take-Two;TTWO;; ; ;TTWO;Earnings;positive;high;https://ir.take2games.com;Strong FY2024 + GTA VI hype (+20%)
 GTA6_2024_KEYART;16.05.24;Take-Two;TTWO;Rockstar;1;GTA VI;GTA;Trailer/Reveal;positive;medium;https://ir.take2games.com;Official screenshots/key art
 TTWO_2025_GTA6_DELAY1;02.05.25;Take-Two;TTWO;Rockstar Games;1;GTA VI;GTA;Delay;Negative;High;https://www.youtube.com/watch?v=VQRLujxTm3c;"Announcement of GTA VI release delay; market reaction around -8%."
 TTWO_2025_GTA6_TRAILER2;06.05.25;Take-Two;TTWO;Rockstar Games;1;GTA VI;GTA;Trailer/Reveal;Positive;Medium;https://www.rockstargames.com/newswire/article/258aa538o412ok/grand-theft-auto-vi-is-now-coming-may-26-2026#:~:text=Grand%20Theft%20Auto%20VI%20is,quality%20you%20expect%20and%20deserve.;"Released alongside the delay news; cinematic style, introduced protagonists Jason & Lucia."
 TTWO_2025_GTA6_DELAY2;06.11.25;Take-Two;TTWO;Rockstar Games;1;GTA VI;GTA;Delay;Negative;High;https://www.rockstargames.com/newswire/article/ak3ak31a49a221/grand-theft-auto-vi-is-now-set-to-launch-november-19-2026#:~:text=Grand%20Theft%20Auto%20VI%20%2D%20Watch,Contact;"Second announcement of GTA VI release delay; makret reaction around -8%"
-TTWO_EARN_Q3_2020;06.02.20;Take-Two;TTWO;;;;;Earnings;;;https://ir.take2games.com;Q3 2020 earnings conference call
-TTWO_EARN_Q4_2020;20.05.20;Take-Two;TTWO;;;;;Earnings;;;https://ir.take2games.com;Q4 2020 earnings conference call
-TTWO_EARN_Q1_2021;03.08.20;Take-Two;TTWO;;;;;Earnings;;;https://ir.take2games.com;Q1 2021 earnings conference call
-TTWO_EARN_Q2_2021;05.11.20;Take-Two;TTWO;;;;;Earnings;;;https://ir.take2games.com;Q2 2021 earnings conference call
-TTWO_EARN_Q3_2021;08.02.21;Take-Two;TTWO;;;;;Earnings;;;https://ir.take2games.com;Q3 2021 earnings conference call
-TTWO_EARN_Q4_2021;18.05.21;Take-Two;TTWO;;;;;Earnings;;;https://ir.take2games.com;Q4 2021 earnings conference call
-TTWO_EARN_Q1_2022;02.08.21;Take-Two;TTWO;;;;;Earnings;;;https://ir.take2games.com;Q1 2022 earnings conference call
-TTWO_EARN_Q2_2022;03.11.21;Take-Two;TTWO;;;;;Earnings;;;https://ir.take2games.com;Q2 2022 earnings conference call
-TTWO_EARN_Q3_2022;07.02.22;Take-Two;TTWO;;;;;Earnings;;;https://ir.take2games.com;Q3 2022 earnings conference call
-TTWO_EARN_Q4_2022;16.05.22;Take-Two;TTWO;;;;;Earnings;;;https://ir.take2games.com;Q4 2022 earnings conference call
-TTWO_EARN_Q1_2023;08.08.22;Take-Two;TTWO;;;;;Earnings;;;https://ir.take2games.com;Q1 2023 earnings conference call
-TTWO_EARN_Q2_2023;07.11.22;Take-Two;TTWO;;;;;Earnings;;;https://ir.take2games.com;Q2 2023 earnings conference call
-TTWO_EARN_Q3_2023;06.02.23;Take-Two;TTWO;;;;;Earnings;;;https://ir.take2games.com;Q3 2023 earnings conference call
-TTWO_EARN_Q4_2023;17.05.23;Take-Two;TTWO;;;;;Earnings;;;https://ir.take2games.com;Q4 2023 earnings conference call
-TTWO_EARN_Q1_2024;08.08.23;Take-Two;TTWO;;;;;Earnings;;;https://ir.take2games.com;Q1 2024 earnings conference call
-TTWO_EARN_Q2_2024;08.11.23;Take-Two;TTWO;;;;;Earnings;;;https://ir.take2games.com;Q2 2024 earnings conference call
-TTWO_EARN_Q3_2024;08.02.24;Take-Two;TTWO;;;;;Earnings;;;https://ir.take2games.com;Q3 2024 earnings conference call
-TTWO_EARN_Q4_2024;16.05.24;Take-Two;TTWO;;;;;Earnings;;;https://ir.take2games.com;Q4 2024 earnings conference call
-TTWO_EARN_Q1_2025;08.08.24;Take-Two;TTWO;;;;;Earnings;;;https://ir.take2games.com;Q1 2025 earnings conference call
-TTWO_2025_Q3_EARNINGS;07.02.25;Take-Two;TTWO;;; ; ;Earnings;;;https://ir.take2games.com;Q3 FY2025 Earnings Release
-TTWO_2025_Q4_EARNINGS;15.05.25;Take-Two;TTWO;;; ; ;Earnings;;;https://ir.take2games.com;Q4 FY2025 Earnings / Full-Year FY2025 Results
-TTWO_2025_Q1_EARNINGS;08.08.25;Take-Two;TTWO;;; ; ;Earnings;;;https://ir.take2games.com;Q1 FY2026 Earnings (released in 2025)
-EA_2020_Q1_EARNINGS;05.02.20;Electronic Arts;EA;;; ; ;Earnings;;;https://ir.ea.com;Q3 FY2020 Earnings
-EA_2020_Q2_EARNINGS;05.05.20;Electronic Arts;EA;;; ; ;Earnings;;;https://ir.ea.com;Q4 FY2020 Earnings
-EA_2020_Q3_EARNINGS;30.07.20;Electronic Arts;EA;;; ; ;Earnings;;;https://ir.ea.com;Q1 FY2021 Earnings
-EA_2020_Q4_EARNINGS;05.11.20;Electronic Arts;EA;;; ; ;Earnings;;;https://ir.ea.com;Q2 FY2021 Earnings
-EA_2021_Q1_EARNINGS;02.02.21;Electronic Arts;EA;;; ; ;Earnings;;;https://ir.ea.com;Q3 FY2021 Earnings
-EA_2021_Q2_EARNINGS;11.05.21;Electronic Arts;EA;;; ; ;Earnings;;;https://ir.ea.com;Q4 FY2021 Earnings
-EA_2021_Q3_EARNINGS;04.08.21;Electronic Arts;EA;;; ; ;Earnings;;;https://ir.ea.com;Q1 FY2022 Earnings
-EA_2021_Q4_EARNINGS;03.11.21;Electronic Arts;EA;;; ; ;Earnings;;;https://ir.ea.com;Q2 FY2022 Earnings
-EA_2022_Q1_EARNINGS;01.02.22;Electronic Arts;EA;;; ; ;Earnings;;;https://ir.ea.com;Q3 FY2022 Earnings
-EA_2022_Q2_EARNINGS;10.05.22;Electronic Arts;EA;;; ; ;Earnings;;;https://ir.ea.com;Q4 FY2022 Earnings
-EA_2022_Q3_EARNINGS;02.08.22;Electronic Arts;EA;;; ; ;Earnings;;;https://ir.ea.com;Q1 FY2023 Earnings
-EA_2022_Q4_EARNINGS;01.11.22;Electronic Arts;EA;;; ; ;Earnings;;;https://ir.ea.com;Q2 FY2023 Earnings
-EA_2023_Q1_EARNINGS;31.01.23;Electronic Arts;EA;;; ; ;Earnings;;;https://ir.ea.com;Q3 FY2023 Earnings
-EA_2023_Q2_EARNINGS;09.05.23;Electronic Arts;EA;;; ; ;Earnings;;;https://ir.ea.com;Q4 FY2023 Earnings
-EA_2023_Q3_EARNINGS;01.08.23;Electronic Arts;EA;;; ; ;Earnings;;;https://ir.ea.com;Q1 FY2024 Earnings
-EA_2023_Q4_EARNINGS;01.11.23;Electronic Arts;EA;;; ; ;Earnings;;;https://ir.ea.com;Q2 FY2024 Earnings
-EA_2024_Q1_EARNINGS;30.01.24;Electronic Arts;EA;;; ; ;Earnings;;;https://ir.ea.com;Q3 FY2024 Earnings
-EA_2024_Q2_EARNINGS;07.05.24;Electronic Arts;EA;;; ; ;Earnings;;;https://ir.ea.com;Q4 FY2024 Earnings
-EA_2024_Q3_EARNINGS;30.07.24;Electronic Arts;EA;;; ; ;Earnings;;;https://ir.ea.com;Q1 FY2025 Earnings
-EA_2024_Q4_EARNINGS;01.11.24;Electronic Arts;EA;;; ; ;Earnings;;;https://ir.ea.com;Q2 FY2025 Earnings
-ATVI_2020_Q1_EARNINGS;04.02.20;Activision Blizzard;ATVI;;; ; ;Earnings;;;https://investor.activision.com;Q4 2019 Earnings
-ATVI_2020_Q2_EARNINGS;05.05.20;Activision Blizzard;ATVI;;; ; ;Earnings;;;https://investor.activision.com;Q1 2020 Earnings
-ATVI_2020_Q3_EARNINGS;04.08.20;Activision Blizzard;ATVI;;; ; ;Earnings;;;https://investor.activision.com;Q2 2020 Earnings
-ATVI_2020_Q4_EARNINGS;29.10.20;Activision Blizzard;ATVI;;; ; ;Earnings;;;https://investor.activision.com;Q3 2020 Earnings
-ATVI_2021_Q1_EARNINGS;04.02.21;Activision Blizzard;ATVI;;; ; ;Earnings;;;https://investor.activision.com;Q4 2020 Earnings
-ATVI_2021_Q2_EARNINGS;04.05.21;Activision Blizzard;ATVI;;; ; ;Earnings;;;https://investor.activision.com;Q1 2021 Earnings
-ATVI_2021_Q3_EARNINGS;03.08.21;Activision Blizzard;ATVI;;; ; ;Earnings;;;https://investor.activision.com;Q2 2021 Earnings
-ATVI_2021_Q4_EARNINGS;02.11.21;Activision Blizzard;ATVI;;; ; ;Earnings;;;https://investor.activision.com;Q3 2021 Earnings
-ATVI_2022_Q1_EARNINGS;03.02.22;Activision Blizzard;ATVI;;; ; ;Earnings;;;https://investor.activision.com;Q4 2021 Earnings
-ATVI_2022_Q2_EARNINGS;25.04.22;Activision Blizzard;ATVI;;; ; ;Earnings;;;https://investor.activision.com;Q1 2022 Earnings
-ATVI_2022_Q3_EARNINGS;02.08.22;Activision Blizzard;ATVI;;; ; ;Earnings;;;https://investor.activision.com;Q2 2022 Earnings
-ATVI_2022_Q4_EARNINGS;02.11.22;Activision Blizzard;ATVI;;; ; ;Earnings;;;https://investor.activision.com;Q3 2022 Earnings
-ATVI_2023_Q1_EARNINGS;06.02.23;Activision Blizzard;ATVI;;; ; ;Earnings;;;https://investor.activision.com;Q4 2022 Earnings
-ATVI_2023_Q2_EARNINGS;25.04.23;Activision Blizzard;ATVI;;; ; ;Earnings;;;https://investor.activision.com;Q1 2023 Earnings
-ATVI_2023_Q3_EARNINGS;19.07.23;Activision Blizzard;ATVI;;; ; ;Earnings;;;https://investor.activision.com;Q2 2023 Earnings
-UBI_2020_Q1_EARNINGS;09.07.20;Ubisoft;UBI;;; ; ;Earnings;;;https://www.ubisoft.com;Q1 FY2021 Sales
-UBI_2020_Q2_EARNINGS;29.10.20;Ubisoft;UBI;;; ; ;Earnings;;;https://www.ubisoft.com;H1 FY2021 Results
-UBI_2021_Q1_EARNINGS;11.02.21;Ubisoft;UBI;;; ; ;Earnings;;;https://www.ubisoft.com;Q3 FY2021 Sales
-UBI_2021_Q2_EARNINGS;18.05.21;Ubisoft;UBI;;; ; ;Earnings;;;https://www.ubisoft.com;FY2021 Full-Year Earnings
-UBI_2021_Q3_EARNINGS;21.07.21;Ubisoft;UBI;;; ; ;Earnings;;;https://www.ubisoft.com;Q1 FY2022 Sales
-UBI_2021_Q4_EARNINGS;28.10.21;Ubisoft;UBI;;; ; ;Earnings;;;https://www.ubisoft.com;H1 FY2022 Earnings
-UBI_2022_Q1_EARNINGS;17.02.22;Ubisoft;UBI;;; ; ;Earnings;;;https://www.ubisoft.com;Q3 FY2022 Sales
-UBI_2022_Q2_EARNINGS;12.05.22;Ubisoft;UBI;;; ; ;Earnings;;;https://www.ubisoft.com;FY2022 Full-Year Earnings
-UBI_2022_Q3_EARNINGS;21.07.22;Ubisoft;UBI;;; ; ;Earnings;;;https://www.ubisoft.com;Q1 FY2023 Sales
-UBI_2022_Q4_EARNINGS;27.10.22;Ubisoft;UBI;;; ; ;Earnings;;;https://www.ubisoft.com;H1 FY2023 Earnings
-UBI_2023_Q1_EARNINGS;16.02.23;Ubisoft;UBI;;; ; ;Earnings;;;https://www.ubisoft.com;Q3 FY2023 Sales
-UBI_2023_Q2_EARNINGS;25.05.23;Ubisoft;UBI;;; ; ;Earnings;;;https://www.ubisoft.com;FY2023 Full-Year Earnings
-UBI_2023_Q3_EARNINGS;20.07.23;Ubisoft;UBI;;; ; ;Earnings;;;https://www.ubisoft.com;Q1 FY2024 Sales
-UBI_2023_Q4_EARNINGS;26.10.23;Ubisoft;UBI;;; ; ;Earnings;;;https://www.ubisoft.com;H1 FY2024 Earnings
-UBI_2024_Q1_EARNINGS;08.02.24;Ubisoft;UBI;;; ; ;Earnings;;;https://www.ubisoft.com;Q3 FY2024 Sales
-UBI_2024_Q2_EARNINGS;16.05.24;Ubisoft;UBI;;; ; ;Earnings;;;https://www.ubisoft.com;FY2024 Full-Year Results
-NTDOY_2020_Q1_EARNINGS;30.01.20;Nintendo;NTDOY;;; ; ;Earnings;;;https://www.nintendo.co.jp;Q3 FY2020 Earnings
-NTDOY_2020_Q2_EARNINGS;07.05.20;Nintendo;NTDOY;;; ; ;Earnings;;;https://www.nintendo.co.jp;FY2020 Full-Year Earnings
-NTDOY_2020_Q3_EARNINGS;06.08.20;Nintendo;NTDOY;;; ; ;Earnings;;;https://www.nintendo.co.jp;Q1 FY2021 Earnings
-NTDOY_2020_Q4_EARNINGS;05.11.20;Nintendo;NTDOY;;; ; ;Earnings;;;https://www.nintendo.co.jp;Q2 FY2021 Earnings
-NTDOY_2021_Q1_EARNINGS;01.02.21;Nintendo;NTDOY;;; ; ;Earnings;;;https://www.nintendo.co.jp;Q3 FY2021 Earnings
-NTDOY_2021_Q2_EARNINGS;06.05.21;Nintendo;NTDOY;;; ; ;Earnings;;;https://www.nintendo.co.jp;FY2021 Full-Year Earnings
-NTDOY_2021_Q3_EARNINGS;05.08.21;Nintendo;NTDOY;;; ; ;Earnings;;;https://www.nintendo.co.jp;Q1 FY2022 Earnings
-NTDOY_2021_Q4_EARNINGS;04.11.21;Nintendo;NTDOY;;; ; ;Earnings;;;https://www.nintendo.co.jp;Q2 FY2022 Earnings
-NTDOY_2022_Q1_EARNINGS;03.02.22;Nintendo;NTDOY;;; ; ;Earnings;;;https://www.nintendo.co.jp;Q3 FY2022 Earnings
-NTDOY_2022_Q2_EARNINGS;10.05.22;Nintendo;NTDOY;;; ; ;Earnings;;;https://www.nintendo.co.jp;FY2022 Full-Year Earnings
-NTDOY_2022_Q3_EARNINGS;03.08.22;Nintendo;NTDOY;;; ; ;Earnings;;;https://www.nintendo.co.jp;Q1 FY2023 Earnings
-NTDOY_2022_Q4_EARNINGS;08.11.22;Nintendo;NTDOY;;; ; ;Earnings;;;https://www.nintendo.co.jp;Q2 FY2023 Earnings
-NTDOY_2023_Q1_EARNINGS;07.02.23;Nintendo;NTDOY;;; ; ;Earnings;;;https://www.nintendo.co.jp;Q3 FY2023 Earnings
-NTDOY_2023_Q2_EARNINGS;09.05.23;Nintendo;NTDOY;;; ; ;Earnings;;;https://www.nintendo.co.jp;FY2023 Full-Year Earnings
-NTDOY_2023_Q3_EARNINGS;03.08.23;Nintendo;NTDOY;;; ; ;Earnings;;;https://www.nintendo.co.jp;Q1 FY2024 Earnings
-NTDOY_2023_Q4_EARNINGS;07.11.23;Nintendo;NTDOY;;; ; ;Earnings;;;https://www.nintendo.co.jp;Q2 FY2024 Earnings
-NTDOY_2024_Q1_EARNINGS;06.02.24;Nintendo;NTDOY;;; ; ;Earnings;;;https://www.nintendo.co.jp;Q3 FY2024 Earnings
-NTDOY_2024_Q2_EARNINGS;07.05.24;Nintendo;NTDOY;;; ; ;Earnings;;;https://www.nintendo.co.jp;FY2024 Full-Year Earnings
-NTDOY_2024_Q3_EARNINGS;06.08.24;Nintendo;NTDOY;;; ; ;Earnings;;;https://www.nintendo.co.jp;Q1 FY2025 Earnings
-NTDOY_2024_Q4_EARNINGS;05.11.24;Nintendo;NTDOY;;; ; ;Earnings;;;https://www.nintendo.co.jp;Q2 FY2025 Earnings
+TTWO_EARN_Q3_2020;06.02.20;Take-Two;TTWO;;1;;;Earnings;;;https://ir.take2games.com;Q3 2020 earnings conference call
+TTWO_EARN_Q4_2020;20.05.20;Take-Two;TTWO;;1;;;Earnings;;;https://ir.take2games.com;Q4 2020 earnings conference call
+TTWO_EARN_Q1_2021;03.08.20;Take-Two;TTWO;;1;;;Earnings;;;https://ir.take2games.com;Q1 2021 earnings conference call
+TTWO_EARN_Q2_2021;05.11.20;Take-Two;TTWO;;1;;;Earnings;;;https://ir.take2games.com;Q2 2021 earnings conference call
+TTWO_EARN_Q3_2021;08.02.21;Take-Two;TTWO;;1;;;Earnings;;;https://ir.take2games.com;Q3 2021 earnings conference call
+TTWO_EARN_Q4_2021;18.05.21;Take-Two;TTWO;;1;;;Earnings;;;https://ir.take2games.com;Q4 2021 earnings conference call
+TTWO_EARN_Q1_2022;02.08.21;Take-Two;TTWO;;1;;;Earnings;;;https://ir.take2games.com;Q1 2022 earnings conference call
+TTWO_EARN_Q2_2022;03.11.21;Take-Two;TTWO;;1;;;Earnings;;;https://ir.take2games.com;Q2 2022 earnings conference call
+TTWO_EARN_Q3_2022;07.02.22;Take-Two;TTWO;;1;;;Earnings;;;https://ir.take2games.com;Q3 2022 earnings conference call
+TTWO_EARN_Q4_2022;16.05.22;Take-Two;TTWO;;1;;;Earnings;;;https://ir.take2games.com;Q4 2022 earnings conference call
+TTWO_EARN_Q1_2023;08.08.22;Take-Two;TTWO;;1;;;Earnings;;;https://ir.take2games.com;Q1 2023 earnings conference call
+TTWO_EARN_Q2_2023;07.11.22;Take-Two;TTWO;;1;;;Earnings;;;https://ir.take2games.com;Q2 2023 earnings conference call
+TTWO_EARN_Q3_2023;06.02.23;Take-Two;TTWO;;1;;;Earnings;;;https://ir.take2games.com;Q3 2023 earnings conference call
+TTWO_EARN_Q4_2023;17.05.23;Take-Two;TTWO;;1;;;Earnings;;;https://ir.take2games.com;Q4 2023 earnings conference call
+TTWO_EARN_Q1_2024;08.08.23;Take-Two;TTWO;;1;;;Earnings;;;https://ir.take2games.com;Q1 2024 earnings conference call
+TTWO_EARN_Q2_2024;08.11.23;Take-Two;TTWO;;1;;;Earnings;;;https://ir.take2games.com;Q2 2024 earnings conference call
+TTWO_EARN_Q3_2024;08.02.24;Take-Two;TTWO;;1;;;Earnings;;;https://ir.take2games.com;Q3 2024 earnings conference call
+TTWO_EARN_Q4_2024;16.05.24;Take-Two;TTWO;;1;;;Earnings;;;https://ir.take2games.com;Q4 2024 earnings conference call
+TTWO_EARN_Q1_2025;08.08.24;Take-Two;TTWO;;1;;;Earnings;;;https://ir.take2games.com;Q1 2025 earnings conference call
+TTWO_2025_Q3_EARNINGS;07.02.25;Take-Two;TTWO;;1;;;Earnings;;;https://ir.take2games.com;Q3 FY2025 Earnings Release
+TTWO_2025_Q4_EARNINGS;15.05.25;Take-Two;TTWO;;1;;;Earnings;;;https://ir.take2games.com;Q4 FY2025 Earnings / Full-Year FY2025 Results
+TTWO_2025_Q1_EARNINGS;08.08.25;Take-Two;TTWO;;1;;;Earnings;;;https://ir.take2games.com;Q1 FY2026 Earnings (released in 2025)
+EA_2020_Q1_EARNINGS;05.02.20;Electronic Arts;EA;;0;;;Earnings;;;https://ir.ea.com;Q3 FY2020 Earnings
+EA_2020_Q2_EARNINGS;05.05.20;Electronic Arts;EA;;0;;;Earnings;;;https://ir.ea.com;Q4 FY2020 Earnings
+EA_2020_Q3_EARNINGS;30.07.20;Electronic Arts;EA;;0;;;Earnings;;;https://ir.ea.com;Q1 FY2021 Earnings
+EA_2020_Q4_EARNINGS;05.11.20;Electronic Arts;EA;;0;;;Earnings;;;https://ir.ea.com;Q2 FY2021 Earnings
+EA_2021_Q1_EARNINGS;02.02.21;Electronic Arts;EA;;0;;;Earnings;;;https://ir.ea.com;Q3 FY2021 Earnings
+EA_2021_Q2_EARNINGS;11.05.21;Electronic Arts;EA;;0;;;Earnings;;;https://ir.ea.com;Q4 FY2021 Earnings
+EA_2021_Q3_EARNINGS;04.08.21;Electronic Arts;EA;;0;;;Earnings;;;https://ir.ea.com;Q1 FY2022 Earnings
+EA_2021_Q4_EARNINGS;03.11.21;Electronic Arts;EA;;0;;;Earnings;;;https://ir.ea.com;Q2 FY2022 Earnings
+EA_2022_Q1_EARNINGS;01.02.22;Electronic Arts;EA;;0;;;Earnings;;;https://ir.ea.com;Q3 FY2022 Earnings
+EA_2022_Q2_EARNINGS;10.05.22;Electronic Arts;EA;;0;;;Earnings;;;https://ir.ea.com;Q4 FY2022 Earnings
+EA_2022_Q3_EARNINGS;02.08.22;Electronic Arts;EA;;0;;;Earnings;;;https://ir.ea.com;Q1 FY2023 Earnings
+EA_2022_Q4_EARNINGS;01.11.22;Electronic Arts;EA;;0;;;Earnings;;;https://ir.ea.com;Q2 FY2023 Earnings
+EA_2023_Q1_EARNINGS;31.01.23;Electronic Arts;EA;;0;;;Earnings;;;https://ir.ea.com;Q3 FY2023 Earnings
+EA_2023_Q2_EARNINGS;09.05.23;Electronic Arts;EA;;0;;;Earnings;;;https://ir.ea.com;Q4 FY2023 Earnings
+EA_2023_Q3_EARNINGS;01.08.23;Electronic Arts;EA;;0;;;Earnings;;;https://ir.ea.com;Q1 FY2024 Earnings
+EA_2023_Q4_EARNINGS;01.11.23;Electronic Arts;EA;;0;;;Earnings;;;https://ir.ea.com;Q2 FY2024 Earnings
+EA_2024_Q1_EARNINGS;30.01.24;Electronic Arts;EA;;0;;;Earnings;;;https://ir.ea.com;Q3 FY2024 Earnings
+EA_2024_Q2_EARNINGS;07.05.24;Electronic Arts;EA;;0;;;Earnings;;;https://ir.ea.com;Q4 FY2024 Earnings
+EA_2024_Q3_EARNINGS;30.07.24;Electronic Arts;EA;;0;;;Earnings;;;https://ir.ea.com;Q1 FY2025 Earnings
+EA_2024_Q4_EARNINGS;01.11.24;Electronic Arts;EA;;0;;;Earnings;;;https://ir.ea.com;Q2 FY2025 Earnings
+ATVI_2020_Q1_EARNINGS;04.02.20;Activision Blizzard;ATVI;;0;;;Earnings;;;https://investor.activision.com;Q4 2019 Earnings
+ATVI_2020_Q2_EARNINGS;05.05.20;Activision Blizzard;ATVI;;0;;;Earnings;;;https://investor.activision.com;Q1 2020 Earnings
+ATVI_2020_Q3_EARNINGS;04.08.20;Activision Blizzard;ATVI;;0;;;Earnings;;;https://investor.activision.com;Q2 2020 Earnings
+ATVI_2020_Q4_EARNINGS;29.10.20;Activision Blizzard;ATVI;;0;;;Earnings;;;https://investor.activision.com;Q3 2020 Earnings
+ATVI_2021_Q1_EARNINGS;04.02.21;Activision Blizzard;ATVI;;0;;;Earnings;;;https://investor.activision.com;Q4 2020 Earnings
+ATVI_2021_Q2_EARNINGS;04.05.21;Activision Blizzard;ATVI;;0;;;Earnings;;;https://investor.activision.com;Q1 2021 Earnings
+ATVI_2021_Q3_EARNINGS;03.08.21;Activision Blizzard;ATVI;;0;;;Earnings;;;https://investor.activision.com;Q2 2021 Earnings
+ATVI_2021_Q4_EARNINGS;02.11.21;Activision Blizzard;ATVI;;0;;;Earnings;;;https://investor.activision.com;Q3 2021 Earnings
+ATVI_2022_Q1_EARNINGS;03.02.22;Activision Blizzard;ATVI;;0;;;Earnings;;;https://investor.activision.com;Q4 2021 Earnings
+ATVI_2022_Q2_EARNINGS;25.04.22;Activision Blizzard;ATVI;;0;;;Earnings;;;https://investor.activision.com;Q1 2022 Earnings
+ATVI_2022_Q3_EARNINGS;02.08.22;Activision Blizzard;ATVI;;0;;;Earnings;;;https://investor.activision.com;Q2 2022 Earnings
+ATVI_2022_Q4_EARNINGS;02.11.22;Activision Blizzard;ATVI;;0;;;Earnings;;;https://investor.activision.com;Q3 2022 Earnings
+ATVI_2023_Q1_EARNINGS;06.02.23;Activision Blizzard;ATVI;;0;;;Earnings;;;https://investor.activision.com;Q4 2022 Earnings
+ATVI_2023_Q2_EARNINGS;25.04.23;Activision Blizzard;ATVI;;0;;;Earnings;;;https://investor.activision.com;Q1 2023 Earnings
+ATVI_2023_Q3_EARNINGS;19.07.23;Activision Blizzard;ATVI;;0;;;Earnings;;;https://investor.activision.com;Q2 2023 Earnings
+UBI_2020_Q1_EARNINGS;09.07.20;Ubisoft;UBI;;0;;;Earnings;;;https://www.ubisoft.com;Q1 FY2021 Sales
+UBI_2020_Q2_EARNINGS;29.10.20;Ubisoft;UBI;;0;;;Earnings;;;https://www.ubisoft.com;H1 FY2021 Results
+UBI_2021_Q1_EARNINGS;11.02.21;Ubisoft;UBI;;0;;;Earnings;;;https://www.ubisoft.com;Q3 FY2021 Sales
+UBI_2021_Q2_EARNINGS;18.05.21;Ubisoft;UBI;;0;;;Earnings;;;https://www.ubisoft.com;FY2021 Full-Year Earnings
+UBI_2021_Q3_EARNINGS;21.07.21;Ubisoft;UBI;;0;;;Earnings;;;https://www.ubisoft.com;Q1 FY2022 Sales
+UBI_2021_Q4_EARNINGS;28.10.21;Ubisoft;UBI;;0;;;Earnings;;;https://www.ubisoft.com;H1 FY2022 Earnings
+UBI_2022_Q1_EARNINGS;17.02.22;Ubisoft;UBI;;0;;;Earnings;;;https://www.ubisoft.com;Q3 FY2022 Sales
+UBI_2022_Q2_EARNINGS;12.05.22;Ubisoft;UBI;;0;;;Earnings;;;https://www.ubisoft.com;FY2022 Full-Year Earnings
+UBI_2022_Q3_EARNINGS;21.07.22;Ubisoft;UBI;;0;;;Earnings;;;https://www.ubisoft.com;Q1 FY2023 Sales
+UBI_2022_Q4_EARNINGS;27.10.22;Ubisoft;UBI;;0;;;Earnings;;;https://www.ubisoft.com;H1 FY2023 Earnings
+UBI_2023_Q1_EARNINGS;16.02.23;Ubisoft;UBI;;0;;;Earnings;;;https://www.ubisoft.com;Q3 FY2023 Sales
+UBI_2023_Q2_EARNINGS;25.05.23;Ubisoft;UBI;;0;;;Earnings;;;https://www.ubisoft.com;FY2023 Full-Year Earnings
+UBI_2023_Q3_EARNINGS;20.07.23;Ubisoft;UBI;;0;;;Earnings;;;https://www.ubisoft.com;Q1 FY2024 Sales
+UBI_2023_Q4_EARNINGS;26.10.23;Ubisoft;UBI;;0;;;Earnings;;;https://www.ubisoft.com;H1 FY2024 Earnings
+UBI_2024_Q1_EARNINGS;08.02.24;Ubisoft;UBI;;0;;;Earnings;;;https://www.ubisoft.com;Q3 FY2024 Sales
+UBI_2024_Q2_EARNINGS;16.05.24;Ubisoft;UBI;;0;;;Earnings;;;https://www.ubisoft.com;FY2024 Full-Year Results
+NTDOY_2020_Q1_EARNINGS;30.01.20;Nintendo;NTDOY;;0;;;Earnings;;;https://www.nintendo.co.jp;Q3 FY2020 Earnings
+NTDOY_2020_Q2_EARNINGS;07.05.20;Nintendo;NTDOY;;0;;;Earnings;;;https://www.nintendo.co.jp;FY2020 Full-Year Earnings
+NTDOY_2020_Q3_EARNINGS;06.08.20;Nintendo;NTDOY;;0;;;Earnings;;;https://www.nintendo.co.jp;Q1 FY2021 Earnings
+NTDOY_2020_Q4_EARNINGS;05.11.20;Nintendo;NTDOY;;0;;;Earnings;;;https://www.nintendo.co.jp;Q2 FY2021 Earnings
+NTDOY_2021_Q1_EARNINGS;01.02.21;Nintendo;NTDOY;;0;;;Earnings;;;https://www.nintendo.co.jp;Q3 FY2021 Earnings
+NTDOY_2021_Q2_EARNINGS;06.05.21;Nintendo;NTDOY;;0;;;Earnings;;;https://www.nintendo.co.jp;FY2021 Full-Year Earnings
+NTDOY_2021_Q3_EARNINGS;05.08.21;Nintendo;NTDOY;;0;;;Earnings;;;https://www.nintendo.co.jp;Q1 FY2022 Earnings
+NTDOY_2021_Q4_EARNINGS;04.11.21;Nintendo;NTDOY;;0;;;Earnings;;;https://www.nintendo.co.jp;Q2 FY2022 Earnings
+NTDOY_2022_Q1_EARNINGS;03.02.22;Nintendo;NTDOY;;0;;;Earnings;;;https://www.nintendo.co.jp;Q3 FY2022 Earnings
+NTDOY_2022_Q2_EARNINGS;10.05.22;Nintendo;NTDOY;;0;;;Earnings;;;https://www.nintendo.co.jp;FY2022 Full-Year Earnings
+NTDOY_2022_Q3_EARNINGS;03.08.22;Nintendo;NTDOY;;0;;;Earnings;;;https://www.nintendo.co.jp;Q1 FY2023 Earnings
+NTDOY_2022_Q4_EARNINGS;08.11.22;Nintendo;NTDOY;;0;;;Earnings;;;https://www.nintendo.co.jp;Q2 FY2023 Earnings
+NTDOY_2023_Q1_EARNINGS;07.02.23;Nintendo;NTDOY;;0;;;Earnings;;;https://www.nintendo.co.jp;Q3 FY2023 Earnings
+NTDOY_2023_Q2_EARNINGS;09.05.23;Nintendo;NTDOY;;0;;;Earnings;;;https://www.nintendo.co.jp;FY2023 Full-Year Earnings
+NTDOY_2023_Q3_EARNINGS;03.08.23;Nintendo;NTDOY;;0;;;Earnings;;;https://www.nintendo.co.jp;Q1 FY2024 Earnings
+NTDOY_2023_Q4_EARNINGS;07.11.23;Nintendo;NTDOY;;0;;;Earnings;;;https://www.nintendo.co.jp;Q2 FY2024 Earnings
+NTDOY_2024_Q1_EARNINGS;06.02.24;Nintendo;NTDOY;;0;;;Earnings;;;https://www.nintendo.co.jp;Q3 FY2024 Earnings
+NTDOY_2024_Q2_EARNINGS;07.05.24;Nintendo;NTDOY;;0;;;Earnings;;;https://www.nintendo.co.jp;FY2024 Full-Year Earnings
+NTDOY_2024_Q3_EARNINGS;06.08.24;Nintendo;NTDOY;;0;;;Earnings;;;https://www.nintendo.co.jp;Q1 FY2025 Earnings
+NTDOY_2024_Q4_EARNINGS;05.11.24;Nintendo;NTDOY;;0;;;Earnings;;;https://www.nintendo.co.jp;Q2 FY2025 Earnings
