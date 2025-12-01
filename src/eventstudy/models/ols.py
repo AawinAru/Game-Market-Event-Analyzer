@@ -3,9 +3,9 @@ OLS regression of abnormal returns on event features and GTA Google Trends.
 
 - Input:  data/processed/regression_dataset_with_gta_trends.csv
 - Output:
-    - data/processed/ols_regression_results.txt  (all 3 models)
-    - data/processed/ols_regression_coeffs.csv   (all params)
-    - data/processed/gta_scenario_predictions.csv (bull/base/bear AR_event)
+    - results/02_ols_regression/ols_regression_results.txt  (all 3 models)
+    - results/02_ols_regression/ols_regression_coeffs.csv   (all params)
+    - results/02_ols_regression/gta_scenario_predictions.csv (bull/base/bear AR_event)
 """
 
 from pathlib import Path
@@ -13,14 +13,17 @@ import pandas as pd
 import numpy as np
 import statsmodels.api as sm
 
-# ---------------------------------------------------------------------
-# Paths
-# ---------------------------------------------------------------------
+# ✅ SETUP PATHS
 BASE_DIR = Path(__file__).resolve().parents[3]
 DATA_PROCESSED = BASE_DIR / "data" / "processed"
+RESULTS_OLS = BASE_DIR / "results" / "02_ols_regression"
+
+# Create results folder if it doesn't exist
+RESULTS_OLS.mkdir(parents=True, exist_ok=True)
 
 print(f"BASE_DIR:       {BASE_DIR}")
-print(f"DATA_PROCESSED: {DATA_PROCESSED}\n")
+print(f"DATA_PROCESSED: {DATA_PROCESSED}")
+print(f"RESULTS_OLS:    {RESULTS_OLS}\n")
 
 # Which return we explain
 TARGET_VAR = "AR_event"
@@ -296,9 +299,9 @@ def main():
 
     # -----------------------------------------------------------------
     # MERGE ALL OLS SUMMARIES INTO ONE FILE
+    # ✅ SAVE TO RESULTS FOLDER
     # -----------------------------------------------------------------
-    out_dir = DATA_PROCESSED
-    merged_summary_path = out_dir / "ols_regression_results.txt"
+    merged_summary_path = RESULTS_OLS / "ols_regression_results.txt"
 
     print(f"💾 Merging all OLS summaries into: {merged_summary_path}")
 
@@ -318,12 +321,13 @@ def main():
         write_model("MODEL 2 – All Publishers + GTA Trends", m2)
         write_model("MODEL 3 – TTWO Only + GTA Trends", m3)
 
-    print("✅ All summaries saved into ONE file:", merged_summary_path)
+    print("✅ All summaries saved to:", merged_summary_path)
 
     # -----------------------------------------------------------------
     # MERGE ALL COEFFICIENTS INTO ONE CSV (UNION OF PARAMETERS)
+    # ✅ SAVE TO RESULTS FOLDER
     # -----------------------------------------------------------------
-    merged_coeffs_path = out_dir / "ols_regression_coeffs.csv"
+    merged_coeffs_path = RESULTS_OLS / "ols_regression_coeffs.csv"
 
     all_idx = sorted(set(m1.params.index) | set(m2.params.index) | set(m3.params.index))
     coeffs_df = pd.DataFrame(index=all_idx)
@@ -333,20 +337,22 @@ def main():
 
     coeffs_df = coeffs_df.reset_index().rename(columns={"index": "parameter"})
     coeffs_df.to_csv(merged_coeffs_path, index=False)
-    print("✅ All model coefficients saved into ONE CSV:", merged_coeffs_path)
+    print("✅ All model coefficients saved to:", merged_coeffs_path)
 
     # -----------------------------------------------------------------
     # GTA VI BULL / BASE / BEAR SCENARIOS (using Model 2)
+    # ✅ SAVE TO RESULTS FOLDER
     # -----------------------------------------------------------------
     scen_df = build_gta_scenarios(m2)
     print("\n📊 Scenario predictions (Model 2 – AR_event):")
     print(scen_df[["market_scenario", "trend_scenario", "pred_AR_event"]])
 
-    scen_out_path = out_dir / "gta_scenario_predictions.csv"
-    scen_df.to_csv(scen_out_path)
+    scen_out_path = RESULTS_OLS / "gta_scenario_predictions.csv"
+    scen_df.to_csv(scen_out_path, index=False)
     print("✅ Scenario predictions saved to:", scen_out_path)
 
     print("\n🎉 OLS regression + scenarios completed cleanly.")
+    print(f"📁 All results saved to: {RESULTS_OLS}\n")
 
 
 if __name__ == "__main__":

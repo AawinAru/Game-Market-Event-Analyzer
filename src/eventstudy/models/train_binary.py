@@ -5,6 +5,7 @@ Target: impact_high (0 = not high impact, 1 = high impact)
 import pandas as pd
 import numpy as np
 from pathlib import Path
+from matplotlib.backends.backend_pdf import PdfPages
 
 from sklearn.model_selection import (
     train_test_split,
@@ -27,10 +28,17 @@ import seaborn as sns
 # ---- Setup paths ----
 BASE_DIR = Path(__file__).resolve().parents[3]
 DATA_PROCESSED = BASE_DIR / "data" / "processed"
+RESULTS_BINARY = BASE_DIR / "results" / "03_binary_classification"
+
+# Create results folder if it doesn't exist
+RESULTS_BINARY.mkdir(parents=True, exist_ok=True)
 
 print(f"BASE_DIR: {BASE_DIR}")
-print(f"DATA_PROCESSED: {DATA_PROCESSED}\n")
+print(f"DATA_PROCESSED: {DATA_PROCESSED}")
+print(f"RESULTS_BINARY: {RESULTS_BINARY}\n")
 
+# Global list to collect all plots
+all_figures = []
 
 # =====================================================================
 # 1. DATA LOADING & PREPARATION
@@ -91,11 +99,12 @@ def split_data(X, y):
 # =====================================================================
 
 def evaluate_model(model, X_test, y_test, name="Model"):
-    """Evaluate model on the test set and plot confusion matrix."""
+    """Evaluate model on the test set and save confusion matrix as PNG."""
+    
     y_pred = model.predict(X_test)
 
     acc = accuracy_score(y_test, y_pred)
-    f1 = f1_score(y_test, y_pred, average="macro")
+    f1 = f1_score(y_test, y_pred, average="macro", zero_division=0)
     cm = confusion_matrix(y_test, y_pred)
 
     print(f"\n{'='*70}")
@@ -110,11 +119,12 @@ def evaluate_model(model, X_test, y_test, name="Model"):
             y_pred,
             target_names=["Not high", "High"],
             digits=3,
+            zero_division=0
         )
     )
 
     # Plot confusion matrix
-    plt.figure(figsize=(5, 4))
+    fig, ax = plt.subplots(figsize=(5, 4))
     sns.heatmap(
         cm,
         annot=True,
@@ -122,17 +132,20 @@ def evaluate_model(model, X_test, y_test, name="Model"):
         cmap="Blues",
         xticklabels=["Not high", "High"],
         yticklabels=["Not high", "High"],
+        ax=ax
     )
-    plt.title(f"{name} – Confusion Matrix (Binary)")
-    plt.xlabel("Predicted")
-    plt.ylabel("True")
+    ax.set_title(f"{name} – Confusion Matrix (Binary)")
+    ax.set_xlabel("Predicted")
+    ax.set_ylabel("True")
     plt.tight_layout()
 
-    plot_path = DATA_PROCESSED / f"{name.lower().replace(' ', '_')}_binary_confusion_matrix.png"
-    plt.savefig(plot_path, dpi=300, bbox_inches="tight")
-    plt.close()
-
-    print(f"\n   📊 Confusion matrix plot saved to: {plot_path}\n")
+    # ✅ SAVE PNG TO RESULTS
+    png_name = name.lower().replace(" ", "_").replace("(", "").replace(")", "")
+    png_path = RESULTS_BINARY / f"{png_name}_confusion_matrix.png"
+    plt.savefig(png_path, dpi=300, bbox_inches="tight")
+    plt.close(fig)
+    
+    print(f"   📊 Saved PNG: {png_path}\n")
 
     return acc, f1
 
@@ -231,13 +244,14 @@ def train_neural_network(X_train, X_test, y_train, y_test):
 
 
 def compare_models(models, X_test, y_test):
-    """Compare models on test set (binary)."""
+    """Compare models on test set and save comparison PNG."""
+    
     results = []
 
     for name, model in models.items():
         y_pred = model.predict(X_test)
         acc = accuracy_score(y_test, y_pred)
-        f1 = f1_score(y_test, y_pred, average="macro")
+        f1 = f1_score(y_test, y_pred, average="macro", zero_division=0)
         results.append({"Model": name, "Accuracy": acc, "F1_macro": f1})
 
     results_df = pd.DataFrame(results)
@@ -248,7 +262,7 @@ def compare_models(models, X_test, y_test):
     print(results_df.to_string(index=False))
 
     # Plot comparison
-    fig, ax = plt.subplots(figsize=(8, 5))
+    fig, ax = plt.subplots(figsize=(10, 6))
     x = np.arange(len(results_df))
     width = 0.35
 
@@ -264,11 +278,13 @@ def compare_models(models, X_test, y_test):
     ax.grid(True, alpha=0.3)
 
     plt.tight_layout()
-    plot_path = DATA_PROCESSED / "binary_model_comparison.png"
-    plt.savefig(plot_path, dpi=300, bbox_inches="tight")
-    plt.close()
+    
+    # ✅ SAVE PNG TO RESULTS
+    png_path = RESULTS_BINARY / "binary_model_comparison.png"
+    plt.savefig(png_path, dpi=300, bbox_inches="tight")
+    plt.close(fig)
 
-    print(f"\n   📊 Binary model comparison plot saved to: {plot_path}\n")
+    print(f"   📊 Saved PNG: {png_path}\n")
 
     return results_df
 
@@ -310,7 +326,6 @@ def main():
 
     cv_results = []
     for name, model in models.items():
-        # Clone same type with same hyperparameters (fresh model)
         if "Logistic" in name:
             m = LogisticRegression(max_iter=5000)
         elif "Random Forest" in name:
@@ -322,16 +337,15 @@ def main():
                 random_state=42,
             )
         else:  # MLP
-            # ✅ Same fixes as train_neural_network()
             m = MLPClassifier(
                 hidden_layer_sizes=(64, 32),
                 activation="relu",
                 solver="adam",
-                max_iter=2000,  # ✅ Changed from 500
+                max_iter=2000,
                 random_state=42,
-                early_stopping=True,  # ✅ New
-                validation_fraction=0.1,  # ✅ New
-                n_iter_no_change=50,  # ✅ New
+                early_stopping=True,
+                validation_fraction=0.1,
+                n_iter_no_change=50,
                 verbose=0
             )
 
@@ -349,12 +363,23 @@ def main():
     print("\n📄 Binary cross-validation summary:")
     print(cv_df.to_string(index=False))
 
-    # 6) Save results
-    results_test.to_csv(DATA_PROCESSED / "binary_model_results_testset.csv", index=False)
-    cv_df.to_csv(DATA_PROCESSED / "binary_model_results_cv.csv", index=False)
+    # 6) ✅ SAVE CSVs TO RESULTS FOLDER (PNGs already saved above)
+    
+    # Save test results
+    test_csv = RESULTS_BINARY / "binary_test_results.csv"
+    results_test.to_csv(test_csv, index=False)
+    print(f"✅ Test results saved to: {test_csv}")
+    
+    # Save CV results
+    cv_csv = RESULTS_BINARY / "binary_cv_results.csv"
+    cv_df.to_csv(cv_csv, index=False)
+    print(f"✅ CV results saved to: {cv_csv}")
 
-    print("\n✅ Saved BINARY test-set results to: binary_model_results_testset.csv")
-    print("✅ Saved BINARY CV results to:       binary_model_results_cv.csv")
+    print("\n" + "="*70)
+    print("✅ BINARY CLASSIFICATION COMPLETE")
+    print("="*70)
+    print(f"📁 All results saved to: {RESULTS_BINARY}")
+    print("="*70 + "\n")
 
     return {
         "models": models,

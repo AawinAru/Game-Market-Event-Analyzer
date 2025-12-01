@@ -20,9 +20,14 @@ import seaborn as sns
 # ---- Setup paths ----
 BASE_DIR = Path(__file__).resolve().parents[3]
 DATA_PROCESSED = BASE_DIR / "data" / "processed"
+RESULTS_MULTICLASS = BASE_DIR / "results" / "04_multiclass_classification"
+
+# Create results folder if it doesn't exist
+RESULTS_MULTICLASS.mkdir(parents=True, exist_ok=True)
 
 print(f"BASE_DIR: {BASE_DIR}")
-print(f"DATA_PROCESSED: {DATA_PROCESSED}\n")
+print(f"DATA_PROCESSED: {DATA_PROCESSED}")
+print(f"RESULTS_MULTICLASS: {RESULTS_MULTICLASS}\n")
 
 
 def load_data():
@@ -65,7 +70,6 @@ def evaluate_model(model, X_test, y_test, name="Model"):
     """Evaluate model and display results"""
     y_pred = model.predict(X_test)
     
-    # ✅ Added zero_division=0 to f1_score
     acc = accuracy_score(y_test, y_pred)
     f1 = f1_score(y_test, y_pred, average="macro", zero_division=0)
     cm = confusion_matrix(y_test, y_pred)
@@ -75,7 +79,6 @@ def evaluate_model(model, X_test, y_test, name="Model"):
     print(f"{'='*70}")
     print(f"Accuracy: {round(acc, 3)}")
     print(f"F1-score (macro): {round(f1, 3)}")
-    # ✅ Added zero_division=0 to classification_report
     print(f"\nClassification Report:\n{classification_report(y_test, y_pred, zero_division=0)}")
     
     # Plot confusion matrix
@@ -93,12 +96,12 @@ def evaluate_model(model, X_test, y_test, name="Model"):
     plt.ylabel("True")
     plt.tight_layout()
     
-    # ✅ Save instead of show
-    filepath = DATA_PROCESSED / f"{name.lower().replace(' ', '_')}_confusion_matrix.png"
-    plt.savefig(filepath, dpi=300, bbox_inches='tight')
-    print(f"   📊 Plot saved to: {filepath}")
+    # ✅ SAVE PNG TO RESULTS
+    png_name = name.lower().replace(" ", "_").replace("(", "").replace(")", "")
+    png_path = RESULTS_MULTICLASS / f"{png_name}_confusion_matrix.png"
+    plt.savefig(png_path, dpi=300, bbox_inches='tight')
+    print(f"   📊 Plot saved to: {png_path}")
     
-    # ✅ Close figure to free memory
     plt.close()
     
     return acc, f1
@@ -163,7 +166,6 @@ def compare_models(models, X_test, y_test):
     for name, model in models.items():
         y_pred = model.predict(X_test)
         acc = accuracy_score(y_test, y_pred)
-        # ✅ Added zero_division=0
         f1 = f1_score(y_test, y_pred, average="macro", zero_division=0)
         results.append({"Model": name, "Accuracy": acc, "F1-score (macro)": f1})
     
@@ -184,19 +186,19 @@ def compare_models(models, X_test, y_test):
     
     ax.set_xlabel("Model")
     ax.set_ylabel("Score")
-    ax.set_title("Model Comparison: Accuracy vs F1-score")
+    ax.set_title("Multiclass Model Comparison: Accuracy vs F1-score")
     ax.set_xticks(x)
     ax.set_xticklabels(results_df["Model"], rotation=45, ha='right')
     ax.legend()
     ax.grid(True, alpha=0.3)
     
     plt.tight_layout()
-    # ✅ Save instead of show
-    filepath = DATA_PROCESSED / "model_comparison.png"
-    plt.savefig(filepath, dpi=300, bbox_inches='tight')
-    print(f"   📊 Plot saved to: {filepath}")
     
-    # ✅ Close figure
+    # ✅ SAVE PNG TO RESULTS
+    png_path = RESULTS_MULTICLASS / "multiclass_model_comparison.png"
+    plt.savefig(png_path, dpi=300, bbox_inches='tight')
+    print(f"   📊 Plot saved to: {png_path}")
+    
     plt.close()
     
     return results_df
@@ -279,23 +281,21 @@ def main():
     for name, model in models.items():
         # Create a fresh clone (to avoid leakage)
         if name == "Logistic Regression":
-            # ✅ REMOVED multi_class="multinomial"
             m = LogisticRegression(max_iter=5000)
         elif name == "Random Forest":
             m = RandomForestClassifier(n_estimators=300, max_depth=None, random_state=42)
         elif name == "Gradient Boosting":
             m = GradientBoostingClassifier(learning_rate=0.05, n_estimators=300, random_state=42)
         else:  # MLP
-            # ✅ Also increased max_iter and added early stopping
             m = MLPClassifier(
                 hidden_layer_sizes=(64, 32),
                 activation='relu',
                 solver='adam',
-                max_iter=2000,  # ✅ Increased
+                max_iter=2000,
                 random_state=42,
-                early_stopping=True,  # ✅ Added
-                validation_fraction=0.1,  # ✅ Added
-                n_iter_no_change=50  # ✅ Added
+                early_stopping=True,
+                validation_fraction=0.1,
+                n_iter_no_change=50
             )
 
         cv_acc, cv_f1 = cross_validate_model(m, X, y, name=name)
@@ -309,11 +309,23 @@ def main():
     print("\n📄 Cross-validation summary:")
     print(cv_df.to_string(index=False))
 
-    # Save outputs
-    results_df.to_csv(DATA_PROCESSED / "model_results_testset.csv", index=False)
-    cv_df.to_csv(DATA_PROCESSED / "model_results_cv.csv", index=False)
-    print("\n✅ Saved test-set results to: model_results_testset.csv")
-    print("✅ Saved CV results to:       model_results_cv.csv")
+    # ✅ SAVE CSVs TO RESULTS FOLDER (PNGs already saved above)
+    
+    # Save test results
+    test_csv = RESULTS_MULTICLASS / "multiclass_test_results.csv"
+    results_df.to_csv(test_csv, index=False)
+    print(f"\n✅ Test results saved to: {test_csv}")
+    
+    # Save CV results
+    cv_csv = RESULTS_MULTICLASS / "multiclass_cv_results.csv"
+    cv_df.to_csv(cv_csv, index=False)
+    print(f"✅ CV results saved to: {cv_csv}")
+
+    print("\n" + "="*70)
+    print("✅ MULTICLASS CLASSIFICATION COMPLETE")
+    print("="*70)
+    print(f"📁 All results saved to: {RESULTS_MULTICLASS}")
+    print("="*70 + "\n")
 
     return {
         "models": models,
