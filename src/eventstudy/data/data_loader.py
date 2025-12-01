@@ -1,3 +1,62 @@
+#data_download_reference.py
+
+import yfinance as yf
+import pandas as pd
+from pathlib import Path
+
+# Setup path
+BASE_DIR = Path(__file__).resolve().parents[3]
+data_dir = BASE_DIR / "data" / "raw"
+data_dir.mkdir(parents=True, exist_ok=True)
+
+print(f"📁 Saving to: {data_dir}\n")
+
+# ============================================================
+# TTWO
+# ============================================================
+print("Downloading TTWO...")
+data = yf.download("TTWO", start="2010-01-01", end="2025-11-15", progress=False)
+data = data[["Close"]].rename(columns={"Close": "Adj Close"})
+data.to_csv(data_dir / "TTWO_2010_2025.csv", index=True)
+print(f"✅ Saved: TTWO_2010_2025.csv\n")
+
+# ============================================================
+# Game Stocks
+# ============================================================
+print("Downloading game stocks...")
+tickers = ["EA", "ATVI", "UBSFY", "NTDOY", "^GSPC"]
+data = yf.download(tickers, start="2010-01-01", end="2025-11-15", progress=False)
+if isinstance(data.columns, pd.MultiIndex):
+    data = data["Close"]
+data.columns = tickers
+data.to_csv(data_dir / "GameStocks_SP500_2010_2025.csv", index=True)
+print(f"✅ Saved: GameStocks_SP500_2010_2025.csv\n")
+
+# ============================================================
+# EA
+# ============================================================
+print("Downloading EA...")
+df = yf.download("EA", start="2010-01-01", end="2025-11-15", progress=False)
+df = df[["Close"]].rename(columns={"Close": "Adj Close"})
+df.to_csv(data_dir / "EA_2010_2025.csv", index=True)
+print(f"✅ Saved: EA_2010_2025.csv\n")
+
+# ============================================================
+# VIX
+# ============================================================
+print("Downloading VIX...")
+df = yf.download("^VIX", start="2010-01-01", end="2025-11-15", progress=False)
+if isinstance(df.columns, pd.MultiIndex):
+    df = df["Close"]
+else:
+    df = df[["Close"]]
+df = df.rename(columns={"Close": "VIX"})
+df.to_csv(data_dir / "VIX_2010_2025.csv", index=True)
+print(f"✅ Saved: VIX_2010_2025.csv\n")
+
+print("🎉 All data downloaded to data/raw/")
+
+#build_prices.py
 """
 Build merged stock prices from multiple sources.
 """
@@ -71,24 +130,7 @@ def build_prices():
     print(f"   Shape: {prices_long.shape}")
     print(f"   Columns: {prices_long.columns.tolist()}")
 
-    # Convert from long to wide format
-    prices_wide = prices.pivot_table(
-        index="date",
-        columns="ticker",
-        values="adj_close",
-        aggfunc="first"  # In case of duplicates, take the first value
-    )
-    
-    # Reset index to make date a column
-    prices_wide = prices_wide.reset_index()
-    
-    # Sort by date
-    prices_wide = prices_wide.sort_values("date").reset_index(drop=True)
-
-    DATA_PROCESSED.mkdir(parents=True, exist_ok=True)
-    out = DATA_PROCESSED / "prices_wide.csv"
-    prices_wide.to_csv(out, index=False)
-    print(f"✅ Saved: {out}")
+   
 
 
 if __name__ == "__main__":
