@@ -41,18 +41,45 @@ def load_data():
 def prepare_features(df):
     """Prepare features and target"""
     target = "impact_label_num"
-    
-    X = df.drop(columns=["impact_label", "impact_label_num"])
+
+    # ✅ Use the SAME feature list as in gta6_prediction.py
+    feature_cols = [
+        "is_rockstar",
+        "sentiment_negative",
+        "market_return",
+        "franchise_gta",
+        "vix_level",
+        "vix_30d_mean",
+        "event_type_marketing",
+        "event_type_negative",
+        "event_type_release",
+        "vix_regime_medium",
+        "vix_regime_high",
+    ]
+
+    missing = [c for c in feature_cols if c not in df.columns]
+    if missing:
+        raise KeyError(f"Missing expected feature columns in ml_dataset: {missing}")
+
+    X = df[feature_cols].copy()
     y = df[target]
-    
-    print(f"Feature matrix X shape: {X.shape}")
-    print(f"Target y shape: {y.shape}\n")
-    
+
+    print(f"Feature matrix X shape (before NaN drop): {X.shape}")
+    print(f"Target y shape (before NaN drop): {y.shape}")
+
+    # DROP NaN ROWS AND RESET INDEX
+    mask = X.isna().any(axis=1) | y.isna()
+    X = X[~mask].reset_index(drop=True)
+    y = y[~mask].reset_index(drop=True)
+
+    print(f"Feature matrix X shape (after NaN drop): {X.shape}")
+    print(f"Target y shape (after NaN drop): {y.shape}\n")
+
     return X, y
 
 
 def split_data(X, y):
-    """Split data into train/test"""
+    """Split data into train/test with stratification."""
     X_train, X_test, y_train, y_test = train_test_split(
         X, y,
         test_size=0.25,
@@ -60,6 +87,12 @@ def split_data(X, y):
         stratify=y
     )
     
+    # ✅ Reset indices after split to avoid misalignment
+    X_train = X_train.reset_index(drop=True)
+    X_test = X_test.reset_index(drop=True)
+    y_train = y_train.reset_index(drop=True)
+    y_test = y_test.reset_index(drop=True)
+
     print(f"Train size: {X_train.shape}")
     print(f"Test size: {X_test.shape}\n")
     
@@ -120,7 +153,12 @@ def train_logistic_regression(X_train, X_test, y_train, y_test):
 def train_random_forest(X_train, X_test, y_train, y_test):
     """Train Random Forest"""
     print("\n🤖 Training Random Forest...")
-    rf = RandomForestClassifier(n_estimators=300, max_depth=None, random_state=42)
+    rf = RandomForestClassifier(
+        n_estimators=300,
+        max_depth=6,
+        min_samples_leaf=2,
+        random_state=42
+    )
     rf.fit(X_train, y_train)
     acc, f1 = evaluate_model(rf, X_test, y_test, name="Random Forest")
     return rf, acc, f1

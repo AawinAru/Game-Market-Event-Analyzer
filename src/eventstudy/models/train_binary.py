@@ -21,6 +21,9 @@ from sklearn.metrics import (
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.neural_network import MLPClassifier
+from sklearn.pipeline import Pipeline
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler
 
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -55,7 +58,18 @@ def load_data():
 def prepare_features_binary(df: pd.DataFrame):
     """
     Prepare features X and binary target y = impact_high.
-    We drop the multiclass labels to avoid accidental leakage.
+    Use the SAME feature set as the multiclass models / GTA6 scenarios:
+      - is_rockstar
+      - sentiment_negative
+      - market_return
+      - franchise_gta
+      - vix_level
+      - vix_30d_mean
+      - event_type_marketing
+      - event_type_negative
+      - event_type_release
+      - vix_regime_medium
+      - vix_regime_high
     """
     if "impact_high" not in df.columns:
         raise KeyError(
@@ -65,18 +79,41 @@ def prepare_features_binary(df: pd.DataFrame):
 
     target = "impact_high"
 
-    # Drop all label-related columns from features
-    drop_cols = [c for c in ["impact_label", "impact_label_num", "impact_high"] if c in df.columns]
-    X = df.drop(columns=drop_cols)
+    feature_cols = [
+        "is_rockstar",
+        "sentiment_negative",
+        "market_return",
+        "franchise_gta",
+        "vix_level",
+        "vix_30d_mean",
+        "event_type_marketing",
+        "event_type_negative",
+        "event_type_release",
+        "vix_regime_medium",
+        "vix_regime_high",
+    ]
+
+    missing = [c for c in feature_cols if c not in df.columns]
+    if missing:
+        raise KeyError(f"Missing expected feature columns in ml_dataset: {missing}")
+
+    X = df[feature_cols].copy()
     y = df[target].astype(int)
 
-    print(f"Feature matrix X shape: {X.shape}")
-    print(f"Target y shape: {y.shape}")
+    print(f"Feature matrix X shape (before NaN drop): {X.shape}")
+    print(f"Target y shape (before NaN drop): {y.shape}")
+
+    # still drop rows with NaNs (you already saw 152 → 133)
+    mask = X.isna().any(axis=1) | y.isna()
+    X = X[~mask].reset_index(drop=True)
+    y = y[~mask].reset_index(drop=True)
+
+    print(f"Feature matrix X shape (after NaN drop): {X.shape}")
+    print(f"Target y shape (after NaN drop): {y.shape}")
     print("\nBinary target distribution (impact_high):")
     print(y.value_counts().rename({0: "Not high", 1: "High"}), "\n")
 
     return X, y
-
 
 def split_data(X, y):
     """Split data into train/test with stratification."""
@@ -87,6 +124,12 @@ def split_data(X, y):
         random_state=42,
         stratify=y,
     )
+
+    # ✅ Reset indices after split to avoid misalignment
+    X_train = X_train.reset_index(drop=True)
+    X_test = X_test.reset_index(drop=True)
+    y_train = y_train.reset_index(drop=True)
+    y_test = y_test.reset_index(drop=True)
 
     print(f"Train size: {X_train.shape}")
     print(f"Test size:  {X_test.shape}\n")
@@ -193,54 +236,87 @@ def cross_validate_model(model, X, y, name="Model"):
 # =====================================================================
 
 def train_logistic_regression(X_train, X_test, y_train, y_test):
-    print("\n🤖 Training Logistic Regression (binary)...")
-    log_reg = LogisticRegression(max_iter=5000)
-    log_reg.fit(X_train, y_train)
-    acc, f1 = evaluate_model(log_reg, X_test, y_test, name="Logistic Regression (Binary)")
-    return log_reg, acc, f1
+    """Train Logistic Regression with imputation for NaN values"""
+    
+    print("🤖 Training Logistic Regression (binary)...")
+    
+    # ✅ CREATE PIPELINE WITH IMPUTATION
+    pipeline = Pipeline([
+        ('imputer', SimpleImputer(strategy='mean')),
+        ('scaler', StandardScaler()),
+        ('model', LogisticRegression(max_iter=1000, random_state=42))
+    ])
+    
+    # Fit pipeline
+    pipeline.fit(X_train, y_train)
+    
+    # Evaluate
+    acc, f1 = evaluate_model(pipeline, X_test, y_test, name="Logistic Regression (Binary)")
+    
+    return pipeline, acc, f1
 
 
 def train_random_forest(X_train, X_test, y_train, y_test):
+    """Train Random Forest with imputation for NaN values"""
     print("\n🤖 Training Random Forest (binary)...")
-    rf = RandomForestClassifier(
-        n_estimators=300,
-        max_depth=None,
-        random_state=42,
-    )
-    rf.fit(X_train, y_train)
-    acc, f1 = evaluate_model(rf, X_test, y_test, name="Random Forest (Binary)")
-    return rf, acc, f1
+    
+    pipeline = Pipeline([
+        ('imputer', SimpleImputer(strategy='mean')),
+        ('model', RandomForestClassifier(
+            n_estimators=300,
+            max_depth=6,          # 🔧 limit depth
+            min_samples_leaf=2,   # 🔧 regularization
+            random_state=42
+        ))
+    ])
+    
+    pipeline.fit(X_train, y_train)
+    acc, f1 = evaluate_model(pipeline, X_test, y_test, name="Random Forest (Binary)")
+    
+    return pipeline, acc, f1
 
 
 def train_gradient_boosting(X_train, X_test, y_train, y_test):
+    """Train Gradient Boosting with imputation for NaN values"""
     print("\n🤖 Training Gradient Boosting (binary)...")
-    gb = GradientBoostingClassifier(
-        learning_rate=0.05,
-        n_estimators=300,
-        random_state=42,
-    )
-    gb.fit(X_train, y_train)
-    acc, f1 = evaluate_model(gb, X_test, y_test, name="Gradient Boosting (Binary)")
-    return gb, acc, f1
+    
+    # ✅ CREATE PIPELINE WITH IMPUTATION
+    pipeline = Pipeline([
+        ('imputer', SimpleImputer(strategy='mean')),
+        ('model', GradientBoostingClassifier(learning_rate=0.05, n_estimators=300, random_state=42))
+    ])
+    
+    pipeline.fit(X_train, y_train)
+    acc, f1 = evaluate_model(pipeline, X_test, y_test, name="Gradient Boosting (Binary)")
+    
+    return pipeline, acc, f1
 
 
 def train_neural_network(X_train, X_test, y_train, y_test):
+    """Train Neural Network with imputation for NaN values"""
     print("\n🤖 Training Neural Network (MLP, binary)...")
-    # ✅ Increased max_iter + early stopping
-    mlp = MLPClassifier(
-        hidden_layer_sizes=(64, 32),
-        activation="relu",
-        solver="adam",
-        max_iter=2000,  # ✅ Changed from 500
-        random_state=42,
-        early_stopping=True,  # ✅ New: stop if validation doesn't improve
-        validation_fraction=0.1,  # ✅ New: use 10% for validation
-        n_iter_no_change=50,  # ✅ New: stop after 50 iters with no improvement
-        verbose=0  # Set to 1 to see training progress
-    )
-    mlp.fit(X_train, y_train)
-    acc, f1 = evaluate_model(mlp, X_test, y_test, name="Neural Network (MLP, Binary)")
-    return mlp, acc, f1
+    
+    # ✅ CREATE PIPELINE WITH IMPUTATION
+    pipeline = Pipeline([
+        ('imputer', SimpleImputer(strategy='mean')),
+        ('scaler', StandardScaler()),
+        ('model', MLPClassifier(
+            hidden_layer_sizes=(64, 32),
+            activation="relu",
+            solver="adam",
+            max_iter=2000,
+            random_state=42,
+            early_stopping=True,
+            validation_fraction=0.1,
+            n_iter_no_change=50,
+            verbose=0
+        ))
+    ])
+    
+    pipeline.fit(X_train, y_train)
+    acc, f1 = evaluate_model(pipeline, X_test, y_test, name="Neural Network (MLP, Binary)")
+    
+    return pipeline, acc, f1
 
 
 def compare_models(models, X_test, y_test):
@@ -326,30 +402,7 @@ def main():
 
     cv_results = []
     for name, model in models.items():
-        if "Logistic" in name:
-            m = LogisticRegression(max_iter=5000)
-        elif "Random Forest" in name:
-            m = RandomForestClassifier(n_estimators=300, max_depth=None, random_state=42)
-        elif "Gradient Boosting" in name:
-            m = GradientBoostingClassifier(
-                learning_rate=0.05,
-                n_estimators=300,
-                random_state=42,
-            )
-        else:  # MLP
-            m = MLPClassifier(
-                hidden_layer_sizes=(64, 32),
-                activation="relu",
-                solver="adam",
-                max_iter=2000,
-                random_state=42,
-                early_stopping=True,
-                validation_fraction=0.1,
-                n_iter_no_change=50,
-                verbose=0
-            )
-
-        cv_acc, cv_f1 = cross_validate_model(m, X, y, name=name)
+        cv_acc, cv_f1 = cross_validate_model(model, X, y, name=name)
         cv_results.append(
             {
                 "Model": name,
@@ -363,7 +416,7 @@ def main():
     print("\n📄 Binary cross-validation summary:")
     print(cv_df.to_string(index=False))
 
-    # 6) ✅ SAVE CSVs TO RESULTS FOLDER (PNGs already saved above)
+    # 6) ✅ SAVE CSVs TO RESULTS FOLDER
     
     # Save test results
     test_csv = RESULTS_BINARY / "binary_test_results.csv"

@@ -1,0 +1,1258 @@
+
+================================================================================
+🎮 GAME MARKET EVENT ANALYZER – COMPLETE PIPELINE
+================================================================================
+⏰ Started at: 2025-12-02 12:44:43
+
+
+================================================================================
+📥 STEP 0: DATA LOADING & DOWNLOAD
+================================================================================
+BASE_DIR: /files/capstone_project/game-market-event-analyzer
+RAW_DATA: /files/capstone_project/game-market-event-analyzer/data/raw
+PROCESSED_DATA: /files/capstone_project/game-market-event-analyzer/data/processed
+
+▶️  Running data_loader.py...
+
+================================================================================
+📥 DATA LOADER - DOWNLOAD & BUILD PRICES
+================================================================================
+
+🌐 STEP 1: DOWNLOAD RAW DATA
+--------------------------------------------------------------------------------
+📊 Downloading TTWO...
+   ✅ Saved: TTWO_2010_2025.csv
+
+📊 Downloading game stocks...
+   ✅ Saved: GameStocks_SP500_2010_2025.csv
+
+📊 Downloading EA...
+   ✅ Saved: EA_2010_2025.csv
+
+📊 Downloading VIX...
+   ✅ Saved: VIX_2010_2025.csv
+
+🌐 STEP 2: BUILD PRICES
+--------------------------------------------------------------------------------
+🔨 Building prices_long.csv...
+   ✅ Saved: /files/capstone_project/game-market-event-analyzer/data/processed/prices_long.csv
+   Shape: (23958, 3)
+   Tickers: ['ATVI', 'EA', 'NTDOY', 'TTWO', 'UBSFY', '^GSPC']
+   Date range: 2010-01-04 to 2025-11-14
+
+================================================================================
+✅ DATA LOADING COMPLETE
+================================================================================
+📁 All data saved to: /files/capstone_project/game-market-event-analyzer/data/processed
+
+✅ Step 0 complete: Raw data downloaded & prices built
+
+
+================================================================================
+📊 STEP 1: FEATURES ENGINEERING
+================================================================================
+BASE_DIR: /files/capstone_project/game-market-event-analyzer
+DATA_RAW exists: True
+DATA_PROCESSED exists: True
+▶️  Step 1a: compute_returns...
+Project root: /files/capstone_project/game-market-event-analyzer
+Data processed: /files/capstone_project/game-market-event-analyzer/data/processed
+
+✅ Loaded 23958 records
+        date ticker  adj_close
+0 2010-01-04   ATVI  17.663647
+1 2010-01-05   ATVI  18.159981
+2 2010-01-06   ATVI  17.692841
+3 2010-01-07   ATVI  17.556595
+4 2010-01-08   ATVI  17.906948
+
+Unique tickers: ['ATVI' 'EA' 'NTDOY' 'TTWO' 'UBSFY' 'SP500']
+
+✅ Computed daily returns
+        date ticker  adj_close    return
+0 2010-01-04   ATVI  17.663647       NaN
+1 2010-01-05   ATVI  18.159981  0.028099
+2 2010-01-06   ATVI  17.692841 -0.025724
+3 2010-01-07   ATVI  17.556595 -0.007701
+4 2010-01-08   ATVI  17.906948  0.019956
+5 2010-01-11   ATVI  17.780430 -0.007065
+6 2010-01-12   ATVI  16.398483 -0.077723
+7 2010-01-13   ATVI  16.709902  0.018991
+8 2010-01-14   ATVI  16.719639  0.000583
+9 2010-01-15   ATVI  16.573658 -0.008731
+
+✅ Added market returns
+        date ticker  adj_close    return  market_return
+0 2010-01-04   ATVI  17.663647       NaN            NaN
+1 2010-01-05   ATVI  18.159981  0.028099       0.003116
+2 2010-01-06   ATVI  17.692841 -0.025724       0.000546
+3 2010-01-07   ATVI  17.556595 -0.007701       0.004001
+4 2010-01-08   ATVI  17.906948  0.019956       0.002882
+5 2010-01-11   ATVI  17.780430 -0.007065       0.001747
+6 2010-01-12   ATVI  16.398483 -0.077723      -0.009381
+7 2010-01-13   ATVI  16.709902  0.018991       0.008326
+8 2010-01-14   ATVI  16.719639  0.000583       0.002426
+9 2010-01-15   ATVI  16.573658 -0.008731      -0.010823
+
+✅ Saved to: /files/capstone_project/game-market-event-analyzer/data/processed/prices_with_returns.csv
+   Shape: (23958, 5)
+   Columns: ['date', 'ticker', 'adj_close', 'return', 'market_return']
+▶️  Step 1b: merge_event_returns...
+Project root: /files/capstone_project/game-market-event-analyzer
+Data raw: /files/capstone_project/game-market-event-analyzer/data/raw
+Data processed: /files/capstone_project/game-market-event-analyzer/data/processed
+
+✅ Loaded 152 events
+                      event_id  ...                                              notes
+0  TTWO_2011_GTA5_ANNOUNCEMENT  ...  Rockstar announces Grand Theft Auto V with fir...
+1           GTAV_2011_TRAILER1  ...                                   GTA V Trailer #1
+2        GTAV_2012_SCREENSHOTS  ...                             First screenshot batch
+3           GTAV_2012_TRAILER2  ...                                   GTA V Trailer #2
+4              GTAV_2013_DELAY  ...                            Delay to September 2013
+
+[5 rows x 13 columns]
+
+✅ Loaded 23958 price records
+
+✅ Merged events with prices
+                      event_id       date  ...    return market_return
+0  TTWO_2011_GTA5_ANNOUNCEMENT 2011-10-25  ...  0.057679     -0.020045
+1           GTAV_2011_TRAILER1 2011-11-02  ...  0.022891      0.016105
+2        GTAV_2012_SCREENSHOTS 2012-07-12  ... -0.006550     -0.004987
+3           GTAV_2012_TRAILER2 2012-11-14  ... -0.003475     -0.013852
+4              GTAV_2013_DELAY 2013-01-31  ... -0.068147     -0.002563
+
+[5 rows x 16 columns]
+
+✅ Saved to: /files/capstone_project/game-market-event-analyzer/data/processed/events_with_returns.csv
+   Shape: (152, 16)
+   Columns: ['event_id', 'date', 'publisher', 'ticker', 'studio', 'is_rockstar', 'game', 'franchise', 'event_type', 'sentiment', 'impact_expectation_manual', 'source_url', 'notes', 'adj_close', 'return', 'market_return']
+▶️  Step 1c: compute_ar_car...
+Project root: /files/capstone_project/game-market-event-analyzer
+Data processed: /files/capstone_project/game-market-event-analyzer/data/processed
+
+✅ Loaded 23958 price records
+        date ticker  adj_close    return  market_return
+0 2010-01-04   ATVI  17.663647       NaN            NaN
+1 2010-01-05   ATVI  18.159981  0.028099       0.003116
+2 2010-01-06   ATVI  17.692841 -0.025724       0.000546
+3 2010-01-07   ATVI  17.556595 -0.007701       0.004001
+4 2010-01-08   ATVI  17.906948  0.019956       0.002882
+   ATVI: alpha=0.000390, beta=0.826401
+   EA: alpha=0.000390, beta=0.826401
+   NTDOY: alpha=-0.000061, beta=0.644210
+   SP500: alpha=0.000000, beta=1.000000
+   TTWO: alpha=0.000546, beta=0.939354
+   UBSFY: alpha=0.000266, beta=0.636621
+
+✅ Computed Abnormal Returns (AR)
+        date ticker  adj_close  ...  market_return  expected_return        AR
+0 2010-01-04   ATVI  17.663647  ...            NaN              NaN       NaN
+1 2010-01-05   ATVI  18.159981  ...       0.003116         0.002965  0.025134
+2 2010-01-06   ATVI  17.692841  ...       0.000546         0.000841 -0.026565
+3 2010-01-07   ATVI  17.556595  ...       0.004001         0.003697 -0.011397
+4 2010-01-08   ATVI  17.906948  ...       0.002882         0.002772  0.017184
+5 2010-01-11   ATVI  17.780430  ...       0.001747         0.001834 -0.008899
+6 2010-01-12   ATVI  16.398483  ...      -0.009381        -0.007362 -0.070360
+7 2010-01-13   ATVI  16.709902  ...       0.008326         0.007271  0.011720
+8 2010-01-14   ATVI  16.719639  ...       0.002426         0.002395 -0.001813
+9 2010-01-15   ATVI  16.573658  ...      -0.010823        -0.008554 -0.000177
+
+[10 rows x 7 columns]
+
+✅ Saved to: /files/capstone_project/game-market-event-analyzer/data/processed/prices_with_ar.csv
+   Shape: (23958, 7)
+   Columns: ['date', 'ticker', 'adj_close', 'return', 'market_return', 'expected_return', 'AR']
+▶️  Step 1d: car_into_labels...
+Project root: /files/capstone_project/game-market-event-analyzer
+Data processed: /files/capstone_project/game-market-event-analyzer/data/processed
+
+✅ Loaded 152 events
+                      event_id        date  ...    return market_return
+0  TTWO_2011_GTA5_ANNOUNCEMENT  2011-10-25  ...  0.057679     -0.020045
+1           GTAV_2011_TRAILER1  2011-11-02  ...  0.022891      0.016105
+2        GTAV_2012_SCREENSHOTS  2012-07-12  ... -0.006550     -0.004987
+3           GTAV_2012_TRAILER2  2012-11-14  ... -0.003475     -0.013852
+4              GTAV_2013_DELAY  2013-01-31  ... -0.068147     -0.002563
+
+[5 rows x 16 columns]
+
+🔨 Computing CAR windows...
+✅ CAR windows computed
+  ticker       date trading_date  ...   CAR_0_1   CAR_0_3   CAR_0_5
+0   TTWO 2011-10-25   2011-10-25  ...  0.068804  0.095792  0.095792
+1   TTWO 2011-11-02   2011-11-02  ...  0.005652  0.011005 -0.016210
+2   TTWO 2012-07-12   2012-07-12  ... -0.041531 -0.041531 -0.033895
+3   TTWO 2012-11-14   2012-11-14  ...  0.016916  0.037798  0.060788
+4   TTWO 2013-01-31   2013-01-31  ... -0.026151 -0.026151 -0.035325
+
+[5 rows x 8 columns]
+
+✅ Impact labels created
+   Label distribution:
+impact_label
+High      60
+Low       54
+Medium    38
+Name: count, dtype: int64
+
+✅ Saved to: /files/capstone_project/game-market-event-analyzer/data/processed/events_labeled.csv
+   Shape: (152, 25)
+   Columns: ['event_id', 'date', 'publisher', 'ticker', 'studio', 'is_rockstar', 'game', 'franchise', 'event_type', 'sentiment', 'impact_expectation_manual', 'source_url', 'notes', 'adj_close', 'return', 'market_return', 'trading_date', 'AR_event', 'CAR_m1_p1', 'CAR_0_1', 'CAR_0_3', 'CAR_0_5', 'impact_label', 'impact_label_num', 'impact_high']
+✅ Step 1 complete: Features engineered
+
+
+================================================================================
+🎯 STEP 2: BUILD ML DATASET
+================================================================================
+▶️  Running build_ml_dataset...
+Loaded events_labeled.csv with shape: (152, 25)
+Columns: ['event_id', 'date', 'publisher', 'ticker', 'studio', 'is_rockstar', 'game', 'franchise', 'event_type', 'sentiment', 'impact_expectation_manual', 'source_url', 'notes', 'adj_close', 'return', 'market_return', 'trading_date', 'AR_event', 'CAR_m1_p1', 'CAR_0_1', 'CAR_0_3', 'CAR_0_5', 'impact_label', 'impact_label_num', 'impact_high']
+
+📊 Event type mapping:
+Before simplification:
+event_type
+earnings              97
+release               22
+trailer/reveal        12
+major announcement     8
+delay                  7
+controversy            3
+corporate event        2
+leak                   1
+Name: count, dtype: int64
+
+After simplification:
+event_type
+corporate    99
+release      22
+marketing    20
+negative     11
+Name: count, dtype: int64
+📈 Loading VIX from: /files/capstone_project/game-market-event-analyzer/data/raw/VIX_2010_2025.csv
+   VIX columns (raw): ['Date', '^VIX']
+   VIX columns (normalized): ['date', '^vix']
+   Using column '^vix' as VIX level
+
+📈 VIX sample:
+        date  vix_level  vix_30d_mean vix_regime
+0 2010-01-04  20.040001     20.040001       high
+1 2010-01-05  19.350000     19.695001       high
+2 2010-01-06  19.160000     19.516667       high
+3 2010-01-07  19.059999     19.402500     medium
+4 2010-01-08  18.129999     19.148000     medium
+
+🎯 After VIX merge (first rows):
+  trading_date  vix_level  vix_30d_mean vix_regime
+0   2011-10-25  32.220001     35.409000       high
+1   2011-11-02  32.740002     34.637667       high
+2   2012-07-12  18.330000     20.295000     medium
+3   2012-11-14  17.920000     16.773000     medium
+4   2013-01-31  14.280000     14.986000        low
+
+📌 Target distributions:
+impact_label_num:
+impact_label_num
+0    54
+1    38
+2    60
+Name: count, dtype: int64
+
+impact_high:
+impact_high
+0    92
+1    60
+Name: count, dtype: int64
+
+📋 Present feature columns: ['is_rockstar', 'sentiment_negative', 'market_return', 'franchise_gta', 'vix_level', 'vix_30d_mean', 'event_type', 'vix_regime']
+is_rockstar unique values after cleaning: [1 0]
+Categorical columns to encode: ['event_type', 'vix_regime']
+Dropped 0 rows with missing labels.
+
+✅ ML DATASET SUMMARY
+======================================================================
+Feature columns: 11
+Total rows: 152
+
+Label distribution (impact_label_num):
+impact_label_num
+0    54
+1    38
+2    60
+Name: count, dtype: int64
+
+Binary target distribution (impact_high):
+impact_high
+0    92
+1    60
+Name: count, dtype: int64
+
+Feature names:
+   1. is_rockstar
+   2. sentiment_negative
+   3. market_return
+   4. franchise_gta
+   5. vix_level
+   6. vix_30d_mean
+   7. event_type_marketing
+   8. event_type_negative
+   9. event_type_release
+  10. vix_regime_medium
+  11. vix_regime_high
+
+✅ Saved ML dataset to: /files/capstone_project/game-market-event-analyzer/data/processed/ml_dataset.csv
+✅ Step 2 complete: ML dataset built
+
+
+================================================================================
+📈 STEP 3: GTA TRENDS & REGRESSION DATASET
+================================================================================
+▶️  Running trends.py...
+BASE_DIR:       /files/capstone_project/game-market-event-analyzer
+DATA_RAW:       /files/capstone_project/game-market-event-analyzer/data/raw
+DATA_PROCESSED: /files/capstone_project/game-market-event-analyzer/data/processed
+
+🚀 Building regression dataset with GTA-only Google Trends...
+
+🔍 Inspecting events_labeled.csv...
+
+======================================================================
+📊 EVENTS_LABELED.CSV INSPECTION
+======================================================================
+
+Shape: (152, 25)
+
+Columns (25):
+   1. event_id                       | object
+   2. date                           | object
+   3. publisher                      | object
+   4. ticker                         | object
+   5. studio                         | object
+   6. is_rockstar                    | object
+   7. game                           | object
+   8. franchise                      | object
+   9. event_type                     | object
+  10. sentiment                      | object
+  11. impact_expectation_manual      | object
+  12. source_url                     | object
+  13. notes                          | object
+  14. adj_close                      | float64
+  15. return                         | float64
+  16. market_return                  | float64
+  17. trading_date                   | object
+  18. AR_event                       | float64
+  19. CAR_m1_p1                      | float64
+  20. CAR_0_1                        | float64
+  21. CAR_0_3                        | float64
+  22. CAR_0_5                        | float64
+  23. impact_label                   | object
+  24. impact_label_num               | int64
+  25. impact_high                    | int64
+
+First 3 rows:
+                      event_id        date publisher ticker          studio is_rockstar   game franchise          event_type sentiment impact_expectation_manual                                            source_url                                                                 notes  adj_close    return  market_return trading_date  AR_event  CAR_m1_p1   CAR_0_1   CAR_0_3   CAR_0_5 impact_label  impact_label_num  impact_high
+0  TTWO_2011_GTA5_ANNOUNCEMENT  2011-10-25  Take-Two   TTWO  Rockstar Games           1  GTA V       GTA  Major Announcement  positive                    Medium  https://www.rockstargames.com/newswire/article/19161  Rockstar announces Grand Theft Auto V with first teaser information.      15.22  0.057679      -0.020045   2011-10-25  0.075962   0.077457  0.068804  0.095792  0.095792         High                 2            1
+1           GTAV_2011_TRAILER1  2011-11-02  Take-Two   TTWO        Rockstar           1  GTA V       GTA      Trailer/Reveal  positive                    medium                         https://www.rockstargames.com                                                      GTA V Trailer #1      15.64  0.022891       0.016105   2011-11-02  0.007217   0.000302  0.005652  0.011005 -0.016210          Low                 0            0
+2        GTAV_2012_SCREENSHOTS  2012-07-12  Take-Two   TTWO        Rockstar           1  GTA V       GTA      Trailer/Reveal   neutral                       low                         https://www.rockstargames.com                                                First screenshot batch       9.10 -0.006550      -0.004987   2012-07-12 -0.002412  -0.037677 -0.041531 -0.041531 -0.033895         High                 2            1
+
+Data types:
+event_id                      object
+date                          object
+publisher                     object
+ticker                        object
+studio                        object
+is_rockstar                   object
+game                          object
+franchise                     object
+event_type                    object
+sentiment                     object
+impact_expectation_manual     object
+source_url                    object
+notes                         object
+adj_close                    float64
+return                       float64
+market_return                float64
+trading_date                  object
+AR_event                     float64
+CAR_m1_p1                    float64
+CAR_0_1                      float64
+CAR_0_3                      float64
+CAR_0_5                      float64
+impact_label                  object
+impact_label_num               int64
+impact_high                    int64
+dtype: object
+
+Missing values:
+event_id                      0
+date                          0
+publisher                     0
+ticker                        0
+studio                       96
+is_rockstar                   0
+game                         98
+franchise                    97
+event_type                    0
+sentiment                    97
+impact_expectation_manual    97
+source_url                    0
+notes                         0
+adj_close                    19
+return                       19
+market_return                19
+trading_date                  0
+AR_event                     19
+CAR_m1_p1                     0
+CAR_0_1                       0
+CAR_0_3                       0
+CAR_0_5                       0
+impact_label                  0
+impact_label_num              0
+impact_high                   0
+dtype: int64
+
+======================================================================
+
+📂 Using CACHED GTA trends from: /files/capstone_project/game-market-event-analyzer/data/raw/gta_trends.csv
+✅ Loaded 835 rows from cache
+
+📆 Expanding weekly GTA trends to DAILY (forward-fill)...
+✅ GTA daily trends sample:
+        date  trend_gta  ...  trend_rockstar  trend_gta_mean
+0 2010-01-03       45.0  ...            28.0       36.666667
+1 2010-01-04       45.0  ...            28.0       36.666667
+2 2010-01-05       45.0  ...            28.0       36.666667
+3 2010-01-06       45.0  ...            28.0       36.666667
+4 2010-01-07       45.0  ...            28.0       36.666667
+
+[5 rows x 6 columns] 
+
+📥 Loading events_labeled from: /files/capstone_project/game-market-event-analyzer/data/processed/events_labeled.csv
+📋 Available columns (25):
+    1. event_id
+    2. date
+    3. publisher
+    4. ticker
+    5. studio
+    6. is_rockstar
+    7. game
+    8. franchise
+    9. event_type
+   10. sentiment
+   11. impact_expectation_manual
+   12. source_url
+   13. notes
+   14. adj_close
+   15. return
+   16. market_return
+   17. trading_date
+   18. AR_event
+   19. CAR_m1_p1
+   20. CAR_0_1
+   21. CAR_0_3
+   22. CAR_0_5
+   23. impact_label
+   24. impact_label_num
+   25. impact_high
+
+✅ Parsing dates from column: 'date'
+✅ Loaded events_labeled: (152, 26)
+   Date range: 2011-10-25 00:00:00 to 2025-11-06 00:00:00
+
+🔗 Merging GTA trends with events on trading_date...
+✅ Sample of merged regression dataset (with raw trends):
+                      event_id trading_date  ... trend_rockstar  trend_gta_mean
+0  TTWO_2011_GTA5_ANNOUNCEMENT   2011-10-25  ...          42.25       41.250000
+1           GTAV_2011_TRAILER1   2011-11-02  ...          39.25       37.916667
+2        GTAV_2012_SCREENSHOTS   2012-07-12  ...          39.00       43.500000
+3           GTAV_2012_TRAILER2   2012-11-14  ...          38.25       43.583333
+4              GTAV_2013_DELAY   2013-01-31  ...          38.50       37.666667
+
+[5 rows x 10 columns] 
+
+✔ GTA trends restricted to TTWO only — Cleared 101 rows.
+
+✅ Added normalized trend columns (_z)
+
+✅ Saved regression dataset with GTA trends to: /files/capstone_project/game-market-event-analyzer/data/processed/regression_dataset_with_gta_trends.csv
+
+📊 Final regression dataset shape: (152, 37)
+✅ Step 3 complete: Regression dataset with GTA trends
+
+
+================================================================================
+📉 STEP 4: OLS REGRESSION ANALYSIS
+================================================================================
+▶️  Running ols.py...
+BASE_DIR:       /files/capstone_project/game-market-event-analyzer
+DATA_PROCESSED: /files/capstone_project/game-market-event-analyzer/data/processed
+RESULTS_OLS:    /files/capstone_project/game-market-event-analyzer/results/02_ols_regression
+
+📥 Loading regression dataset from: /files/capstone_project/game-market-event-analyzer/data/processed/regression_dataset_with_gta_trends.csv
+✅ Loaded regression dataset: (152, 37)
+   Columns: ['event_id', 'date_x', 'publisher', 'ticker', 'studio', 'is_rockstar', 'game', 'franchise', 'event_type', 'sentiment', 'impact_expectation_manual', 'source_url', 'notes', 'adj_close', 'return', 'market_return', 'trading_date', 'AR_event', 'CAR_m1_p1', 'CAR_0_1', 'CAR_0_3', 'CAR_0_5', 'impact_label', 'impact_label_num', 'impact_high', 'event_date', 'date_y', 'trend_gta', 'trend_gta6', 'trend_gtavi', 'trend_rockstar', 'trend_gta_mean', 'trend_gta_z', 'trend_gta6_z', 'trend_gtavi_z', 'trend_rockstar_z', 'trend_gta_mean_z']
+
+✅ Rows after dropping missing AR_event: 133
+   Sentiment dummies added: ['sent_negative', 'sent_positive']
+   Event-type dummies added: ['evt_delay','evt_earnings','evt_leak','evt_major announcement','evt_release','evt_trailer/reveal']
+
+🔧 Converting X and y to numeric...
+   Dropped 2 rows with NaN in predictors/target
+📐 Final feature matrix: X=(131, 11), y=(131,)
+   Columns: ['const', 'market_return', 'is_rockstar', 'sent_negative', 'sent_positive', 'evt_delay', 'evt_earnings', 'evt_leak', 'evt_major announcement', 'evt_release', 'evt_trailer/reveal']
+
+================================================================================
+MODEL 1 – Baseline (all publishers, no GTA trends)
+================================================================================
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:               AR_event   R-squared:                       0.220
+Model:                            OLS   Adj. R-squared:                  0.162
+Method:                 Least Squares   F-statistic:                     3.788
+Date:                Tue, 02 Dec 2025   Prob (F-statistic):           0.000310
+Time:                        12:44:51   Log-Likelihood:                 311.82
+No. Observations:                 131   AIC:                            -603.6
+Df Residuals:                     121   BIC:                            -574.9
+Df Model:                           9                                         
+Covariance Type:            nonrobust                                         
+==========================================================================================
+                             coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------------------
+const                      0.0057      0.020      0.281      0.779      -0.034       0.046
+market_return             -0.5171      0.187     -2.761      0.007      -0.888      -0.146
+is_rockstar                0.0101      0.005      2.052      0.042       0.000       0.020
+sent_negative             -0.0131      0.015     -0.868      0.387      -0.043       0.017
+sent_positive              0.0018      0.011      0.159      0.874      -0.020       0.024
+evt_delay                 -0.0200      0.017     -1.177      0.241      -0.054       0.014
+evt_earnings              -0.0049      0.020     -0.239      0.812      -0.045       0.035
+evt_leak               -3.465e-15   1.26e-15     -2.760      0.007   -5.95e-15    -9.8e-16
+evt_major announcement     0.0160      0.019      0.842      0.401      -0.022       0.054
+evt_release               -0.0136      0.017     -0.792      0.430      -0.048       0.020
+evt_trailer/reveal        -0.0125      0.019     -0.648      0.518      -0.051       0.026
+==============================================================================
+Omnibus:                       62.376   Durbin-Watson:                   1.790
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              421.492
+Skew:                           1.462   Prob(JB):                     2.98e-92
+Kurtosis:                      11.287   Cond. No.                     3.75e+17
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+[2] The smallest eigenvalue is 1.54e-33. This might indicate that there are
+strong multicollinearity problems or that the design matrix is singular.
+
+
+✅ Rows after dropping missing AR_event: 133
+   Sentiment dummies added: ['sent_negative', 'sent_positive']
+   Event-type dummies added: ['evt_delay','evt_earnings','evt_leak','evt_major announcement','evt_release','evt_trailer/reveal']
+   Using GTA trend z-features: ['trend_gta_z', 'trend_gta6_z', 'trend_gtavi_z', 'trend_rockstar_z']
+
+🔧 Converting X and y to numeric...
+   Dropped 2 rows with NaN in predictors/target
+📐 Final feature matrix: X=(131, 15), y=(131,)
+   Columns: ['const', 'market_return', 'is_rockstar', 'sent_negative', 'sent_positive', 'evt_delay', 'evt_earnings', 'evt_leak', 'evt_major announcement', 'evt_release', 'evt_trailer/reveal', 'trend_gta_z', 'trend_gta6_z', 'trend_gtavi_z', 'trend_rockstar_z']
+
+================================================================================
+MODEL 2 – All publishers + GTA trend z-features
+================================================================================
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:               AR_event   R-squared:                       0.262
+Model:                            OLS   Adj. R-squared:                  0.181
+Method:                 Least Squares   F-statistic:                     3.203
+Date:                Tue, 02 Dec 2025   Prob (F-statistic):           0.000380
+Time:                        12:44:51   Log-Likelihood:                 315.50
+No. Observations:                 131   AIC:                            -603.0
+Df Residuals:                     117   BIC:                            -562.8
+Df Model:                          13                                         
+Covariance Type:            nonrobust                                         
+==========================================================================================
+                             coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------------------
+const                      0.0050      0.020      0.245      0.807      -0.035       0.045
+market_return             -0.5045      0.188     -2.679      0.008      -0.877      -0.132
+is_rockstar                0.0106      0.005      2.163      0.033       0.001       0.020
+sent_negative             -0.0125      0.015     -0.814      0.417      -0.043       0.018
+sent_positive              0.0022      0.011      0.195      0.846      -0.021       0.025
+evt_delay                 -0.0201      0.017     -1.172      0.244      -0.054       0.014
+evt_earnings              -0.0041      0.020     -0.201      0.841      -0.045       0.036
+evt_leak               -3.435e-15   1.28e-15     -2.674      0.009   -5.98e-15   -8.91e-16
+evt_major announcement     0.0168      0.019      0.893      0.374      -0.020       0.054
+evt_release               -0.0137      0.017     -0.808      0.421      -0.047       0.020
+evt_trailer/reveal        -0.0140      0.019     -0.725      0.470      -0.052       0.024
+trend_gta_z                0.0019      0.004      0.500      0.618      -0.006       0.009
+trend_gta6_z              -0.0054      0.003     -1.538      0.127      -0.012       0.002
+trend_gtavi_z              0.0037      0.004      1.055      0.294      -0.003       0.011
+trend_rockstar_z           0.0057      0.004      1.572      0.119      -0.001       0.013
+==============================================================================
+Omnibus:                       55.922   Durbin-Watson:                   1.801
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              276.354
+Skew:                           1.395   Prob(JB):                     9.78e-61
+Kurtosis:                       9.546   Cond. No.                     4.76e+16
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+[2] The smallest eigenvalue is 9.55e-32. This might indicate that there are
+strong multicollinearity problems or that the design matrix is singular.
+
+
+🔎 TTWO-only subset: 51 rows (was 152)
+✅ Rows after dropping missing AR_event: 50
+   Sentiment dummies added: ['sent_negative', 'sent_positive']
+   Event-type dummies added: ['evt_delay','evt_earnings','evt_leak','evt_major announcement','evt_release','evt_trailer/reveal']
+   Using GTA trend z-features: ['trend_gta_z', 'trend_gta6_z', 'trend_gtavi_z', 'trend_rockstar_z']
+
+🔧 Converting X and y to numeric...
+   Dropped 2 rows with NaN in predictors/target
+📐 Final feature matrix: X=(48, 14), y=(48,)
+   Columns: ['market_return', 'is_rockstar', 'sent_negative', 'sent_positive', 'evt_delay', 'evt_earnings', 'evt_leak', 'evt_major announcement', 'evt_release', 'evt_trailer/reveal', 'trend_gta_z', 'trend_gta6_z', 'trend_gtavi_z', 'trend_rockstar_z']
+
+================================================================================
+MODEL 3 – TTWO-only + GTA trend z-features
+================================================================================
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:               AR_event   R-squared:                       0.319
+Model:                            OLS   Adj. R-squared:                  0.135
+Method:                 Least Squares   F-statistic:                     1.736
+Date:                Tue, 02 Dec 2025   Prob (F-statistic):              0.109
+Time:                        12:44:51   Log-Likelihood:                 103.36
+No. Observations:                  48   AIC:                            -184.7
+Df Residuals:                      37   BIC:                            -164.1
+Df Model:                          10                                         
+Covariance Type:            nonrobust                                         
+==========================================================================================
+                             coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------------------
+market_return             -0.9938      0.543     -1.830      0.075      -2.094       0.107
+is_rockstar                0.0061      0.010      0.593      0.557      -0.015       0.027
+sent_negative             -0.0135      0.009     -1.508      0.140      -0.032       0.005
+sent_positive              0.0068      0.021      0.317      0.753      -0.037       0.050
+evt_delay                 -0.0135      0.009     -1.508      0.140      -0.032       0.005
+evt_earnings               0.0076      0.012      0.645      0.523      -0.016       0.032
+evt_leak                5.491e-17   3.05e-17      1.798      0.080   -6.98e-18    1.17e-16
+evt_major announcement     0.0321      0.014      2.276      0.029       0.004       0.061
+evt_release               -0.0117      0.018     -0.648      0.521      -0.048       0.025
+evt_trailer/reveal        -0.0084      0.012     -0.705      0.485      -0.033       0.016
+trend_gta_z                0.0029      0.006      0.514      0.610      -0.008       0.014
+trend_gta6_z              -0.0050      0.005     -0.998      0.325      -0.015       0.005
+trend_gtavi_z              0.0035      0.005      0.694      0.492      -0.007       0.014
+trend_rockstar_z           0.0059      0.005      1.165      0.251      -0.004       0.016
+==============================================================================
+Omnibus:                       24.374   Durbin-Watson:                   1.610
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):               49.848
+Skew:                           1.417   Prob(JB):                     1.50e-11
+Kurtosis:                       7.111   Cond. No.                     3.25e+16
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+[2] The smallest eigenvalue is 6.64e-32. This might indicate that there are
+strong multicollinearity problems or that the design matrix is singular.
+
+
+💾 Merging all OLS summaries into: /files/capstone_project/game-market-event-analyzer/results/02_ols_regression/ols_regression_results.txt
+✅ All summaries saved to: /files/capstone_project/game-market-event-analyzer/results/02_ols_regression/ols_regression_results.txt
+✅ All model coefficients saved to: /files/capstone_project/game-market-event-analyzer/results/02_ols_regression/ols_regression_coeffs.csv
+
+📊 Scenario predictions (Model 2 – AR_event):
+          market_scenario trend_scenario  pred_AR_event
+scenario                                               
+bear_low             bear            low       0.038739
+bear_mid             bear            mid       0.044631
+bear_high            bear           high       0.050522
+base_low             base            low       0.028650
+base_mid             base            mid       0.034541
+base_high            base           high       0.040432
+bull_low             bull            low       0.018560
+bull_mid             bull            mid       0.024452
+bull_high            bull           high       0.030343
+✅ Scenario predictions saved to: /files/capstone_project/game-market-event-analyzer/results/02_ols_regression/gta_scenario_predictions.csv
+
+🎉 OLS regression + scenarios completed cleanly.
+📁 All results saved to: /files/capstone_project/game-market-event-analyzer/results/02_ols_regression
+
+✅ Step 4 complete: OLS regression results saved
+
+
+================================================================================
+🤖 STEP 5: BINARY CLASSIFICATION MODELS
+================================================================================
+▶️  Running train_binary.py...
+BASE_DIR: /files/capstone_project/game-market-event-analyzer
+DATA_PROCESSED: /files/capstone_project/game-market-event-analyzer/data/processed
+RESULTS_BINARY: /files/capstone_project/game-market-event-analyzer/results/03_binary_classification
+
+✅ Loaded ml_dataset.csv: (152, 14)
+   Columns: ['is_rockstar', 'sentiment_negative', 'market_return', 'franchise_gta', 'vix_level', 'vix_30d_mean', 'impact_label', 'impact_label_num', 'impact_high', 'event_type_marketing', 'event_type_negative', 'event_type_release', 'vix_regime_medium', 'vix_regime_high']
+
+Feature matrix X shape (before NaN drop): (152, 11)
+Target y shape (before NaN drop): (152,)
+Feature matrix X shape (after NaN drop): (133, 11)
+Target y shape (after NaN drop): (133,)
+
+Binary target distribution (impact_high):
+impact_high
+Not high    73
+High        60
+Name: count, dtype: int64 
+
+Train size: (99, 11)
+Test size:  (34, 11)
+
+🤖 Training Logistic Regression (binary)...
+
+======================================================================
+=== Logistic Regression (Binary) (BINARY: impact_high) ===
+======================================================================
+Accuracy:        0.706
+F1-score (macro): 0.696
+
+Classification Report:
+
+              precision    recall  f1-score   support
+
+    Not high      0.714     0.789     0.750        19
+        High      0.692     0.600     0.643        15
+
+    accuracy                          0.706        34
+   macro avg      0.703     0.695     0.696        34
+weighted avg      0.705     0.706     0.703        34
+
+   📊 Saved PNG: /files/capstone_project/game-market-event-analyzer/results/03_binary_classification/logistic_regression_binary_confusion_matrix.png
+
+
+🤖 Training Random Forest (binary)...
+
+======================================================================
+=== Random Forest (Binary) (BINARY: impact_high) ===
+======================================================================
+Accuracy:        0.765
+F1-score (macro): 0.742
+
+Classification Report:
+
+              precision    recall  f1-score   support
+
+    Not high      0.720     0.947     0.818        19
+        High      0.889     0.533     0.667        15
+
+    accuracy                          0.765        34
+   macro avg      0.804     0.740     0.742        34
+weighted avg      0.795     0.765     0.751        34
+
+   📊 Saved PNG: /files/capstone_project/game-market-event-analyzer/results/03_binary_classification/random_forest_binary_confusion_matrix.png
+
+
+🤖 Training Gradient Boosting (binary)...
+
+======================================================================
+=== Gradient Boosting (Binary) (BINARY: impact_high) ===
+======================================================================
+Accuracy:        0.735
+F1-score (macro): 0.715
+
+Classification Report:
+
+              precision    recall  f1-score   support
+
+    Not high      0.708     0.895     0.791        19
+        High      0.800     0.533     0.640        15
+
+    accuracy                          0.735        34
+   macro avg      0.754     0.714     0.715        34
+weighted avg      0.749     0.735     0.724        34
+
+   📊 Saved PNG: /files/capstone_project/game-market-event-analyzer/results/03_binary_classification/gradient_boosting_binary_confusion_matrix.png
+
+
+🤖 Training Neural Network (MLP, binary)...
+
+======================================================================
+=== Neural Network (MLP, Binary) (BINARY: impact_high) ===
+======================================================================
+Accuracy:        0.618
+F1-score (macro): 0.601
+
+Classification Report:
+
+              precision    recall  f1-score   support
+
+    Not high      0.636     0.737     0.683        19
+        High      0.583     0.467     0.519        15
+
+    accuracy                          0.618        34
+   macro avg      0.610     0.602     0.601        34
+weighted avg      0.613     0.618     0.610        34
+
+   📊 Saved PNG: /files/capstone_project/game-market-event-analyzer/results/03_binary_classification/neural_network_mlp,_binary_confusion_matrix.png
+
+
+======================================================================
+📊 MODEL COMPARISON – BINARY (impact_high)
+======================================================================
+                       Model  Accuracy  F1_macro
+Logistic Regression (Binary)  0.705882  0.696429
+      Random Forest (Binary)  0.764706  0.742424
+  Gradient Boosting (Binary)  0.735294  0.715349
+Neural Network (MLP, Binary)  0.617647  0.600723
+   📊 Saved PNG: /files/capstone_project/game-market-event-analyzer/results/03_binary_classification/binary_model_comparison.png
+
+
+======================================================================
+🔍 OVERFITTING CHECK (BINARY): Logistic Regression (Binary)
+======================================================================
+Train Accuracy: 0.707
+Test  Accuracy: 0.706
+Gap (train - test): 0.001
+✅ Good generalization (gap ≤ 0.10)
+
+======================================================================
+🔍 OVERFITTING CHECK (BINARY): Random Forest (Binary)
+======================================================================
+Train Accuracy: 0.939
+Test  Accuracy: 0.765
+Gap (train - test): 0.175
+⚠️  WARNING: Possible overfitting (gap > 0.10)
+
+======================================================================
+🔍 OVERFITTING CHECK (BINARY): Gradient Boosting (Binary)
+======================================================================
+Train Accuracy: 0.980
+Test  Accuracy: 0.735
+Gap (train - test): 0.245
+⚠️  WARNING: Possible overfitting (gap > 0.10)
+
+======================================================================
+🔍 OVERFITTING CHECK (BINARY): Neural Network (MLP, Binary)
+======================================================================
+Train Accuracy: 0.808
+Test  Accuracy: 0.618
+Gap (train - test): 0.190
+⚠️  WARNING: Possible overfitting (gap > 0.10)
+
+======================================================================
+🔁 5-FOLD STRATIFIED CROSS-VALIDATION – BINARY
+======================================================================
+
+📊 Logistic Regression (Binary) – 5-fold CV (BINARY):
+  Accuracy: 0.615 ± 0.092
+  F1-macro: 0.604 ± 0.095
+
+📊 Random Forest (Binary) – 5-fold CV (BINARY):
+  Accuracy: 0.630 ± 0.062
+  F1-macro: 0.620 ± 0.063
+
+📊 Gradient Boosting (Binary) – 5-fold CV (BINARY):
+  Accuracy: 0.562 ± 0.104
+  F1-macro: 0.559 ± 0.103
+
+📊 Neural Network (MLP, Binary) – 5-fold CV (BINARY):
+  Accuracy: 0.578 ± 0.105
+  F1-macro: 0.539 ± 0.127
+
+📄 Binary cross-validation summary:
+                       Model  CV_Accuracy_mean  CV_F1_macro_mean
+Logistic Regression (Binary)          0.615385          0.604490
+      Random Forest (Binary)          0.630484          0.619580
+  Gradient Boosting (Binary)          0.562393          0.559484
+Neural Network (MLP, Binary)          0.577778          0.539052
+✅ Test results saved to: /files/capstone_project/game-market-event-analyzer/results/03_binary_classification/binary_test_results.csv
+✅ CV results saved to: /files/capstone_project/game-market-event-analyzer/results/03_binary_classification/binary_cv_results.csv
+
+======================================================================
+✅ BINARY CLASSIFICATION COMPLETE
+======================================================================
+📁 All results saved to: /files/capstone_project/game-market-event-analyzer/results/03_binary_classification
+======================================================================
+
+✅ Step 5 complete: Binary classification results saved
+
+
+================================================================================
+🎯 STEP 6: MULTICLASS CLASSIFICATION MODELS
+================================================================================
+▶️  Running train_classification.py...
+BASE_DIR: /files/capstone_project/game-market-event-analyzer
+DATA_PROCESSED: /files/capstone_project/game-market-event-analyzer/data/processed
+RESULTS_MULTICLASS: /files/capstone_project/game-market-event-analyzer/results/04_multiclass_classification
+
+✅ Loaded ml_dataset.csv: (152, 14)
+   Columns: ['is_rockstar', 'sentiment_negative', 'market_return', 'franchise_gta', 'vix_level', 'vix_30d_mean', 'impact_label', 'impact_label_num', 'impact_high', 'event_type_marketing', 'event_type_negative', 'event_type_release', 'vix_regime_medium', 'vix_regime_high']
+
+Feature matrix X shape (before NaN drop): (152, 11)
+Target y shape (before NaN drop): (152,)
+Feature matrix X shape (after NaN drop): (133, 11)
+Target y shape (after NaN drop): (133,)
+
+Train size: (99, 11)
+Test size: (34, 11)
+
+
+🤖 Training Logistic Regression...
+
+======================================================================
+=== Logistic Regression ===
+======================================================================
+Accuracy: 0.5
+F1-score (macro): 0.378
+
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.50      0.22      0.31         9
+           1       0.25      0.10      0.14        10
+           2       0.54      0.93      0.68        15
+
+    accuracy                           0.50        34
+   macro avg       0.43      0.42      0.38        34
+weighted avg       0.44      0.50      0.42        34
+
+   📊 Plot saved to: /files/capstone_project/game-market-event-analyzer/results/04_multiclass_classification/logistic_regression_confusion_matrix.png
+
+🤖 Training Random Forest...
+
+======================================================================
+=== Random Forest ===
+======================================================================
+Accuracy: 0.5
+F1-score (macro): 0.411
+
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.67      0.22      0.33         9
+           1       0.33      0.20      0.25        10
+           2       0.52      0.87      0.65        15
+
+    accuracy                           0.50        34
+   macro avg       0.51      0.43      0.41        34
+weighted avg       0.50      0.50      0.45        34
+
+   📊 Plot saved to: /files/capstone_project/game-market-event-analyzer/results/04_multiclass_classification/random_forest_confusion_matrix.png
+
+🤖 Training Gradient Boosting...
+
+======================================================================
+=== Gradient Boosting ===
+======================================================================
+Accuracy: 0.382
+F1-score (macro): 0.353
+
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.25      0.22      0.24         9
+           1       0.43      0.30      0.35        10
+           2       0.42      0.53      0.47        15
+
+    accuracy                           0.38        34
+   macro avg       0.37      0.35      0.35        34
+weighted avg       0.38      0.38      0.37        34
+
+   📊 Plot saved to: /files/capstone_project/game-market-event-analyzer/results/04_multiclass_classification/gradient_boosting_confusion_matrix.png
+
+🤖 Training Neural Network (MLP)...
+
+======================================================================
+=== Neural Network (MLP) ===
+======================================================================
+Accuracy: 0.441
+F1-score (macro): 0.204
+
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.00      0.00      0.00         9
+           1       0.00      0.00      0.00        10
+           2       0.44      1.00      0.61        15
+
+    accuracy                           0.44        34
+   macro avg       0.15      0.33      0.20        34
+weighted avg       0.19      0.44      0.27        34
+
+   📊 Plot saved to: /files/capstone_project/game-market-event-analyzer/results/04_multiclass_classification/neural_network_mlp_confusion_matrix.png
+
+======================================================================
+📊 MODEL COMPARISON
+======================================================================
+               Model  Accuracy  F1-score (macro)
+ Logistic Regression  0.500000          0.377825
+       Random Forest  0.500000          0.411111
+   Gradient Boosting  0.382353          0.352941
+Neural Network (MLP)  0.441176          0.204082
+   📊 Plot saved to: /files/capstone_project/game-market-event-analyzer/results/04_multiclass_classification/multiclass_model_comparison.png
+
+======================================================================
+🔍 OVERFITTING CHECK: Logistic Regression
+======================================================================
+Train Accuracy: 0.576
+Test Accuracy:  0.500
+Overfitting risk: 0.076
+✅ Good generalization (gap <= 0.10)
+
+======================================================================
+🔍 OVERFITTING CHECK: Random Forest
+======================================================================
+Train Accuracy: 0.879
+Test Accuracy:  0.500
+Overfitting risk: 0.379
+⚠️  WARNING: Possible overfitting (gap > 0.10)
+
+======================================================================
+🔍 OVERFITTING CHECK: Gradient Boosting
+======================================================================
+Train Accuracy: 0.980
+Test Accuracy:  0.382
+Overfitting risk: 0.597
+⚠️  WARNING: Possible overfitting (gap > 0.10)
+
+======================================================================
+🔍 OVERFITTING CHECK: Neural Network (MLP)
+======================================================================
+Train Accuracy: 0.455
+Test Accuracy:  0.441
+Overfitting risk: 0.013
+✅ Good generalization (gap <= 0.10)
+
+======================================================================
+🔁 5-FOLD STRATIFIED CROSS-VALIDATION (on full dataset)
+======================================================================
+
+📊 Logistic Regression – 5-fold CV:
+  Accuracy: 0.466 ± 0.037
+  F1-macro: 0.386 ± 0.057
+
+📊 Random Forest – 5-fold CV:
+  Accuracy: 0.443 ± 0.096
+  F1-macro: 0.407 ± 0.096
+
+📊 Gradient Boosting – 5-fold CV:
+  Accuracy: 0.428 ± 0.076
+  F1-macro: 0.398 ± 0.064
+
+📊 Neural Network (MLP) – 5-fold CV:
+  Accuracy: 0.421 ± 0.079
+  F1-macro: 0.221 ± 0.062
+
+📄 Cross-validation summary:
+               Model  CV_Accuracy_mean  CV_F1_macro_mean
+ Logistic Regression          0.466097          0.386467
+       Random Forest          0.443020          0.407272
+   Gradient Boosting          0.427920          0.398470
+Neural Network (MLP)          0.420513          0.220564
+
+✅ Test results saved to: /files/capstone_project/game-market-event-analyzer/results/04_multiclass_classification/multiclass_test_results.csv
+✅ CV results saved to: /files/capstone_project/game-market-event-analyzer/results/04_multiclass_classification/multiclass_cv_results.csv
+
+======================================================================
+✅ MULTICLASS CLASSIFICATION COMPLETE
+======================================================================
+📁 All results saved to: /files/capstone_project/game-market-event-analyzer/results/04_multiclass_classification
+======================================================================
+
+✅ Step 6 complete: Multiclass classification results saved
+
+
+================================================================================
+🎮 STEP 7: GTA 6 SCENARIO PREDICTIONS
+================================================================================
+▶️  Running gta6_prediction.py...
+BASE_DIR:       /files/capstone_project/game-market-event-analyzer
+DATA_PROCESSED: /files/capstone_project/game-market-event-analyzer/data/processed
+
+📥 Loaded ML dataset: (152, 14)
+📐 Final X shape: (133, 11), y shape: (133,)
+
+🤖 Training Random Forest (sanity test split)…
+📊 Classification report (hold-out split):
+              precision    recall  f1-score   support
+
+           0       0.67      0.22      0.33         9
+           1       0.33      0.20      0.25        10
+           2       0.52      0.87      0.65        15
+
+    accuracy                           0.50        34
+   macro avg       0.51      0.43      0.41        34
+weighted avg       0.50      0.50      0.45        34
+
+🔁 Re-training Random Forest on FULL dataset...
+✅ GTA6 scenario feature rows:
+   is_rockstar  sentiment_negative  ...  vix_regime_high  scenario
+0          1.0                 0.0  ...              1.0      bear
+1          1.0                 0.0  ...              0.0      base
+2          1.0                 0.0  ...              0.0      bull
+
+[3 rows x 12 columns] 
+
+📊 GTA6 Scenario Predictions:
+  scenario  predicted_class  ... proba_medium  proba_high
+0     bear                2  ...     0.250256    0.584022
+1     base                2  ...     0.344749    0.409058
+2     bull                0  ...     0.230631    0.380453
+
+[3 rows x 6 columns]
+
+✅ Saved to /files/capstone_project/game-market-event-analyzer/results/04_multiclass_classification/gta6_scenario_predictions_ml.csv
+✅ Step 7 complete: GTA 6 predictions saved
+
+
+================================================================================
+🔍 STEP 8: BACKTESTS ON GTA VI EVENTS
+================================================================================
+✅ Loaded ml_dataset: (152, 14)
+   Columns: ['is_rockstar', 'sentiment_negative', 'market_return', 'franchise_gta', 'vix_level', 'vix_30d_mean', 'impact_label', 'impact_label_num', 'impact_high', 'event_type_marketing', 'event_type_negative', 'event_type_release', 'vix_regime_medium', 'vix_regime_high']
+⚠️ Dropping 19 rows with NaNs from ML dataset
+✅ ML training data ready: X=(133, 11), y=(133,)
+✅ Loaded backtest events: (7, 25)
+   Columns: ['event_id', 'date', 'publisher', 'ticker', 'studio', 'is_rockstar', 'game', 'franchise', 'event_type', 'sentiment', 'impact_expectation_manual', 'source_url', 'notes', 'adj_close', 'return', 'market_return', 'trading_date', 'AR_event', 'CAR_m1_p1', 'CAR_0_1', 'CAR_0_3', 'CAR_0_5', 'impact_label', 'impact_label_num', 'impact_high']
+📈 Loading VIX from: /files/capstone_project/game-market-event-analyzer/data/raw/VIX_2010_2025.csv
+📈 VIX sample:
+         date  vix_level  vix_30d_mean vix_regime
+0 2010-01-04  20.040001     20.040001       high
+1 2010-01-05  19.350000     19.695001       high
+2 2010-01-06  19.160000     19.516667       high
+3 2010-01-07  19.059999     19.402500     medium
+4 2010-01-08  18.129999     19.148000     medium
+✅ Backtest features ready: X=(7, 11), y=(7,)
+
+🔍 NaNs per feature in backtest X:
+market_return    1
+dtype: int64
+
+======================================================================
+🎯 GTA6 BACKTEST – GRADIENT BOOSTING (MULTICLASS)
+======================================================================
+                          event_id trading_date  ...  true_label_str  pred_label_str
+0  TTWO_2022_GTA6_DEV-ANNOUNCEMENT   2022-02-04  ...            High            High
+1                   GTA6_2022_LEAK   2022-09-18  ...             Low            High
+2          TTWO_2023_GTA6_TRAILER1   2023-12-05  ...             Low             Low
+3                 GTA6_2024_KEYART   2024-05-16  ...             Low             Low
+4            TTWO_2025_GTA6_DELAY1   2025-05-02  ...            High            High
+5          TTWO_2025_GTA6_TRAILER2   2025-05-06  ...            High            High
+6            TTWO_2025_GTA6_DELAY2   2025-11-06  ...            High            High
+
+[7 rows x 9 columns]
+
+✅ Saved ML backtest results to: /files/capstone_project/game-market-event-analyzer/results/05_summary/gta6_backtest_ml_gradient_boosting.csv
+
+
+📐 Loaded Model 2 coefficients:
+parameter
+const                     4.988029e-03
+evt_delay                -2.008587e-02
+evt_earnings             -4.110320e-03
+evt_leak                 -3.434842e-15
+evt_major announcement    1.675465e-02
+evt_release              -1.370269e-02
+evt_trailer/reveal       -1.397789e-02
+is_rockstar               1.055362e-02
+market_return            -5.044760e-01
+sent_negative            -1.246692e-02
+sent_positive             2.244739e-03
+trend_gta6_z             -5.363410e-03
+trend_gta_z               1.878397e-03
+trend_gtavi_z             3.718942e-03
+trend_rockstar_z          5.657251e-03
+Name: model2_all_trends, dtype: float64
+
+✅ Found 5 GTA6 events in regression dataset
+
+🧱 Design matrix X for backtest (first rows):
+    const  evt_delay  ...  trend_gtavi_z  trend_rockstar_z
+44    1.0        0.0  ...       0.986613         -0.564475
+54    1.0        0.0  ...       1.783650          0.405915
+56    1.0        1.0  ...      -0.018346          0.046511
+57    1.0        0.0  ...      -0.330230          0.585616
+58    1.0        1.0  ...       0.085615          1.160662
+
+[5 rows x 15 columns]
+
+======================================================================
+📉 GTA6 BACKTEST – OLS MODEL 2 (AR_event)
+======================================================================
+                   event_id  event_date  ... AR_event_pred     error
+44           GTA6_2022_LEAK  2022-09-18  ...           NaN       NaN
+54  TTWO_2023_GTA6_TRAILER1  2023-12-05  ...      0.016041  0.021130
+56    TTWO_2025_GTA6_DELAY1  2025-05-02  ...     -0.029730  0.051282
+57  TTWO_2025_GTA6_TRAILER2  2025-05-06  ...      0.012221 -0.023396
+58    TTWO_2025_GTA6_DELAY2  2025-11-06  ...     -0.002245 -0.002936
+
+[5 rows x 7 columns]
+
+✅ Saved OLS backtest results to: /files/capstone_project/game-market-event-analyzer/results/05_summary/gta6_backtest_ols_model2.csv
+
+✅ Step 8 complete: Backtest results saved
+
+
+================================================================================
+✅ PIPELINE COMPLETED SUCCESSFULLY
+================================================================================
+
+📁 RESULTS DIRECTORY STRUCTURE:
+
+   /files/capstone_project/game-market-event-analyzer/results/
+   ├── 00_data_loading/
+   ├── 01_trends_analysis/
+   ├── 02_ols_regression/
+   │   ├── ols_regression_results.txt
+   │   ├── ols_regression_coeffs.csv
+   │   └── gta_scenario_predictions.csv
+   ├── 03_binary_classification/
+   │   ├── binary_test_results.csv
+   │   ├── binary_cv_results.csv
+   │   ├── binary_model_comparison.png
+   │   └── *_confusion_matrix.png
+   ├── 04_multiclass_classification/
+   │   ├── multiclass_test_results.csv
+   │   ├── multiclass_cv_results.csv
+   │   ├── gta6_scenario_predictions_ml.csv
+   │   ├── multiclass_model_comparison.png
+   │   └── *_confusion_matrix.png
+   └── 05_summary/
+
+📊 DATA PROCESSING PIPELINE:
+
+    ┌─────────────────────────────────────────────────────────────┐
+    │ 0. DATA LOADING                                             │
+    │    ↓ Download TTWO, EA, GameStocks, VIX from Yahoo Finance │
+    │    ↓ Build prices_long.csv                                 │
+    └─────────────────────────────────────────────────────────────┘
+                           ↓
+    ┌─────────────────────────────────────────────────────────────┐
+    │ 1. FEATURES ENGINEERING                                    │
+    │    ↓ compute_returns.py → prices_with_returns.csv          │
+    │    ↓ merge_event_returns.py → events_with_returns.csv      │
+    │    ↓ compute_ar_car.py → events_with_car.csv               │
+    │    ↓ car_into_labels.py → events_labeled.csv               │
+    └─────────────────────────────────────────────────────────────┘
+                           ↓
+    ┌─────────────────────────────────────────────────────────────┐
+    │ 2. ML DATASET BUILDING                                      │
+    │    ↓ build_ml_dataset.py → ml_dataset.csv                  │
+    └─────────────────────────────────────────────────────────────┘
+                     ↙              ↘
+    ┌──────────────────────┐  ┌──────────────────────────────────┐
+    │ 3. TRENDS ANALYSIS   │  │ 4. ML MODELS                     │
+    │ trends.py            │  │    ├─ ols.py (binary/multiclass) │
+    │ ↓                    │  │    ├─ train_binary.py            │
+    │regression_dataset    │  │    ├─ train_classification.py    │
+    │_with_gta_trends.csv  │  │    └─ gta6_prediction.py         │
+    └──────────────────────┘  └──────────────────────────────────┘
+    
+
+📈 ANALYSIS OUTPUTS:
+   ✅ OLS Regression (3 models)
+   ✅ Binary Classification (4 models: LR, RF, GB, MLP)
+   ✅ Multiclass Classification (4 models: LR, RF, GB, MLP)
+   ✅ GTA 6 Scenario Predictions (bear/base/bull)
+   ✅ Confusion Matrices (PNG)
+   ✅ Model Comparison Charts (PNG)
+   ✅ Cross-Validation Results (CSV)
+
+================================================================================
+⏰ Completed at: 2025-12-02 12:45:22
+📂 All results saved to: /files/capstone_project/game-market-event-analyzer/results
+================================================================================
+
