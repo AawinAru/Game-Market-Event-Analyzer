@@ -11,8 +11,8 @@ MODEL 1 – Baseline (All Publishers, No Trends)
 Dep. Variable:               AR_event   R-squared:                       0.220
 Model:                            OLS   Adj. R-squared:                  0.162
 Method:                 Least Squares   F-statistic:                     3.788
-Date:                Tue, 02 Dec 2025   Prob (F-statistic):           0.000310
-Time:                        12:44:51   Log-Likelihood:                 311.82
+Date:                Wed, 03 Dec 2025   Prob (F-statistic):           0.000310
+Time:                        18:01:45   Log-Likelihood:                 311.82
 No. Observations:                 131   AIC:                            -603.6
 Df Residuals:                     121   BIC:                            -574.9
 Df Model:                           9                                         
@@ -52,8 +52,8 @@ MODEL 2 – All Publishers + GTA Trends
 Dep. Variable:               AR_event   R-squared:                       0.262
 Model:                            OLS   Adj. R-squared:                  0.181
 Method:                 Least Squares   F-statistic:                     3.203
-Date:                Tue, 02 Dec 2025   Prob (F-statistic):           0.000380
-Time:                        12:44:51   Log-Likelihood:                 315.50
+Date:                Wed, 03 Dec 2025   Prob (F-statistic):           0.000380
+Time:                        18:01:45   Log-Likelihood:                 315.50
 No. Observations:                 131   AIC:                            -603.0
 Df Residuals:                     117   BIC:                            -562.8
 Df Model:                          13                                         
@@ -97,8 +97,8 @@ MODEL 3 – TTWO Only + GTA Trends
 Dep. Variable:               AR_event   R-squared:                       0.319
 Model:                            OLS   Adj. R-squared:                  0.135
 Method:                 Least Squares   F-statistic:                     1.736
-Date:                Tue, 02 Dec 2025   Prob (F-statistic):              0.109
-Time:                        12:44:51   Log-Likelihood:                 103.36
+Date:                Wed, 03 Dec 2025   Prob (F-statistic):              0.109
+Time:                        18:01:45   Log-Likelihood:                 103.36
 No. Observations:                  48   AIC:                            -184.7
 Df Residuals:                      37   BIC:                            -164.1
 Df Model:                          10                                         

@@ -61,7 +61,7 @@ def create_gta6_backtest_events():
         print(f"\n⚠️  Missing columns: {missing}")
     
     # Save to raw data folder
-    output_path = DATA_RAW / "gta6_backtest_events.csv"
+    output_path = DATA_PROCESSED / "gta6_backtest_events.csv"
     df_gta6.to_csv(output_path, sep=";", index=False)
     
     print(f"\n✅ Saved {len(df_gta6)} GTA VI events to: {output_path}")

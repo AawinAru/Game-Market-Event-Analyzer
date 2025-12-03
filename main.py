@@ -116,6 +116,22 @@ def run_pipeline():
         traceback.print_exc()
         return False
 
+    # ✅ STEP 3b: Create GTA6 Backtest Events
+    print("\n" + "=" * 80)
+    print("🎮 STEP 3b: CREATE GTA VI BACKTEST EVENTS")
+    print("=" * 80)
+    try:
+        print("▶️  Creating gta6_backtest_events.csv...")
+        from eventstudy.models.gta6_backtest_events import create_gta6_backtest_events
+        create_gta6_backtest_events()
+        print("✅ Step 3b complete: GTA VI backtest events created\n")
+    except Exception as e:
+        print(f"❌ Step 3b failed: {e}")
+        import traceback
+        traceback.print_exc()
+        return False
+
+
     # ✅ STEP 4: OLS Regression
     print("\n" + "=" * 80)
     print("📉 STEP 4: OLS REGRESSION ANALYSIS")
@@ -243,24 +259,28 @@ def print_final_summary():
     │ 2. ML DATASET BUILDING                                      │
     │    ↓ build_ml_dataset.py → ml_dataset.csv                  │
     └─────────────────────────────────────────────────────────────┘
-                     ↙              ↘
-    ┌──────────────────────┐  ┌──────────────────────────────────┐
-    │ 3. TRENDS ANALYSIS   │  │ 4. ML MODELS                     │
-    │ trends.py            │  │    ├─ ols.py (binary/multiclass) │
-    │ ↓                    │  │    ├─ train_binary.py            │
-    │regression_dataset    │  │    ├─ train_classification.py    │
-    │_with_gta_trends.csv  │  │    └─ gta6_prediction.py         │
-    └──────────────────────┘  └──────────────────────────────────┘
+                     ↙       ↓          ↘
+    ┌──────────────────┐  ┌──────────────────────┐  ┌─────────────────────────────┐
+    │ 3. TRENDS        │  │ 3b-3c. GTA6          │  │ 4. ML MODELS                │
+    │ trends.py        │  │ BACKTEST             │  │    ├─ ols.py                │
+    │ ↓                │  │ ├─gta6_backtest      │  │    ├─ train_binary.py       │
+    │regression_dataset│  │ │_events.py          │  │    ├─ train_classification  │
+    │_with_gta_trends  │  │ ├─build_gta6_        │  │    ├─ gta6_prediction.py    │
+    │.csv              │  │ │backtest_features   │  │    ├─ backtest_ml.py        │
+    └──────────────────┘  │ └─ gta6_backtest     │  │    └─ backtest_ols.py       │
+                          │   _ml.csv            │  └─────────────────────────────┘
+                          └──────────────────────┘
     """)
     
     print("\n📈 ANALYSIS OUTPUTS:")
-    print("   ✅ OLS Regression (3 models)")
-    print("   ✅ Binary Classification (4 models: LR, RF, GB, MLP)")
-    print("   ✅ Multiclass Classification (4 models: LR, RF, GB, MLP)")
-    print("   ✅ GTA 6 Scenario Predictions (bear/base/bull)")
-    print("   ✅ Confusion Matrices (PNG)")
-    print("   ✅ Model Comparison Charts (PNG)")
+    print("   ✅ Step 4: OLS Regression (3 models + scenario predictions)")
+    print("   ✅ Step 5: Binary Classification (4 models: LR, RF, GB, MLP)")
+    print("   ✅ Step 6: Multiclass Classification (4 models: LR, RF, GB, MLP)")
+    print("   ✅ Step 7: GTA 6 Scenario Predictions (ML-based)")
+    print("   ✅ Step 8: Backtests on GTA VI Events (ML & OLS)")
+    print("   ✅ Confusion Matrices & Model Comparisons (PNG)")
     print("   ✅ Cross-Validation Results (CSV)")
+    print("   ✅ Feature Importance & Detailed Reports")
     
     print("\n" + "=" * 80)
     print(f"⏰ Completed at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")

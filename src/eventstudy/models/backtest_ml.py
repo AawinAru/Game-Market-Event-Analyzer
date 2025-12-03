@@ -21,7 +21,7 @@ DATA_RAW = BASE_DIR / "data" / "raw"
 RESULTS_DIR = BASE_DIR / "results" / "05_summary"
 RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
-BACKTEST_PATH = DATA_RAW / "gta6_backtest_events.csv"
+BACKTEST_PATH = DATA_PROCESSED / "gta6_backtest_events.csv"  # ✅ Changed to DATA_PROCESSED
 
 # SAME FEATURES AS train_classification.py + gta6_prediction.py (no AR_event)
 FEATURE_COLS = [
