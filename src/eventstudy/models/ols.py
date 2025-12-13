@@ -169,6 +169,66 @@ def prepare_features(df, target_col=TARGET_VAR, use_trends=True, ttwo_only=False
     # ✅ FIXED: Return data aligned with X, y (all have same RangeIndex)
     return X, y, data  # data already has matching index
 
+# ---------------------------------------------------------------------
+# Leave-One-Out Cross-Validation for OLS
+# ---------------------------------------------------------------------
+def loo_cv_ols(X, y, name="Model"):
+    """
+    Naive LOO-CV for OLS:
+    - For each i, fit on all observations except i
+    - Predict y_i
+    - Compute LOO-MAE, LOO-MSE, LOO-R²
+    """
+    n = len(y)
+    if n < 5:
+        print(f"⚠️ {name}: too few observations ({n}) for meaningful LOO.")
+        return {
+            "n": n,
+            "loo_mae": np.nan,
+            "loo_mse": np.nan,
+            "loo_r2": np.nan,
+        }
+
+    y_true = y.values.astype(float)
+    preds = np.empty(n, dtype=float)
+
+    # ✅ RESET INDICES TO 0, 1, 2, ...
+    X_reset = X.reset_index(drop=True)
+    y_reset = y.reset_index(drop=True)
+
+    for i in range(n):
+        # train on all but i
+        X_train = X_reset.drop(index=i)
+        y_train = y_reset.drop(index=i)
+
+        model_i = sm.OLS(y_train, X_train).fit()
+        # predict on left-out i
+        y_hat_i = model_i.predict(X_reset.iloc[[i]]).values[0]  # ✅ Use .values[0]
+        preds[i] = y_hat_i
+
+    errors = y_true - preds
+    loo_mse = float(np.mean(errors ** 2))
+    loo_mae = float(np.mean(np.abs(errors)))
+
+    sst = float(np.sum((y_true - y_true.mean()) ** 2))
+    ssr = float(np.sum(errors ** 2))
+    loo_r2 = 1.0 - ssr / sst if sst > 0 else np.nan
+
+    print("\n" + "-" * 70)
+    print(f"🔁 LOO-CV RESULTS – {name}")
+    print("-" * 70)
+    print(f"n           : {n}")
+    print(f"LOO-MAE     : {loo_mae:.6f}")
+    print(f"LOO-MSE     : {loo_mse:.6f}")
+    print(f"LOO-R²      : {loo_r2:.4f}")
+    print("-" * 70 + "\n")
+
+    return {
+        "n": n,
+        "loo_mae": loo_mae,
+        "loo_mse": loo_mse,
+        "loo_r2": loo_r2,
+    }
 
 # ---------------------------------------------------------------------
 # Run one OLS model
@@ -186,7 +246,7 @@ def run_model(name, df, target_col=TARGET_VAR, use_trends=True, ttwo_only=False)
     print(model.summary())
     print("\n")
 
-    return model, data_used
+    return model, data_used, X, y  # ✅ Returns 4 values
 
 
 # ---------------------------------------------------------------------
@@ -267,35 +327,41 @@ def build_gta_scenarios(model):
 # ---------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------
+# ---------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------
 def main():
     df = load_regression_data()
 
     # -------- Model 1: baseline, all publishers, no GTA trends --------
-    m1, d1 = run_model(
+    m1, d1, X1, y1 = run_model(
         "MODEL 1 – Baseline (all publishers, no GTA trends)",
         df,
         target_col=TARGET_VAR,
         use_trends=False,
         ttwo_only=False,
     )
+    loo1 = loo_cv_ols(X1, y1, name="MODEL 1 – Baseline")
 
     # -------- Model 2: all publishers + GTA trends --------
-    m2, d2 = run_model(
+    m2, d2, X2, y2 = run_model(
         "MODEL 2 – All publishers + GTA trend z-features",
         df,
         target_col=TARGET_VAR,
         use_trends=True,
         ttwo_only=False,
     )
+    loo2 = loo_cv_ols(X2, y2, name="MODEL 2 – All publishers + GTA trends")
 
     # -------- Model 3: TTWO only + GTA trends --------
-    m3, d3 = run_model(
+    m3, d3, X3, y3 = run_model(
         "MODEL 3 – TTWO-only + GTA trend z-features",
         df,
         target_col=TARGET_VAR,
         use_trends=True,
         ttwo_only=True,
     )
+    loo3 = loo_cv_ols(X3, y3, name="MODEL 3 – TTWO-only + GTA trends")
 
     # -----------------------------------------------------------------
     # MERGE ALL OLS SUMMARIES INTO ONE FILE
@@ -310,18 +376,25 @@ def main():
         f.write("OLS REGRESSION RESULTS – ALL MODELS\n")
         f.write("=" * 100 + "\n\n")
 
-        def write_model(name, model):
+        def write_model(name, model, loo_stats=None):
             f.write("\n" + "=" * 100 + "\n")
             f.write(f"{name}\n")
             f.write("=" * 100 + "\n")
             f.write(model.summary().as_text())
+            f.write("\n")
+            if loo_stats is not None:
+                f.write("\n--- Leave-One-Out Cross-Validation (AR_event) ---\n")
+                f.write(f"n        : {loo_stats['n']}\n")
+                f.write(f"LOO-MAE  : {loo_stats['loo_mae']:.6f}\n")
+                f.write(f"LOO-MSE  : {loo_stats['loo_mse']:.6f}\n")
+                f.write(f"LOO-R²   : {loo_stats['loo_r2']:.4f}\n")
             f.write("\n\n")
 
-        write_model("MODEL 1 – Baseline (All Publishers, No Trends)", m1)
-        write_model("MODEL 2 – All Publishers + GTA Trends", m2)
-        write_model("MODEL 3 – TTWO Only + GTA Trends", m3)
+        write_model("MODEL 1 – Baseline (All Publishers, No Trends)", m1, loo1)
+        write_model("MODEL 2 – All Publishers + GTA Trends", m2, loo2)
+        write_model("MODEL 3 – TTWO Only + GTA Trends", m3, loo3)
 
-    print("✅ All summaries saved to:", merged_summary_path)
+    print("✅ All summaries (incl. LOO metrics) saved to:", merged_summary_path)
 
     # -----------------------------------------------------------------
     # MERGE ALL COEFFICIENTS INTO ONE CSV (UNION OF PARAMETERS)
@@ -351,7 +424,7 @@ def main():
     scen_df.to_csv(scen_out_path, index=False)
     print("✅ Scenario predictions saved to:", scen_out_path)
 
-    print("\n🎉 OLS regression + scenarios completed cleanly.")
+    print("\n🎉 OLS regression + scenarios + LOO completed cleanly.")
     print(f"📁 All results saved to: {RESULTS_OLS}\n")
 
 

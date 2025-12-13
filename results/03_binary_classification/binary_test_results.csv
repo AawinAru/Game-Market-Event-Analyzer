@@ -1,5 +1,5 @@
 Model,Accuracy,F1_macro
-Logistic Regression (Binary),0.7058823529411765,0.6964285714285714
-Random Forest (Binary),0.7647058823529411,0.7424242424242424
-Gradient Boosting (Binary),0.7352941176470589,0.7153488372093023
-"Neural Network (MLP, Binary)",0.6176470588235294,0.6007226738934056
+Logistic Regression (Binary),0.625,0.6190476190476191
+Random Forest (Binary),0.65625,0.6476476476476476
+Gradient Boosting (Binary),0.625,0.6235294117647059
+"Neural Network (MLP, Binary)",0.59375,0.4793491864831039

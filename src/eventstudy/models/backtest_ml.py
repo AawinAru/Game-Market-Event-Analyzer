@@ -258,8 +258,66 @@ def run_backtest_gb():
     print(df_res)
     print(f"\n✅ Saved ML backtest results to: {out_path}\n")
 
+
+# ✅ ADD THIS NEW FUNCTION
+def run_backtest_binary():
+    """Backtest Binary Logistic Regression on GTA VI events."""
+    
+    # 1) Load training data
+    X, y = load_ml_dataset()
+    
+    # Convert y to binary (High = 1, else = 0)
+    y_binary = (y == 2).astype(int)  # 2 = High impact
+    
+    ids, X_bt, y_bt = prepare_backtest_features()
+    
+    # Convert backtest y to binary
+    y_bt_binary = (y_bt == 2).astype(int)
+    
+    # 2) Impute NaNs in backtest features
+    imputer = SimpleImputer(strategy="mean")
+    imputer.fit(X)
+    
+    X_bt_clean = pd.DataFrame(
+        imputer.transform(X_bt),
+        columns=X_bt.columns,
+        index=X_bt.index,
+    )
+    
+    # 3) Train Logistic Regression on binary target
+    from sklearn.linear_model import LogisticRegression
+    
+    lr = LogisticRegression(max_iter=1000, random_state=42)
+    lr.fit(X, y_binary)
+    
+    # 4) Predict on backtest
+    proba = lr.predict_proba(X_bt_clean)
+    y_hat = lr.predict(X_bt_clean)
+    
+    df_res = ids.copy()
+    df_res["true_label"] = y_bt_binary
+    df_res["pred_label"] = y_hat
+    df_res["proba_not_high"] = proba[:, 0]
+    df_res["proba_high"] = proba[:, 1]
+    
+    label_map = {0: "Not High", 1: "High"}
+    df_res["true_label_str"] = df_res["true_label"].map(label_map)
+    df_res["pred_label_str"] = df_res["pred_label"].map(label_map)
+    
+    out_path = RESULTS_DIR / "gta6_backtest_ml_binary_logistic.csv"
+    df_res.to_csv(out_path, index=False)
+    
+    print("\n======================================================================")
+    print("🎯 GTA6 BACKTEST – LOGISTIC REGRESSION (BINARY)")
+    print("======================================================================")
+    print(df_res)
+    print(f"\n✅ Saved Binary backtest results to: {out_path}\n")
+
+
+# ✅ UPDATE MAIN FUNCTION
 def main():
-    run_backtest_gb()
+    run_backtest_gb()      # ✅ Multiclass Gradient Boosting
+    run_backtest_binary()  # ✅ Binary Logistic Regression
 
 
 if __name__ == "__main__":

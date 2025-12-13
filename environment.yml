@@ -1,0 +1,42 @@
+name: game-market-event-analyzer
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  # Python version
+  - python=3.12.3
+  
+  # Data processing
+  - pandas>=1.5.0
+  - numpy>=1.23.0
+  
+  # Machine Learning
+  - scikit-learn>=1.2.0
+  - xgboost>=1.7.0
+  
+  # Statistics & Regression
+  - statsmodels>=0.13.0
+  - scipy>=1.9.0
+  
+  # Visualization
+  - matplotlib>=3.6.0
+  - seaborn>=0.12.0
+  - plotly>=5.10.0
+  
+  # Data Download
+  - yfinance>=0.2.0
+  
+  # Jupyter & Development
+  - jupyter>=1.0.0
+  - ipython>=8.0.0
+  - ipykernel>=6.0.0
+  
+  # Utilities
+  - python-dotenv>=0.20.0
+  - tqdm>=4.64.0
+  
+  # Optional: Deep Learning (for Neural Networks)
+  - tensorflow>=2.10.0  # Comment out if not needed
+  
+pip:
+   - pytrends>=4.7.0  # Google Trends API
