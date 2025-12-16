@@ -26,6 +26,9 @@ dependencies:
   # Data Download
   - yfinance>=0.2.0
   
+  # Google Trends (MOVE FROM PIP TO CONDA)
+  - pytrends>=4.7.0
+  
   # Jupyter & Development
   - jupyter>=1.0.0
   - ipython>=8.0.0
@@ -35,8 +38,7 @@ dependencies:
   - python-dotenv>=0.20.0
   - tqdm>=4.64.0
   
-  # Optional: Deep Learning (for Neural Networks)
-  - tensorflow>=2.10.0  # Comment out if not needed
-  
-pip:
-   - pytrends>=4.7.0  # Google Trends API
+  # Pip dependencies
+  - pip
+  - pip:
+      - pytrends>=4.9.2

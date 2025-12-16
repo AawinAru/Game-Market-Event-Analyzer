@@ -11,8 +11,8 @@ MODEL 1 – Baseline (All Publishers, No Trends)
 Dep. Variable:               AR_event   R-squared:                       0.254
 Model:                            OLS   Adj. R-squared:                  0.195
 Method:                 Least Squares   F-statistic:                     4.306
-Date:                Sat, 13 Dec 2025   Prob (F-statistic):           7.75e-05
-Time:                        16:22:48   Log-Likelihood:                 296.06
+Date:                Tue, 16 Dec 2025   Prob (F-statistic):           7.75e-05
+Time:                        12:09:00   Log-Likelihood:                 296.06
 No. Observations:                 124   AIC:                            -572.1
 Df Residuals:                     114   BIC:                            -543.9
 Df Model:                           9                                         
@@ -59,8 +59,8 @@ MODEL 2 – All Publishers + GTA Trends
 Dep. Variable:               AR_event   R-squared:                       0.298
 Model:                            OLS   Adj. R-squared:                  0.215
 Method:                 Least Squares   F-statistic:                     3.592
-Date:                Sat, 13 Dec 2025   Prob (F-statistic):           0.000103
-Time:                        16:22:48   Log-Likelihood:                 299.85
+Date:                Tue, 16 Dec 2025   Prob (F-statistic):           0.000103
+Time:                        12:09:00   Log-Likelihood:                 299.85
 No. Observations:                 124   AIC:                            -571.7
 Df Residuals:                     110   BIC:                            -532.2
 Df Model:                          13                                         
@@ -75,7 +75,7 @@ sent_negative             -0.0123      0.018     -0.672      0.503      -0.048  
 sent_positive              0.0036      0.012      0.310      0.757      -0.019       0.027
 evt_delay                 -0.0282      0.018     -1.566      0.120      -0.064       0.007
 evt_earnings              -0.0049      0.023     -0.215      0.830      -0.050       0.040
-evt_leak               -4.303e-15   1.47e-15     -2.926      0.004   -7.22e-15   -1.39e-15
+evt_leak               -2.344e-15      8e-16     -2.931      0.004   -3.93e-15   -7.59e-16
 evt_major announcement     0.0181      0.022      0.825      0.411      -0.025       0.062
 evt_release               -0.0170      0.019     -0.909      0.365      -0.054       0.020
 evt_trailer/reveal        -0.0171      0.021     -0.801      0.425      -0.059       0.025
@@ -87,12 +87,12 @@ trend_rockstar_z           0.0055      0.004      1.531      0.129      -0.002  
 Omnibus:                       56.719   Durbin-Watson:                   1.741
 Prob(Omnibus):                  0.000   Jarque-Bera (JB):              288.621
 Skew:                           1.476   Prob(JB):                     2.12e-63
-Kurtosis:                       9.866   Cond. No.                     4.41e+17
+Kurtosis:                       9.866   Cond. No.                     3.98e+16
 ==============================================================================
 
 Notes:
 [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
-[2] The smallest eigenvalue is 1.08e-33. This might indicate that there are
+[2] The smallest eigenvalue is 1.32e-31. This might indicate that there are
 strong multicollinearity problems or that the design matrix is singular.
 
 --- Leave-One-Out Cross-Validation (AR_event) ---
@@ -111,8 +111,8 @@ MODEL 3 – TTWO Only + GTA Trends
 Dep. Variable:               AR_event   R-squared:                       0.319
 Model:                            OLS   Adj. R-squared:                  0.135
 Method:                 Least Squares   F-statistic:                     1.736
-Date:                Sat, 13 Dec 2025   Prob (F-statistic):              0.109
-Time:                        16:22:48   Log-Likelihood:                 103.36
+Date:                Tue, 16 Dec 2025   Prob (F-statistic):              0.109
+Time:                        12:09:00   Log-Likelihood:                 103.36
 No. Observations:                  48   AIC:                            -184.7
 Df Residuals:                      37   BIC:                            -164.1
 Df Model:                          10                                         
@@ -126,7 +126,7 @@ sent_negative             -0.0135      0.009     -1.508      0.140      -0.032  
 sent_positive              0.0068      0.021      0.317      0.753      -0.037       0.050
 evt_delay                 -0.0135      0.009     -1.508      0.140      -0.032       0.005
 evt_earnings               0.0076      0.012      0.645      0.523      -0.016       0.032
-evt_leak                5.491e-17   3.05e-17      1.798      0.080   -6.98e-18    1.17e-16
+evt_leak                5.912e-16   3.27e-16      1.810      0.078   -7.06e-17    1.25e-15
 evt_major announcement     0.0321      0.014      2.276      0.029       0.004       0.061
 evt_release               -0.0117      0.018     -0.648      0.521      -0.048       0.025
 evt_trailer/reveal        -0.0084      0.012     -0.705      0.485      -0.033       0.016
@@ -138,12 +138,12 @@ trend_rockstar_z           0.0059      0.005      1.165      0.251      -0.004  
 Omnibus:                       24.374   Durbin-Watson:                   1.610
 Prob(Omnibus):                  0.000   Jarque-Bera (JB):               49.848
 Skew:                           1.417   Prob(JB):                     1.50e-11
-Kurtosis:                       7.111   Cond. No.                     3.25e+16
+Kurtosis:                       7.111   Cond. No.                     7.29e+16
 ==============================================================================
 
 Notes:
 [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
-[2] The smallest eigenvalue is 6.64e-32. This might indicate that there are
+[2] The smallest eigenvalue is 1.32e-32. This might indicate that there are
 strong multicollinearity problems or that the design matrix is singular.
 
 --- Leave-One-Out Cross-Validation (AR_event) ---

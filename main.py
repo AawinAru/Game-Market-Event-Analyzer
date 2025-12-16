@@ -21,8 +21,6 @@ sys.path.insert(0, str(BASE_DIR / "src"))
 
 # ✅ CREATE RESULTS DIRECTORY STRUCTURE
 RESULTS_DIR = BASE_DIR / "results"
-RESULTS_DATA = RESULTS_DIR / "00_data_loading"
-RESULTS_TRENDS = RESULTS_DIR / "01_trends_analysis"
 RESULTS_OLS = RESULTS_DIR / "02_ols_regression"
 RESULTS_BINARY = RESULTS_DIR / "03_binary_classification"
 RESULTS_MULTICLASS = RESULTS_DIR / "04_multiclass_classification"
@@ -220,8 +218,6 @@ def print_final_summary():
     
     print("\n📁 RESULTS DIRECTORY STRUCTURE:")
     print(f"\n   {RESULTS_DIR}/")
-    print(f"   ├── 00_data_loading/")
-    print(f"   ├── 01_trends_analysis/")
     print(f"   ├── 02_ols_regression/")
     print(f"   │   ├── ols_regression_results.txt")
     print(f"   │   ├── ols_regression_coeffs.csv")
