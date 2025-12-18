@@ -31,7 +31,9 @@ def compute_returns():
     prices["ticker"] = (
         prices["ticker"]
         .str.replace("^GSPC", "SP500", regex=False)
-        .str.replace("UBI.PA", "UBSFY", regex=False)
+        .str.replace("UBI.PA", "UBI", regex=False)
+        .str.replace("UBSFY", "UBI", regex=False)
+        .str.replace("AYI.DE", "ATVI", regex=False)
         .str.upper()
     )
 

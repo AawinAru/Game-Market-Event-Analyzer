@@ -26,7 +26,7 @@ RESULTS_BINARY = RESULTS_DIR / "03_binary_classification"
 RESULTS_MULTICLASS = RESULTS_DIR / "04_multiclass_classification"
 RESULTS_SUMMARY = RESULTS_DIR / "05_summary"
 
-for dir_path in [RESULTS_DATA, RESULTS_TRENDS, RESULTS_OLS, RESULTS_BINARY, RESULTS_MULTICLASS, RESULTS_SUMMARY]:
+for dir_path in [RESULTS_OLS, RESULTS_BINARY, RESULTS_MULTICLASS, RESULTS_SUMMARY]:
     dir_path.mkdir(parents=True, exist_ok=True)
 
 print("\n" + "="*80)

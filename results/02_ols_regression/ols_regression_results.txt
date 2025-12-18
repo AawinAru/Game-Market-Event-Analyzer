@@ -8,46 +8,44 @@ MODEL 1 – Baseline (All Publishers, No Trends)
 ====================================================================================================
                             OLS Regression Results                            
 ==============================================================================
-Dep. Variable:               AR_event   R-squared:                       0.254
-Model:                            OLS   Adj. R-squared:                  0.195
-Method:                 Least Squares   F-statistic:                     4.306
-Date:                Tue, 16 Dec 2025   Prob (F-statistic):           7.75e-05
-Time:                        12:09:00   Log-Likelihood:                 296.06
-No. Observations:                 124   AIC:                            -572.1
-Df Residuals:                     114   BIC:                            -543.9
-Df Model:                           9                                         
+Dep. Variable:               AR_event   R-squared:                       0.207
+Model:                            OLS   Adj. R-squared:                  0.149
+Method:                 Least Squares   F-statistic:                     3.618
+Date:                Thu, 18 Dec 2025   Prob (F-statistic):           0.000267
+Time:                        08:31:43   Log-Likelihood:                 363.43
+No. Observations:                 150   AIC:                            -704.9
+Df Residuals:                     139   BIC:                            -671.7
+Df Model:                          10                                         
 Covariance Type:            nonrobust                                         
 ==========================================================================================
                              coef    std err          t      P>|t|      [0.025      0.975]
 ------------------------------------------------------------------------------------------
-const                      0.0060      0.023      0.266      0.790      -0.039       0.051
-market_return             -0.5726      0.190     -3.018      0.003      -0.948      -0.197
-is_rockstar                0.0116      0.005      2.301      0.023       0.002       0.022
-sent_negative             -0.0130      0.018     -0.718      0.474      -0.049       0.023
-sent_positive              0.0033      0.011      0.290      0.773      -0.019       0.026
-evt_delay                 -0.0275      0.018     -1.550      0.124      -0.063       0.008
-evt_earnings              -0.0058      0.023     -0.254      0.800      -0.051       0.039
-evt_leak                -2.33e-15   7.73e-16     -3.013      0.003   -3.86e-15   -7.98e-16
-evt_major announcement     0.0170      0.022      0.765      0.446      -0.027       0.061
-evt_release               -0.0172      0.019     -0.904      0.368      -0.055       0.020
-evt_trailer/reveal        -0.0156      0.021     -0.730      0.467      -0.058       0.027
+const                      0.0056      0.019      0.289      0.773      -0.033       0.044
+market_return             -0.4936      0.169     -2.926      0.004      -0.827      -0.160
+is_rockstar                0.0084      0.004      1.896      0.060      -0.000       0.017
+sent_negative             -0.0132      0.014     -0.913      0.363      -0.042       0.015
+sent_positive              0.0025      0.011      0.234      0.815      -0.019       0.024
+evt_delay                 -0.0162      0.016     -1.027      0.306      -0.047       0.015
+evt_earnings              -0.0039      0.019     -0.202      0.840      -0.042       0.034
+evt_leak                   0.0027      0.026      0.103      0.918      -0.049       0.054
+evt_major announcement     0.0166      0.018      0.914      0.362      -0.019       0.052
+evt_release               -0.0136      0.016     -0.830      0.408      -0.046       0.019
+evt_trailer/reveal        -0.0101      0.018     -0.552      0.582      -0.046       0.026
 ==============================================================================
-Omnibus:                       63.550   Durbin-Watson:                   1.750
-Prob(Omnibus):                  0.000   Jarque-Bera (JB):              433.461
-Skew:                           1.572   Prob(JB):                     7.50e-95
-Kurtosis:                      11.603   Cond. No.                     4.93e+17
+Omnibus:                       70.787   Durbin-Watson:                   1.829
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              567.204
+Skew:                           1.450   Prob(JB):                    6.81e-124
+Kurtosis:                      12.074   Cond. No.                         119.
 ==============================================================================
 
 Notes:
 [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
-[2] The smallest eigenvalue is 8.58e-34. This might indicate that there are
-strong multicollinearity problems or that the design matrix is singular.
 
 --- Leave-One-Out Cross-Validation (AR_event) ---
-n        : 124
-LOO-MAE  : 0.017171
-LOO-MSE  : 0.000600
-LOO-R²   : 0.0936
+n        : 150
+LOO-MAE  : 0.016547
+LOO-MSE  : 0.000544
+LOO-R²   : 0.0618
 
 
 
@@ -56,50 +54,48 @@ MODEL 2 – All Publishers + GTA Trends
 ====================================================================================================
                             OLS Regression Results                            
 ==============================================================================
-Dep. Variable:               AR_event   R-squared:                       0.298
-Model:                            OLS   Adj. R-squared:                  0.215
-Method:                 Least Squares   F-statistic:                     3.592
-Date:                Tue, 16 Dec 2025   Prob (F-statistic):           0.000103
-Time:                        12:09:00   Log-Likelihood:                 299.85
-No. Observations:                 124   AIC:                            -571.7
-Df Residuals:                     110   BIC:                            -532.2
-Df Model:                          13                                         
+Dep. Variable:               AR_event   R-squared:                       0.247
+Model:                            OLS   Adj. R-squared:                  0.169
+Method:                 Least Squares   F-statistic:                     3.170
+Date:                Thu, 18 Dec 2025   Prob (F-statistic):           0.000253
+Time:                        08:31:43   Log-Likelihood:                 367.40
+No. Observations:                 150   AIC:                            -704.8
+Df Residuals:                     135   BIC:                            -659.6
+Df Model:                          14                                         
 Covariance Type:            nonrobust                                         
 ==========================================================================================
                              coef    std err          t      P>|t|      [0.025      0.975]
 ------------------------------------------------------------------------------------------
-const                      0.0052      0.023      0.228      0.820      -0.040       0.050
-market_return             -0.5549      0.190     -2.923      0.004      -0.931      -0.179
-is_rockstar                0.0122      0.005      2.428      0.017       0.002       0.022
-sent_negative             -0.0123      0.018     -0.672      0.503      -0.048       0.024
-sent_positive              0.0036      0.012      0.310      0.757      -0.019       0.027
-evt_delay                 -0.0282      0.018     -1.566      0.120      -0.064       0.007
-evt_earnings              -0.0049      0.023     -0.215      0.830      -0.050       0.040
-evt_leak               -2.344e-15      8e-16     -2.931      0.004   -3.93e-15   -7.59e-16
-evt_major announcement     0.0181      0.022      0.825      0.411      -0.025       0.062
-evt_release               -0.0170      0.019     -0.909      0.365      -0.054       0.020
-evt_trailer/reveal        -0.0171      0.021     -0.801      0.425      -0.059       0.025
-trend_gta_z                0.0014      0.004      0.383      0.703      -0.006       0.009
-trend_gta6_z              -0.0056      0.003     -1.616      0.109      -0.012       0.001
-trend_gtavi_z              0.0039      0.004      1.113      0.268      -0.003       0.011
-trend_rockstar_z           0.0055      0.004      1.531      0.129      -0.002       0.013
+const                      0.0045      0.019      0.230      0.818      -0.034       0.043
+market_return             -0.4843      0.169     -2.866      0.005      -0.819      -0.150
+is_rockstar                0.0088      0.004      2.000      0.048    9.82e-05       0.018
+sent_negative             -0.0121      0.015     -0.827      0.410      -0.041       0.017
+sent_positive              0.0034      0.011      0.308      0.759      -0.018       0.025
+evt_delay                 -0.0158      0.016     -1.003      0.318      -0.047       0.015
+evt_earnings              -0.0027      0.019     -0.140      0.889      -0.041       0.036
+evt_leak                   0.0010      0.026      0.039      0.969      -0.051       0.053
+evt_major announcement     0.0174      0.018      0.972      0.333      -0.018       0.053
+evt_release               -0.0138      0.016     -0.850      0.397      -0.046       0.018
+evt_trailer/reveal        -0.0111      0.018     -0.607      0.545      -0.047       0.025
+trend_gta_z                0.0023      0.004      0.661      0.510      -0.005       0.009
+trend_gta6_z              -0.0053      0.003     -1.597      0.113      -0.012       0.001
+trend_gtavi_z              0.0034      0.003      1.017      0.311      -0.003       0.010
+trend_rockstar_z           0.0057      0.003      1.669      0.097      -0.001       0.013
 ==============================================================================
-Omnibus:                       56.719   Durbin-Watson:                   1.741
-Prob(Omnibus):                  0.000   Jarque-Bera (JB):              288.621
-Skew:                           1.476   Prob(JB):                     2.12e-63
-Kurtosis:                       9.866   Cond. No.                     3.98e+16
+Omnibus:                       64.038   Durbin-Watson:                   1.838
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              376.000
+Skew:                           1.390   Prob(JB):                     2.25e-82
+Kurtosis:                      10.241   Cond. No.                         121.
 ==============================================================================
 
 Notes:
 [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
-[2] The smallest eigenvalue is 1.32e-31. This might indicate that there are
-strong multicollinearity problems or that the design matrix is singular.
 
 --- Leave-One-Out Cross-Validation (AR_event) ---
-n        : 124
-LOO-MAE  : 0.017974
-LOO-MSE  : 0.000654
-LOO-R²   : 0.0123
+n        : 150
+LOO-MAE  : 0.017141
+LOO-MSE  : 0.000586
+LOO-R²   : -0.0109
 
 
 
@@ -108,48 +104,48 @@ MODEL 3 – TTWO Only + GTA Trends
 ====================================================================================================
                             OLS Regression Results                            
 ==============================================================================
-Dep. Variable:               AR_event   R-squared:                       0.319
-Model:                            OLS   Adj. R-squared:                  0.135
-Method:                 Least Squares   F-statistic:                     1.736
-Date:                Tue, 16 Dec 2025   Prob (F-statistic):              0.109
-Time:                        12:09:00   Log-Likelihood:                 103.36
-No. Observations:                  48   AIC:                            -184.7
-Df Residuals:                      37   BIC:                            -164.1
-Df Model:                          10                                         
+Dep. Variable:               AR_event   R-squared:                       0.320
+Model:                            OLS   Adj. R-squared:                  0.118
+Method:                 Least Squares   F-statistic:                     1.582
+Date:                Thu, 18 Dec 2025   Prob (F-statistic):              0.145
+Time:                        08:31:43   Log-Likelihood:                 106.02
+No. Observations:                  49   AIC:                            -188.0
+Df Residuals:                      37   BIC:                            -165.3
+Df Model:                          11                                         
 Covariance Type:            nonrobust                                         
 ==========================================================================================
                              coef    std err          t      P>|t|      [0.025      0.975]
 ------------------------------------------------------------------------------------------
 market_return             -0.9938      0.543     -1.830      0.075      -2.094       0.107
-is_rockstar                0.0061      0.010      0.593      0.557      -0.015       0.027
-sent_negative             -0.0135      0.009     -1.508      0.140      -0.032       0.005
+is_rockstar                0.0069      0.010      0.675      0.504      -0.014       0.028
+sent_negative             -0.0097      0.013     -0.758      0.453      -0.036       0.016
 sent_positive              0.0068      0.021      0.317      0.753      -0.037       0.050
-evt_delay                 -0.0135      0.009     -1.508      0.140      -0.032       0.005
-evt_earnings               0.0076      0.012      0.645      0.523      -0.016       0.032
-evt_leak                5.912e-16   3.27e-16      1.810      0.078   -7.06e-17    1.25e-15
-evt_major announcement     0.0321      0.014      2.276      0.029       0.004       0.061
-evt_release               -0.0117      0.018     -0.648      0.521      -0.048       0.025
-evt_trailer/reveal        -0.0084      0.012     -0.705      0.485      -0.033       0.016
+evt_delay                 -0.0180      0.016     -1.156      0.255      -0.050       0.014
+evt_earnings               0.0069      0.012      0.588      0.560      -0.017       0.030
+evt_leak                   0.0083      0.022      0.379      0.707      -0.036       0.053
+evt_major announcement     0.0313      0.014      2.187      0.035       0.002       0.060
+evt_release               -0.0124      0.018     -0.679      0.501      -0.049       0.025
+evt_trailer/reveal        -0.0092      0.012     -0.752      0.457      -0.034       0.016
 trend_gta_z                0.0029      0.006      0.514      0.610      -0.008       0.014
 trend_gta6_z              -0.0050      0.005     -0.998      0.325      -0.015       0.005
 trend_gtavi_z              0.0035      0.005      0.694      0.492      -0.007       0.014
 trend_rockstar_z           0.0059      0.005      1.165      0.251      -0.004       0.016
 ==============================================================================
-Omnibus:                       24.374   Durbin-Watson:                   1.610
-Prob(Omnibus):                  0.000   Jarque-Bera (JB):               49.848
-Skew:                           1.417   Prob(JB):                     1.50e-11
-Kurtosis:                       7.111   Cond. No.                     7.29e+16
+Omnibus:                       25.199   Durbin-Watson:                   1.658
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):               53.759
+Skew:                           1.431   Prob(JB):                     2.12e-12
+Kurtosis:                       7.259   Cond. No.                     1.02e+17
 ==============================================================================
 
 Notes:
 [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
-[2] The smallest eigenvalue is 1.32e-32. This might indicate that there are
+[2] The smallest eigenvalue is 6.86e-33. This might indicate that there are
 strong multicollinearity problems or that the design matrix is singular.
 
 --- Leave-One-Out Cross-Validation (AR_event) ---
-n        : 48
-LOO-MAE  : 0.027481
-LOO-MSE  : 0.001395
-LOO-R²   : -0.2038
+n        : 49
+LOO-MAE  : 0.027183
+LOO-MSE  : 0.001370
+LOO-R²   : -0.2059
 
 

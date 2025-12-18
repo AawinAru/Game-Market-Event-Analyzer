@@ -1,12 +1,12 @@
 """
-GTA 6 scenario prediction using the SAME multiclass model as train_classification.py
-Chosen model: RANDOM FOREST (multiclass)
+GTA 6 scenario prediction using the SAME BINARY model as train_binary.py
+Chosen model: LOGISTIC REGRESSION (binary)
 """
 
 from pathlib import Path
 import pandas as pd
 import numpy as np
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report
 from sklearn.model_selection import train_test_split
 
@@ -15,7 +15,7 @@ from sklearn.model_selection import train_test_split
 # ---------------------------------------------------------------------
 BASE_DIR = Path(__file__).resolve().parents[3]
 DATA_PROCESSED = BASE_DIR / "data" / "processed"
-RESULTS_MULTICLASS = BASE_DIR / "results" / "04_multiclass_classification"
+RESULTS_BINARY = BASE_DIR / "results" / "03_binary_classification"
 
 print(f"BASE_DIR:       {BASE_DIR}")
 print(f"DATA_PROCESSED: {DATA_PROCESSED}\n")
@@ -35,9 +35,9 @@ def load_ml_dataset():
 
 
 # ---------------------------------------------------------------------
-# Build X,y exactly like train_classification.py
+# Build X,y exactly like train_binary.py
 # ---------------------------------------------------------------------
-def build_xy_for_multiclass(df):
+def build_xy_for_binary(df):
     required_cols = [
         "is_rockstar",
         "sentiment_negative",
@@ -50,14 +50,14 @@ def build_xy_for_multiclass(df):
         "event_type_release",
         "vix_regime_medium",
         "vix_regime_high",
-        "impact_label_num",
+        "impact_high",
     ]
 
     missing = [c for c in required_cols if c not in df.columns]
     if missing:
         raise KeyError(f"Missing columns in ml_dataset: {missing}")
 
-    df_clean = df.dropna(subset=["impact_label_num"]).copy()
+    df_clean = df.dropna(subset=["impact_high"]).copy()
 
     X = df_clean[
         [
@@ -75,9 +75,8 @@ def build_xy_for_multiclass(df):
         ]
     ].copy()
 
-    y = df_clean["impact_label_num"].astype(int)
+    y = df_clean["impact_high"].astype(int)
 
-    # Drop NaN rows if any remain
     mask = X.isna().any(axis=1)
     if mask.sum() > 0:
         X = X[~mask]
@@ -88,41 +87,32 @@ def build_xy_for_multiclass(df):
 
 
 # ---------------------------------------------------------------------
-# Train FINAL (chosen) model → RandomForest (multiclass)
+# Train FINAL model → Logistic Regression (binary)
 # ---------------------------------------------------------------------
 def train_best_model(X, y, random_state=42):
 
-    print("🤖 Training Random Forest (sanity test split)…")
+    print("🤖 Training Logistic Regression (binary, sanity test split)…")
 
-    # quick 25% split to show metrics
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.25, stratify=y, random_state=random_state
     )
 
-    rf = RandomForestClassifier(
-        n_estimators=300,
-        max_depth=6,
-        min_samples_leaf=2,
+    model = LogisticRegression(
+        max_iter=1000,
+        solver="lbfgs",
         random_state=random_state
     )
 
-    rf.fit(X_train, y_train)
-    y_pred = rf.predict(X_test)
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
 
     print("📊 Classification report (hold-out split):")
     print(classification_report(y_test, y_pred))
 
-    # train on full dataset for scenario predictions
-    print("🔁 Re-training Random Forest on FULL dataset...")
-    rf_full = RandomForestClassifier(
-        n_estimators=300,
-        max_depth=6,
-        min_samples_leaf=2,
-        random_state=random_state
-    )
-    rf_full.fit(X, y)
+    print("🔁 Re-training Logistic Regression on FULL dataset...")
+    model.fit(X, y)
 
-    return rf_full
+    return model
 
 
 # ---------------------------------------------------------------------
@@ -187,13 +177,13 @@ def build_gta6_scenarios(model_features):
 # ---------------------------------------------------------------------
 # Main run function
 # ---------------------------------------------------------------------
-IMPACT_MAP = {0: "Low impact", 1: "Medium impact", 2: "High impact"}
+LABEL_MAP = {0: "Not High impact", 1: "High impact"}
 
 
 def run_gta6_scenario_predictions():
 
     df_ml = load_ml_dataset()
-    X, y = build_xy_for_multiclass(df_ml)
+    X, y = build_xy_for_binary(df_ml)
 
     model = train_best_model(X, y)
 
@@ -214,18 +204,17 @@ def run_gta6_scenario_predictions():
         results.append({
             "scenario": scenario,
             "predicted_class": cls,
-            "predicted_label": IMPACT_MAP[cls],
-            "proba_low": float(probs[0]),
-            "proba_medium": float(probs[1]),
-            "proba_high": float(probs[2]),
+            "predicted_label": LABEL_MAP[cls],
+            "proba_not_high": float(probs[0]),
+            "proba_high": float(probs[1]),
         })
 
     df_results = pd.DataFrame(results)
 
-    out_path = RESULTS_MULTICLASS / "gta6_scenario_predictions_ml.csv"
+    out_path = RESULTS_BINARY / "gta6_scenario_predictions_binary.csv"
     df_results.to_csv(out_path, index=False)
 
-    print("📊 GTA6 Scenario Predictions:")
+    print("📊 GTA6 Scenario Predictions (Binary):")
     print(df_results)
     print(f"\n✅ Saved to {out_path}")
 
