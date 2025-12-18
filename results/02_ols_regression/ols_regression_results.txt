@@ -12,7 +12,7 @@ Dep. Variable:               AR_event   R-squared:                       0.207
 Model:                            OLS   Adj. R-squared:                  0.149
 Method:                 Least Squares   F-statistic:                     3.618
 Date:                Thu, 18 Dec 2025   Prob (F-statistic):           0.000267
-Time:                        08:31:43   Log-Likelihood:                 363.43
+Time:                        08:58:55   Log-Likelihood:                 363.43
 No. Observations:                 150   AIC:                            -704.9
 Df Residuals:                     139   BIC:                            -671.7
 Df Model:                          10                                         
@@ -33,7 +33,7 @@ evt_release               -0.0136      0.016     -0.830      0.408      -0.046  
 evt_trailer/reveal        -0.0101      0.018     -0.552      0.582      -0.046       0.026
 ==============================================================================
 Omnibus:                       70.787   Durbin-Watson:                   1.829
-Prob(Omnibus):                  0.000   Jarque-Bera (JB):              567.204
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              567.205
 Skew:                           1.450   Prob(JB):                    6.81e-124
 Kurtosis:                      12.074   Cond. No.                         119.
 ==============================================================================
@@ -58,7 +58,7 @@ Dep. Variable:               AR_event   R-squared:                       0.247
 Model:                            OLS   Adj. R-squared:                  0.169
 Method:                 Least Squares   F-statistic:                     3.170
 Date:                Thu, 18 Dec 2025   Prob (F-statistic):           0.000253
-Time:                        08:31:43   Log-Likelihood:                 367.40
+Time:                        08:58:55   Log-Likelihood:                 367.40
 No. Observations:                 150   AIC:                            -704.8
 Df Residuals:                     135   BIC:                            -659.6
 Df Model:                          14                                         
@@ -82,8 +82,8 @@ trend_gta6_z              -0.0053      0.003     -1.597      0.113      -0.012  
 trend_gtavi_z              0.0034      0.003      1.017      0.311      -0.003       0.010
 trend_rockstar_z           0.0057      0.003      1.669      0.097      -0.001       0.013
 ==============================================================================
-Omnibus:                       64.038   Durbin-Watson:                   1.838
-Prob(Omnibus):                  0.000   Jarque-Bera (JB):              376.000
+Omnibus:                       64.039   Durbin-Watson:                   1.838
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              376.001
 Skew:                           1.390   Prob(JB):                     2.25e-82
 Kurtosis:                      10.241   Cond. No.                         121.
 ==============================================================================
@@ -108,7 +108,7 @@ Dep. Variable:               AR_event   R-squared:                       0.320
 Model:                            OLS   Adj. R-squared:                  0.118
 Method:                 Least Squares   F-statistic:                     1.582
 Date:                Thu, 18 Dec 2025   Prob (F-statistic):              0.145
-Time:                        08:31:43   Log-Likelihood:                 106.02
+Time:                        08:58:55   Log-Likelihood:                 106.02
 No. Observations:                  49   AIC:                            -188.0
 Df Residuals:                      37   BIC:                            -165.3
 Df Model:                          11                                         

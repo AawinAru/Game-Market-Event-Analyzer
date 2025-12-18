@@ -2,7 +2,7 @@
 ================================================================================
 🎮 GAME MARKET EVENT ANALYZER – COMPLETE PIPELINE
 ================================================================================
-⏰ Started at: 2025-12-18 08:31:36
+⏰ Started at: 2025-12-18 08:58:48
 
 
 ================================================================================
@@ -60,39 +60,39 @@ Data processed: /files/capstone_project/game-market-event-analyzer/data/processe
 
 ✅ Loaded 23958 records
         date ticker  adj_close
-0 2010-01-04   ATVI  17.647137
+0 2010-01-04   ATVI  17.647135
 1 2010-01-05   ATVI  18.143003
-2 2010-01-06   ATVI  17.676304
-3 2010-01-07   ATVI  17.540184
-4 2010-01-08   ATVI  17.890211
+2 2010-01-06   ATVI  17.676306
+3 2010-01-07   ATVI  17.540186
+4 2010-01-08   ATVI  17.890205
 
 Unique tickers: ['ATVI' 'EA' 'NTDOY' 'TTWO' 'UBI' 'SP500']
 
 ✅ Computed daily returns
         date ticker  adj_close    return
-0 2010-01-04   ATVI  17.647137       NaN
+0 2010-01-04   ATVI  17.647135       NaN
 1 2010-01-05   ATVI  18.143003  0.028099
-2 2010-01-06   ATVI  17.676304 -0.025723
-3 2010-01-07   ATVI  17.540184 -0.007701
-4 2010-01-08   ATVI  17.890211  0.019956
-5 2010-01-11   ATVI  17.763809 -0.007065
-6 2010-01-12   ATVI  16.383148 -0.077723
-7 2010-01-13   ATVI  16.694284  0.018991
-8 2010-01-14   ATVI  16.704012  0.000583
-9 2010-01-15   ATVI  16.558167 -0.008731
+2 2010-01-06   ATVI  17.676306 -0.025723
+3 2010-01-07   ATVI  17.540186 -0.007701
+4 2010-01-08   ATVI  17.890205  0.019955
+5 2010-01-11   ATVI  17.763807 -0.007065
+6 2010-01-12   ATVI  16.383150 -0.077723
+7 2010-01-13   ATVI  16.694288  0.018991
+8 2010-01-14   ATVI  16.704012  0.000582
+9 2010-01-15   ATVI  16.558168 -0.008731
 
 ✅ Added market returns
         date ticker  adj_close    return  market_return
-0 2010-01-04   ATVI  17.647137       NaN            NaN
+0 2010-01-04   ATVI  17.647135       NaN            NaN
 1 2010-01-05   ATVI  18.143003  0.028099       0.003116
-2 2010-01-06   ATVI  17.676304 -0.025723       0.000546
-3 2010-01-07   ATVI  17.540184 -0.007701       0.004001
-4 2010-01-08   ATVI  17.890211  0.019956       0.002882
-5 2010-01-11   ATVI  17.763809 -0.007065       0.001747
-6 2010-01-12   ATVI  16.383148 -0.077723      -0.009381
-7 2010-01-13   ATVI  16.694284  0.018991       0.008326
-8 2010-01-14   ATVI  16.704012  0.000583       0.002426
-9 2010-01-15   ATVI  16.558167 -0.008731      -0.010823
+2 2010-01-06   ATVI  17.676306 -0.025723       0.000546
+3 2010-01-07   ATVI  17.540186 -0.007701       0.004001
+4 2010-01-08   ATVI  17.890205  0.019955       0.002882
+5 2010-01-11   ATVI  17.763807 -0.007065       0.001747
+6 2010-01-12   ATVI  16.383150 -0.077723      -0.009381
+7 2010-01-13   ATVI  16.694288  0.018991       0.008326
+8 2010-01-14   ATVI  16.704012  0.000582       0.002426
+9 2010-01-15   ATVI  16.558168 -0.008731      -0.010823
 
 ✅ Saved to: /files/capstone_project/game-market-event-analyzer/data/processed/prices_with_returns.csv
    Shape: (23958, 5)
@@ -135,11 +135,11 @@ Data processed: /files/capstone_project/game-market-event-analyzer/data/processe
 
 ✅ Loaded 23958 price records
         date ticker  adj_close    return  market_return
-0 2010-01-04   ATVI  17.647137       NaN            NaN
+0 2010-01-04   ATVI  17.647135       NaN            NaN
 1 2010-01-05   ATVI  18.143003  0.028099       0.003116
-2 2010-01-06   ATVI  17.676304 -0.025723       0.000546
-3 2010-01-07   ATVI  17.540184 -0.007701       0.004001
-4 2010-01-08   ATVI  17.890211  0.019956       0.002882
+2 2010-01-06   ATVI  17.676306 -0.025723       0.000546
+3 2010-01-07   ATVI  17.540186 -0.007701       0.004001
+4 2010-01-08   ATVI  17.890205  0.019955       0.002882
    ATVI: alpha=0.000390, beta=0.826401
    EA: alpha=0.000390, beta=0.826401
    NTDOY: alpha=-0.000061, beta=0.644210
@@ -149,16 +149,16 @@ Data processed: /files/capstone_project/game-market-event-analyzer/data/processe
 
 ✅ Computed Abnormal Returns (AR)
         date ticker  adj_close  ...  market_return  expected_return        AR
-0 2010-01-04   ATVI  17.647137  ...            NaN              NaN       NaN
+0 2010-01-04   ATVI  17.647135  ...            NaN              NaN       NaN
 1 2010-01-05   ATVI  18.143003  ...       0.003116         0.002965  0.025134
-2 2010-01-06   ATVI  17.676304  ...       0.000546         0.000841 -0.026564
-3 2010-01-07   ATVI  17.540184  ...       0.004001         0.003697 -0.011397
-4 2010-01-08   ATVI  17.890211  ...       0.002882         0.002772  0.017184
-5 2010-01-11   ATVI  17.763809  ...       0.001747         0.001834 -0.008899
-6 2010-01-12   ATVI  16.383148  ...      -0.009381        -0.007362 -0.070361
-7 2010-01-13   ATVI  16.694284  ...       0.008326         0.007271  0.011721
+2 2010-01-06   ATVI  17.676306  ...       0.000546         0.000841 -0.026564
+3 2010-01-07   ATVI  17.540186  ...       0.004001         0.003697 -0.011397
+4 2010-01-08   ATVI  17.890205  ...       0.002882         0.002772  0.017184
+5 2010-01-11   ATVI  17.763807  ...       0.001747         0.001834 -0.008899
+6 2010-01-12   ATVI  16.383150  ...      -0.009381        -0.007362 -0.070361
+7 2010-01-13   ATVI  16.694288  ...       0.008326         0.007271  0.011721
 8 2010-01-14   ATVI  16.704012  ...       0.002426         0.002395 -0.001813
-9 2010-01-15   ATVI  16.558167  ...      -0.010823        -0.008554 -0.000177
+9 2010-01-15   ATVI  16.558168  ...      -0.010823        -0.008554 -0.000177
 
 [10 rows x 7 columns]
 
@@ -542,7 +542,7 @@ Dep. Variable:               AR_event   R-squared:                       0.207
 Model:                            OLS   Adj. R-squared:                  0.149
 Method:                 Least Squares   F-statistic:                     3.618
 Date:                Thu, 18 Dec 2025   Prob (F-statistic):           0.000267
-Time:                        08:31:43   Log-Likelihood:                 363.43
+Time:                        08:58:54   Log-Likelihood:                 363.43
 No. Observations:                 150   AIC:                            -704.9
 Df Residuals:                     139   BIC:                            -671.7
 Df Model:                          10                                         
@@ -563,7 +563,7 @@ evt_release               -0.0136      0.016     -0.830      0.408      -0.046  
 evt_trailer/reveal        -0.0101      0.018     -0.552      0.582      -0.046       0.026
 ==============================================================================
 Omnibus:                       70.787   Durbin-Watson:                   1.829
-Prob(Omnibus):                  0.000   Jarque-Bera (JB):              567.204
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              567.205
 Skew:                           1.450   Prob(JB):                    6.81e-124
 Kurtosis:                      12.074   Cond. No.                         119.
 ==============================================================================
@@ -601,7 +601,7 @@ Dep. Variable:               AR_event   R-squared:                       0.247
 Model:                            OLS   Adj. R-squared:                  0.169
 Method:                 Least Squares   F-statistic:                     3.170
 Date:                Thu, 18 Dec 2025   Prob (F-statistic):           0.000253
-Time:                        08:31:43   Log-Likelihood:                 367.40
+Time:                        08:58:54   Log-Likelihood:                 367.40
 No. Observations:                 150   AIC:                            -704.8
 Df Residuals:                     135   BIC:                            -659.6
 Df Model:                          14                                         
@@ -625,8 +625,8 @@ trend_gta6_z              -0.0053      0.003     -1.597      0.113      -0.012  
 trend_gtavi_z              0.0034      0.003      1.017      0.311      -0.003       0.010
 trend_rockstar_z           0.0057      0.003      1.669      0.097      -0.001       0.013
 ==============================================================================
-Omnibus:                       64.038   Durbin-Watson:                   1.838
-Prob(Omnibus):                  0.000   Jarque-Bera (JB):              376.000
+Omnibus:                       64.039   Durbin-Watson:                   1.838
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              376.001
 Skew:                           1.390   Prob(JB):                     2.25e-82
 Kurtosis:                      10.241   Cond. No.                         121.
 ==============================================================================
@@ -665,7 +665,7 @@ Dep. Variable:               AR_event   R-squared:                       0.320
 Model:                            OLS   Adj. R-squared:                  0.118
 Method:                 Least Squares   F-statistic:                     1.582
 Date:                Thu, 18 Dec 2025   Prob (F-statistic):              0.145
-Time:                        08:31:43   Log-Likelihood:                 106.02
+Time:                        08:58:55   Log-Likelihood:                 106.02
 No. Observations:                  49   AIC:                            -188.0
 Df Residuals:                      37   BIC:                            -165.3
 Df Model:                          11                                         
@@ -1226,14 +1226,14 @@ Series([], dtype: int64)
 parameter
 const                     0.004468
 evt_delay                -0.015814
-evt_earnings             -0.002736
+evt_earnings             -0.002735
 evt_leak                  0.001018
 evt_major announcement    0.017433
 evt_release              -0.013776
 evt_trailer/reveal       -0.011051
 is_rockstar               0.008830
-market_return            -0.484302
-sent_negative            -0.012099
+market_return            -0.484304
+sent_negative            -0.012098
 sent_positive             0.003362
 trend_gta6_z             -0.005312
 trend_gta_z               0.002348
@@ -1257,11 +1257,11 @@ Name: model2_all_trends, dtype: float64
 📉 GTA6 BACKTEST – OLS MODEL 2 (AR_event)
 ======================================================================
                    event_id  event_date  ... AR_event_pred         error
-44           GTA6_2022_LEAK  2022-09-19  ...      0.000179  2.478215e-16
+44           GTA6_2022_LEAK  2022-09-19  ...      0.000179  1.094773e-16
 54  TTWO_2023_GTA6_TRAILER1  2023-12-05  ...      0.017532  2.262119e-02
-56    TTWO_2025_GTA6_DELAY1  2025-05-02  ...     -0.027403  5.360875e-02
-57  TTWO_2025_GTA6_TRAILER2  2025-05-06  ...      0.013723 -2.189393e-02
-58    TTWO_2025_GTA6_DELAY2  2025-11-06  ...     -0.000813 -1.503296e-03
+56    TTWO_2025_GTA6_DELAY1  2025-05-02  ...     -0.027403  5.360872e-02
+57  TTWO_2025_GTA6_TRAILER2  2025-05-06  ...      0.013723 -2.189392e-02
+58    TTWO_2025_GTA6_DELAY2  2025-11-06  ...     -0.000813 -1.503276e-03
 
 [5 rows x 7 columns]
 
@@ -1338,7 +1338,7 @@ Name: model2_all_trends, dtype: float64
    ✅ Feature Importance & Detailed Reports
 
 ================================================================================
-⏰ Completed at: 2025-12-18 08:32:18
+⏰ Completed at: 2025-12-18 08:59:28
 📂 All results saved to: /files/capstone_project/game-market-event-analyzer/results
 ================================================================================
 
