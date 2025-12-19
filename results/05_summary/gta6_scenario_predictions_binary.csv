@@ -1,0 +1,4 @@
+scenario,predicted_class,predicted_label,proba_not_high,proba_high
+bear,0,Not High impact,0.5989455083922209,0.40105449160777906
+base,0,Not High impact,0.7635261667586519,0.23647383324134802
+bull,1,High impact,0.29637380822604076,0.7036261917739592

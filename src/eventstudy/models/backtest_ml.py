@@ -21,7 +21,7 @@ DATA_RAW = BASE_DIR / "data" / "raw"
 RESULTS_DIR = BASE_DIR / "results" / "05_summary"
 RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
-BACKTEST_PATH = DATA_PROCESSED / "gta6_backtest_events.csv"  # ✅ Changed to DATA_PROCESSED
+BACKTEST_PATH = DATA_RAW / "backtest.csv"  # ✅ Changed to DATA_PROCESSED
 
 # SAME FEATURES AS train_classification.py + gta6_prediction.py (no AR_event)
 FEATURE_COLS = [
@@ -195,7 +195,7 @@ def prepare_backtest_features():
     X_bt = merged[FEATURE_COLS].copy()
 
     if "impact_label_num" not in merged.columns:
-        raise KeyError("Column 'impact_label_num' is missing in gta6_backtest_events.csv")
+        raise KeyError("Column 'impact_label_num' is missing in backtest.csv")
 
     y_bt = merged["impact_label_num"].astype(int)
 
@@ -261,22 +261,31 @@ def run_backtest_gb():
 
 # ✅ ADD THIS NEW FUNCTION
 def run_backtest_binary():
-    """Backtest Binary Logistic Regression on GTA VI events."""
+    """Backtest Binary Logistic Regression on GTA VI events (with class weight fix)."""
+    
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.preprocessing import StandardScaler
     
     # 1) Load training data
     X, y = load_ml_dataset()
     
     # Convert y to binary (High = 1, else = 0)
-    y_binary = (y == 2).astype(int)  # 2 = High impact
+    y_binary = (y == 2).astype(int)
+    
+    print(f"   Class distribution: {(y_binary.value_counts().to_dict())}")
     
     ids, X_bt, y_bt = prepare_backtest_features()
-    
-    # Convert backtest y to binary
     y_bt_binary = (y_bt == 2).astype(int)
     
-    # 2) Impute NaNs in backtest features
+    # 2) Impute NaNs
     imputer = SimpleImputer(strategy="mean")
     imputer.fit(X)
+    
+    X_clean = pd.DataFrame(
+        imputer.transform(X),
+        columns=X.columns,
+        index=X.index,
+    )
     
     X_bt_clean = pd.DataFrame(
         imputer.transform(X_bt),
@@ -284,15 +293,23 @@ def run_backtest_binary():
         index=X_bt.index,
     )
     
-    # 3) Train Logistic Regression on binary target
-    from sklearn.linear_model import LogisticRegression
+    # 3) SCALE features (important for Logistic Regression!)
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X_clean)
+    X_bt_scaled = scaler.transform(X_bt_clean)
     
-    lr = LogisticRegression(max_iter=1000, random_state=42)
-    lr.fit(X, y_binary)
+    # 4) Train Logistic Regression with class weight balancing
+    lr = LogisticRegression(
+        max_iter=1000,
+        random_state=42,
+        class_weight="balanced",  # ✅ Handle class imbalance
+        solver="lbfgs"
+    )
+    lr.fit(X_scaled, y_binary)
     
-    # 4) Predict on backtest
-    proba = lr.predict_proba(X_bt_clean)
-    y_hat = lr.predict(X_bt_clean)
+    # 5) Predict on backtest
+    proba = lr.predict_proba(X_bt_scaled)
+    y_hat = lr.predict(X_bt_scaled)
     
     df_res = ids.copy()
     df_res["true_label"] = y_bt_binary
@@ -307,9 +324,9 @@ def run_backtest_binary():
     out_path = RESULTS_DIR / "gta6_backtest_ml_binary_logistic.csv"
     df_res.to_csv(out_path, index=False)
     
-    print("\n======================================================================")
-    print("🎯 GTA6 BACKTEST – LOGISTIC REGRESSION (BINARY)")
-    print("======================================================================")
+    print("\n" + "="*80)
+    print("🎯 GTA6 BACKTEST – LOGISTIC REGRESSION (BINARY - BALANCED)")
+    print("="*80)
     print(df_res)
     print(f"\n✅ Saved Binary backtest results to: {out_path}\n")
 

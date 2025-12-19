@@ -114,21 +114,6 @@ def run_pipeline():
         traceback.print_exc()
         return False
 
-    # ✅ STEP 3b: Create GTA6 Backtest Events
-    print("\n" + "=" * 80)
-    print("🎮 STEP 3b: CREATE GTA VI BACKTEST EVENTS")
-    print("=" * 80)
-    try:
-        print("▶️  Creating gta6_backtest_events.csv...")
-        from eventstudy.models.gta6_backtest_events import create_gta6_backtest_events
-        create_gta6_backtest_events()
-        print("✅ Step 3b complete: GTA VI backtest events created\n")
-    except Exception as e:
-        print(f"❌ Step 3b failed: {e}")
-        import traceback
-        traceback.print_exc()
-        return False
-
 
     # ✅ STEP 4: OLS Regression
     print("\n" + "=" * 80)
@@ -145,22 +130,7 @@ def run_pipeline():
         traceback.print_exc()
         return False
 
-    # ✅ STEP 5: Binary Classification
-    print("\n" + "=" * 80)
-    print("🤖 STEP 5: BINARY CLASSIFICATION MODELS")
-    print("=" * 80)
-    try:
-        print("▶️  Running train_binary.py...")
-        from eventstudy.models.train_binary import main as binary_main
-        binary_main()
-        print("✅ Step 5 complete: Binary classification results saved\n")
-    except Exception as e:
-        print(f"❌ Step 5 failed: {e}")
-        import traceback
-        traceback.print_exc()
-        return False
-
-    # ✅ STEP 6: Multiclass Classification
+    # ✅ STEP 5: Multiclass Classification
     print("\n" + "=" * 80)
     print("🎯 STEP 6: MULTICLASS CLASSIFICATION MODELS")
     print("=" * 80)
@@ -175,14 +145,29 @@ def run_pipeline():
         traceback.print_exc()
         return False
 
+    # ✅ STEP 6: Binary Classification
+    print("\n" + "=" * 80)
+    print("🤖 STEP 5: BINARY CLASSIFICATION MODELS")
+    print("=" * 80)
+    try:
+        print("▶️  Running train_binary.py...")
+        from eventstudy.models.train_binary import main as binary_main
+        binary_main()
+        print("✅ Step 5 complete: Binary classification results saved\n")
+    except Exception as e:
+        print(f"❌ Step 5 failed: {e}")
+        import traceback
+        traceback.print_exc()
+        return False
+
     # ✅ STEP 7: GTA 6 Predictions
     print("\n" + "=" * 80)
     print("🎮 STEP 7: GTA 6 SCENARIO PREDICTIONS")
     print("=" * 80)
     try:
         print("▶️  Running gta6_prediction.py...")
-        from eventstudy.models.gta6_prediction import run_gta6_scenario_predictions
-        run_gta6_scenario_predictions()
+        from eventstudy.models.gta6_prediction import main as gta6_main
+        gta6_main()
         print("✅ Step 7 complete: GTA 6 predictions saved\n")
     except Exception as e:
         print(f"❌ Step 7 failed: {e}")

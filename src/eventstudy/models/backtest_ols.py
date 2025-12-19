@@ -1,9 +1,9 @@
 """
 Backtest OLS regression (Model 2 – with GTA trend z-scores)
-on GTA VI-related events.
+on GTA VI-related HOLD-OUT events (not in training).
 
 Uses:
-- data/processed/regression_dataset_with_gta_trends.csv
+- data/raw/backtest.csv (DELAY1 only)
 - results/02_ols_regression/ols_regression_coeffs.csv
 """
 
@@ -12,27 +12,20 @@ import pandas as pd
 import numpy as np
 
 BASE_DIR = Path(__file__).resolve().parents[3]
-DATA_PROCESSED = BASE_DIR / "data" / "processed"
+DATA_RAW = BASE_DIR / "data" / "raw"
 RESULTS_OLS = BASE_DIR / "results" / "02_ols_regression"
 RESULTS_SUMMARY = BASE_DIR / "results" / "05_summary"
 RESULTS_SUMMARY.mkdir(parents=True, exist_ok=True)
 
-EVENT_IDS = [
-    "TTWO_2025_GTA6_DELAY1",
-    "TTWO_2025_GTA6_TRAILER2",
-    "TTWO_2025_GTA6_DELAY2",
-    "GTA6_2022_LEAK",
-    "TTWO_2023_GTA6_TRAILER1",
+# ✅ TEST ONLY ON HOLD-OUT EVENT
+HOLDOUT_EVENTS = [
+    "TTWO_2025_GTA6_DELAY1",  
 ]
 
 
-# ---------------------------------------------------------------------
-# Load Model 2 coefficients
-# ---------------------------------------------------------------------
 def load_coeffs_model2():
     """Load OLS coefficients for Model 2 from CSV."""
     coeffs = pd.read_csv(RESULTS_OLS / "ols_regression_coeffs.csv")
-    # columns: parameter, model1_baseline, model2_all_trends, model3_ttwo_trends
     coeffs = coeffs[["parameter", "model2_all_trends"]].set_index("parameter")
     beta = coeffs["model2_all_trends"]
     print("\n📐 Loaded Model 2 coefficients:")
@@ -40,9 +33,6 @@ def load_coeffs_model2():
     return beta
 
 
-# ---------------------------------------------------------------------
-# Recreate dummies exactly like in ols.py
-# ---------------------------------------------------------------------
 def add_dummies_like_ols(df: pd.DataFrame) -> pd.DataFrame:
     """
     Recreate sentiment and event-type dummies used in Model 2:
@@ -80,9 +70,6 @@ def add_dummies_like_ols(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-# ---------------------------------------------------------------------
-# Build X matrix aligned with beta (Model 2)
-# ---------------------------------------------------------------------
 def build_X_for_events(df_reg: pd.DataFrame, beta: pd.Series) -> pd.DataFrame:
     """
     Build feature rows X for the selected events, with columns in the
@@ -110,60 +97,75 @@ def build_X_for_events(df_reg: pd.DataFrame, beta: pd.Series) -> pd.DataFrame:
     for c in X.columns:
         X[c] = pd.to_numeric(X[c], errors="coerce")
 
-    print("\n🧱 Design matrix X for backtest (first rows):")
-    print(X.head())
+    print("\n🧱 Design matrix X for backtest:")
+    print(X)
 
     return X
 
 
-# ---------------------------------------------------------------------
-# Main backtest
-# ---------------------------------------------------------------------
 def run_backtest_ols():
+    """Backtest on HOLD-OUT events only"""
+    
     beta = load_coeffs_model2()
 
-    # Load regression dataset with trends
-    df_reg = pd.read_csv(
-        DATA_PROCESSED / "regression_dataset_with_gta_trends.csv",
-        sep=";",
-    )
-
-    # Filter GTA VI-related events
-    df_reg = df_reg[df_reg["event_id"].isin(EVENT_IDS)].copy()
-    print(f"\n✅ Found {len(df_reg)} GTA6 events in regression dataset")
+    # Load hold-out backtest data
+    df_backtest = pd.read_csv(DATA_RAW / "backtest.csv", sep=";")
+    
+    print(f"\n📊 Backtest dataset loaded:")
+    print(f"   Events in backtest.csv: {df_backtest['event_id'].unique().tolist()}")
+    
+    # Filter to ONLY hold-out events
+    df_backtest = df_backtest[df_backtest["event_id"].isin(HOLDOUT_EVENTS)].copy()
+    
+    if len(df_backtest) == 0:
+        print(f"\n❌ No hold-out events found!")
+        print(f"   Expected: {HOLDOUT_EVENTS}")
+        return
+    
+    print(f"\n✅ Testing on {len(df_backtest)} HOLD-OUT event(s):")
+    print(df_backtest[["event_id", "event_type", "sentiment", "AR_event"]].to_string())
 
     # Recreate sentiment + event-type dummies
-    df_reg = add_dummies_like_ols(df_reg)
+    df_backtest = add_dummies_like_ols(df_backtest)
 
     # Build X aligned with Model 2 betas
-    X = build_X_for_events(df_reg, beta)
+    X = build_X_for_events(df_backtest, beta)
 
     # True AR_event from data
-    y_true = df_reg["AR_event"].astype(float).values
+    y_true = df_backtest["AR_event"].astype(float).values
 
     # Align beta with X.columns
-    beta_vec = beta[X.columns]   # includes 'const' + all features in same order
+    beta_vec = beta[X.columns]
 
     # predicted AR_event = X * beta
     y_pred = X.values @ beta_vec.values
 
     # Build result table
-    res = df_reg[["event_id", "event_date", "event_type", "sentiment"]].copy()
+    res = df_backtest[["event_id", "date", "event_type", "sentiment", "ticker"]].copy()
     res["AR_event_true"] = y_true
     res["AR_event_pred"] = y_pred
     res["error"] = res["AR_event_pred"] - res["AR_event_true"]
+    res["abs_error"] = abs(res["error"])
 
     out_path = RESULTS_SUMMARY / "gta6_backtest_ols_model2.csv"
     res.to_csv(out_path, index=False)
 
-    print("\n======================================================================")
-    print("📉 GTA6 BACKTEST – OLS MODEL 2 (AR_event)")
-    print("======================================================================")
-    print(res)
+    print("\n" + "="*80)
+    print("📉 GTA6 BACKTEST – OLS MODEL 2 (HOLD-OUT EVENTS ONLY)")
+    print("="*80)
+    print(res.to_string(index=False))
+    
+    print(f"\n📊 Prediction Accuracy:")
+    print(f"   Mean Absolute Error: {res['abs_error'].mean():.6f}")
+    print(f"   R²: {1 - (res['error'].std()**2 / (y_true.std()**2 + 1e-10)):.4f}")
+    
     print(f"\n✅ Saved OLS backtest results to: {out_path}\n")
 
 
 def main():
+    print("\n" + "="*80)
+    print("🔬 OLS REGRESSION BACKTEST (HOLD-OUT VALIDATION)")
+    print("="*80)
     run_backtest_ols()
 
 

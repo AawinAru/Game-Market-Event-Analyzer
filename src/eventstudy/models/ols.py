@@ -5,7 +5,6 @@ OLS regression of abnormal returns on event features and GTA Google Trends.
 - Output:
     - results/02_ols_regression/ols_regression_results.txt  (all 3 models)
     - results/02_ols_regression/ols_regression_coeffs.csv   (all params)
-    - results/02_ols_regression/gta_scenario_predictions.csv (bull/base/bear AR_event)
 """
 
 from pathlib import Path
@@ -250,80 +249,6 @@ def run_model(name, df, target_col=TARGET_VAR, use_trends=True, ttwo_only=False)
 
 
 # ---------------------------------------------------------------------
-# Scenario builder: bull / base / bear for GTA VI-like TTWO event
-# ---------------------------------------------------------------------
-def build_gta_scenarios(model):
-    """
-    Build bull/base/bear scenarios for a GTA VI-style event:
-    - TTWO
-    - is_rockstar = 1
-    - positive sentiment
-    - 'major announcement' event type
-    - Different market returns and GTA trend z-levels.
-    """
-
-    cols = model.model.exog_names  # includes 'const'
-    rows = []
-
-    market_scenarios = {
-        "bear": -0.02,   # -2% SP500 day
-        "base":  0.00,   # flat
-        "bull":  0.02,   # +2% SP500 day
-    }
-
-    trend_scenarios = {
-        "low":  -1.0,    # 1 std below avg GTA hype
-        "mid":   0.0,    # average GTA hype
-        "high":  1.0,    # 1 std above avg GTA hype
-    }
-
-    for m_name, m_val in market_scenarios.items():
-        for t_name, t_val in trend_scenarios.items():
-            row = {c: 0.0 for c in cols}
-
-            if "const" in row:
-                row["const"] = 1.0
-
-            # Market & Rockstar
-            if "market_return" in row:
-                row["market_return"] = m_val
-            if "is_rockstar" in row:
-                row["is_rockstar"] = 1.0  # GTA VI = Rockstar game
-
-            # Sentiment: assume positive hype
-            if "sent_negative" in row:
-                row["sent_negative"] = 0.0
-            if "sent_positive" in row:
-                row["sent_positive"] = 1.0
-
-            # Event type: assume "major announcement"
-            for col in row.keys():
-                if col.startswith("evt_"):
-                    row[col] = 0.0
-            if "evt_major announcement" in row:
-                row["evt_major announcement"] = 1.0
-
-            # GTA trends: set to trend z-level
-            for col in ["trend_gta_z", "trend_gta6_z", "trend_gtavi_z", "trend_rockstar_z"]:
-                if col in row:
-                    row[col] = t_val
-
-            row["scenario"] = f"{m_name}_{t_name}"
-            rows.append(row)
-
-    scen_df = pd.DataFrame(rows).set_index("scenario")
-
-    # Ensure columns order matches model exog
-    scen_X = scen_df[cols]
-    preds = model.predict(scen_X)
-
-    scen_df["pred_AR_event"] = preds
-    scen_df["market_scenario"] = [s.split("_")[0] for s in scen_df.index]
-    scen_df["trend_scenario"] = [s.split("_")[1] for s in scen_df.index]
-
-    return scen_df
-
-# ---------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------
 def main():
@@ -409,19 +334,35 @@ def main():
     print("✅ All model coefficients saved to:", merged_coeffs_path)
 
     # -----------------------------------------------------------------
-    # GTA VI BULL / BASE / BEAR SCENARIOS (using Model 2)
-    # ✅ SAVE TO RESULTS FOLDER
+    # ✅ SAVE OLS MODELS (pickle) for later use
     # -----------------------------------------------------------------
-    scen_df = build_gta_scenarios(m2)
-    print("\n📊 Scenario predictions (Model 2 – AR_event):")
-    print(scen_df[["market_scenario", "trend_scenario", "pred_AR_event"]])
-
-    scen_out_path = RESULTS_OLS / "gta_scenario_predictions.csv"
-    scen_df.to_csv(scen_out_path, index=False)
-    print("✅ Scenario predictions saved to:", scen_out_path)
-
-    print("\n🎉 OLS regression + scenarios + LOO completed cleanly.")
-    print(f"📁 All results saved to: {RESULTS_OLS}\n")
+    import pickle
+    
+    models_dict = {
+        "model1": m1,
+        "model2": m2,
+        "model3": m3,
+    }
+    
+    models_path = RESULTS_OLS / "ols_models.pkl"
+    with open(models_path, "wb") as f:
+        pickle.dump(models_dict, f)
+    
+    print(f"✅ OLS models saved to: {models_path}")
+    print(f"   Available models: model1 (baseline), model2 (all+trends), model3 (TTWO+trends)")
+    
+    # Also save feature names for reference
+    features_dict = {
+        "model1_features": list(X1.columns),
+        "model2_features": list(X2.columns),
+        "model3_features": list(X3.columns),
+    }
+    
+    features_path = RESULTS_OLS / "ols_feature_names.pkl"
+    with open(features_path, "wb") as f:
+        pickle.dump(features_dict, f)
+    
+    print(f"✅ Feature names saved to: {features_path}\n")
 
 
 if __name__ == "__main__":
