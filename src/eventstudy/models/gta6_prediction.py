@@ -1,16 +1,18 @@
 """
-GTA VI Scenario Predictions using OLS Model 1 (Baseline).
+GTA VI Scenario Predictions using OLS Model 2 (with Trends) + Binary Classification.
 
-Loads pre-trained OLS model from ols.py and generates:
-- Bull / Base / Bear market scenarios
-- Low / Mid / High GTA hype levels
-- Results: results/02_ols_regression/gta_scenario_predictions.csv
+Generates:
+1. OLS predictions: 3×3 scenarios (market × hype)
+2. Binary ML predictions: 3 scenarios (bear/base/bull)
+- Results: results/05_summary/gta_scenario_predictions*.csv
 """
 
 from pathlib import Path
 import pandas as pd
 import numpy as np
 import pickle
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
 
 # ✅ SETUP PATHS
 BASE_DIR = Path(__file__).resolve().parents[3]
@@ -18,27 +20,22 @@ DATA_PROCESSED = BASE_DIR / "data" / "processed"
 RESULTS_OLS = BASE_DIR / "results" / "02_ols_regression"
 RESULTS_SUMMARY = BASE_DIR / "results" / "05_summary"
 
-# Create results folder if it doesn't exist
+# Create results folders if they don't exist
 RESULTS_OLS.mkdir(parents=True, exist_ok=True)
+RESULTS_SUMMARY.mkdir(parents=True, exist_ok=True)
 
 print(f"BASE_DIR:       {BASE_DIR}")
 print(f"DATA_PROCESSED: {DATA_PROCESSED}")
-print(f"RESULTS_OLS:    {RESULTS_OLS}\n")
+print(f"RESULTS_OLS:    {RESULTS_OLS}")
+print(f"RESULTS_SUMMARY: {RESULTS_SUMMARY}\n")
 
 
 # ============================================================================
-# LOAD OLS MODEL
+# PART 1: OLS MODEL PREDICTIONS
 # ============================================================================
-def load_ols_model(model_name="model1"):
-    """
-    Load pre-trained OLS model from pickle file.
-    
-    Args:
-        model_name: "model1" (baseline), "model2" (all+trends), or "model3" (TTWO+trends)
-    
-    Returns:
-        Fitted OLS model
-    """
+
+def load_ols_model(model_name="model2"):
+    """Load pre-trained OLS model from pickle file."""
     models_path = RESULTS_OLS / "ols_models.pkl"
     
     if not models_path.exists():
@@ -64,42 +61,25 @@ def load_ols_model(model_name="model1"):
     return model
 
 
-# ============================================================================
-# BUILD GTA VI SCENARIOS
-# ============================================================================
-def build_gta_scenarios(model, model_name="model1"):
-    """
-    Build bull/base/bear scenarios for a GTA VI-style event:
-    - TTWO (Rockstar Games)
-    - is_rockstar = 1
-    - positive sentiment
-    - 'major announcement' event type
-    - Different market returns and GTA trend z-levels.
+def build_ols_scenarios(model, model_name="model2"):
+    """Build 3×3 scenario grid (market × hype) for OLS predictions."""
     
-    Args:
-        model: Fitted OLS model
-        model_name: Name of model (for feature validation)
-    
-    Returns:
-        DataFrame with scenario predictions
-    """
-
-    cols = model.model.exog_names  # includes 'const'
+    cols = model.model.exog_names
     rows = []
 
     market_scenarios = {
-        "bear": 0.02,   # -% S&P 500 day
+        "bear": -0.02,   # -2% S&P 500 day
         "base":  0.00,   # flat
-        "bull":  -0.02,   # +2% S&P 500 day
+        "bull":  0.02,   # +2% S&P 500 day
     }
 
     trend_scenarios = {
         "low":  -1.0,    # 1 std below avg GTA hype
         "mid":   0.0,    # average GTA hype
-        "high":  2.0,    # 1 std above avg GTA hype
+        "high":  1.0,    # 1 std above avg GTA hype
     }
 
-    print(f"🔨 Building scenarios for {model_name}...")
+    print(f"🔨 Building OLS scenarios for {model_name}...")
     print(f"   Available features: {cols}\n")
 
     for m_name, m_val in market_scenarios.items():
@@ -114,7 +94,7 @@ def build_gta_scenarios(model, model_name="model1"):
             if "market_return" in row:
                 row["market_return"] = m_val
             if "is_rockstar" in row:
-                row["is_rockstar"] = 1.0  # GTA VI = Rockstar game
+                row["is_rockstar"] = 1.0
 
             # ✅ SENTIMENT: assume positive hype
             if "sent_negative" in row:
@@ -129,8 +109,7 @@ def build_gta_scenarios(model, model_name="model1"):
             if "evt_major announcement" in row:
                 row["evt_major announcement"] = 1.0
 
-            # ✅ GTA TRENDS (z-scored): set to trend level
-            # Only if model includes trends (model2, model3)
+            # ✅ GTA TRENDS (z-scored)
             for col in ["trend_gta_z", "trend_gta6_z", "trend_gtavi_z", "trend_rockstar_z"]:
                 if col in row:
                     row[col] = t_val
@@ -139,12 +118,9 @@ def build_gta_scenarios(model, model_name="model1"):
             rows.append(row)
 
     scen_df = pd.DataFrame(rows).set_index("scenario")
-
-    # ✅ ENSURE COLUMN ORDER MATCHES MODEL
     scen_X = scen_df[cols]
     
-    print(f"   Scenario feature matrix shape: {scen_X.shape}")
-    print(f"   Sample row (bear_low):\n{scen_X.loc['bear_low']}\n")
+    print(f"   Scenario feature matrix shape: {scen_X.shape}\n")
     
     # ✅ PREDICT
     preds = model.predict(scen_X)
@@ -155,63 +131,13 @@ def build_gta_scenarios(model, model_name="model1"):
 
     return scen_df
 
+
 # ============================================================================
-# MAIN
+# PART 2: BINARY ML MODEL PREDICTIONS
 # ============================================================================
-def main():
-    """Generate GTA VI scenario predictions using OLS Model 1."""
-    
-    print("=" * 80)
-    print("🎮 GTA VI SCENARIO PREDICTIONS")
-    print("=" * 80 + "\n")
-    
-    # Load baseline model
-    m2 = load_ols_model(model_name="model2")
-    
-    # Build scenarios
-    scen_df = build_gta_scenarios(m2, model_name="model2 (GTA Trends)")
-    
-    # Display results
-    print("\n" + "=" * 80)
-    print("📊 SCENARIO PREDICTIONS – MODEL 2 (GTA Trends)")
-    print("=" * 80)
-    print(scen_df[["market_scenario", "trend_scenario", "pred_AR_event"]].to_string())
-    
-    # Save to CSV
-    scen_out_path = RESULTS_SUMMARY / "gta_scenario_predictions.csv"
-    scen_df.to_csv(scen_out_path, index=False)
-    print(f"\n✅ Scenario predictions saved to: {scen_out_path}")
 
-if __name__ == "__main__":
-    main()
-
-"""
-GTA 6 scenario prediction using the SAME BINARY model as train_binary.py
-Chosen model: LOGISTIC REGRESSION (binary)
-"""
-
-from pathlib import Path
-import pandas as pd
-import numpy as np
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import classification_report
-from sklearn.model_selection import train_test_split
-
-# ---------------------------------------------------------------------
-# Paths
-# ---------------------------------------------------------------------
-BASE_DIR = Path(__file__).resolve().parents[3]
-DATA_PROCESSED = BASE_DIR / "data" / "processed"
-RESULTS_BINARY = BASE_DIR / "results" / "03_binary_classification"
-
-print(f"BASE_DIR:       {BASE_DIR}")
-print(f"DATA_PROCESSED: {DATA_PROCESSED}\n")
-
-
-# ---------------------------------------------------------------------
-# Load ML dataset
-# ---------------------------------------------------------------------
 def load_ml_dataset():
+    """Load ML dataset with features."""
     path = DATA_PROCESSED / "ml_dataset.csv"
     if not path.exists():
         raise FileNotFoundError(f"ml_dataset.csv not found at: {path}")
@@ -221,10 +147,8 @@ def load_ml_dataset():
     return df
 
 
-# ---------------------------------------------------------------------
-# Build X,y exactly like train_binary.py
-# ---------------------------------------------------------------------
 def build_xy_for_binary(df):
+    """Build X, y for binary classification."""
     required_cols = [
         "is_rockstar",
         "sentiment_negative",
@@ -264,6 +188,7 @@ def build_xy_for_binary(df):
 
     y = df_clean["impact_high"].astype(int)
 
+    # Remove rows with NaN
     mask = X.isna().any(axis=1)
     if mask.sum() > 0:
         X = X[~mask]
@@ -273,43 +198,30 @@ def build_xy_for_binary(df):
     return X, y
 
 
-# ---------------------------------------------------------------------
-# Train FINAL model → Logistic Regression (binary)
-# ---------------------------------------------------------------------
-def train_best_model(X, y, random_state=42):
-
-    print("🤖 Training Logistic Regression (binary, sanity test split)…")
-
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.25, stratify=y, random_state=random_state
-    )
+def train_binary_model(X, y, random_state=42):
+    """Train Logistic Regression on full dataset."""
+    
+    print("🤖 Training Logistic Regression (binary)…\n")
 
     model = LogisticRegression(
         max_iter=1000,
         solver="lbfgs",
-        random_state=random_state
+        random_state=random_state,
+        class_weight="balanced"
     )
 
-    model.fit(X_train, y_train)
-    y_pred = model.predict(X_test)
-
-    print("📊 Classification report (hold-out split):")
-    print(classification_report(y_test, y_pred))
-
-    print("🔁 Re-training Logistic Regression on FULL dataset...")
     model.fit(X, y)
-
+    
+    print("✅ Model trained on full dataset\n")
     return model
 
 
-# ---------------------------------------------------------------------
-# Build GTA 6 bear / base / bull scenario feature rows
-# ---------------------------------------------------------------------
-def build_gta6_scenarios(model_features):
+def build_binary_scenarios(feature_cols):
+    """Build 3 scenarios (bear/base/bull) for binary predictions."""
+    
+    base = {c: 0.0 for c in feature_cols}
 
-    base = {c: 0.0 for c in model_features}
-
-    # fixed attributes for a GTA6 Rockstar announcement
+    # Fixed attributes for GTA VI Rockstar announcement
     base["is_rockstar"] = 1.0
     base["sentiment_negative"] = 0.0
     base["franchise_gta"] = 1.0
@@ -319,7 +231,7 @@ def build_gta6_scenarios(model_features):
 
     scenarios = []
 
-    # Bear
+    # Bear market
     s_bear = base.copy()
     s_bear["market_return"] = -0.02
     s_bear["vix_level"] = 35.0
@@ -328,7 +240,7 @@ def build_gta6_scenarios(model_features):
     s_bear["vix_regime_high"] = 1.0
     scenarios.append(("bear", s_bear))
 
-    # Base
+    # Base market
     s_base = base.copy()
     s_base["market_return"] = 0.00
     s_base["vix_level"] = 20.0
@@ -337,7 +249,7 @@ def build_gta6_scenarios(model_features):
     s_base["vix_regime_high"] = 0.0
     scenarios.append(("base", s_base))
 
-    # Bull
+    # Bull market
     s_bull = base.copy()
     s_bull["market_return"] = 0.02
     s_bull["vix_level"] = 15.0
@@ -348,43 +260,31 @@ def build_gta6_scenarios(model_features):
 
     rows = []
     for name, vec in scenarios:
-        row = {c: vec[c] for c in model_features}
+        row = {c: vec[c] for c in feature_cols}
         row["scenario"] = name
         rows.append(row)
 
     df = pd.DataFrame(rows)
-    df = df[model_features + ["scenario"]]
+    df = df[feature_cols + ["scenario"]]
 
-    print("✅ GTA6 scenario feature rows:")
-    print(df, "\n")
+    print("✅ Binary scenario feature rows:")
+    print(df.to_string(index=False), "\n")
 
     return df
 
 
-# ---------------------------------------------------------------------
-# Main run function
-# ---------------------------------------------------------------------
-LABEL_MAP = {0: "Not High impact", 1: "High impact"}
+LABEL_MAP = {0: "Not High", 1: "High"}
 
 
-def run_gta6_scenario_predictions():
-
-    df_ml = load_ml_dataset()
-    X, y = build_xy_for_binary(df_ml)
-
-    model = train_best_model(X, y)
-
-    feature_cols = list(X.columns)
-    df_scen = build_gta6_scenarios(feature_cols)
-
-    X_scen = df_scen[feature_cols]
-    scen_names = df_scen["scenario"].values
-
+def predict_binary_scenarios(model, df_scenarios, feature_cols):
+    """Generate binary predictions for scenarios."""
+    
+    X_scen = df_scenarios[feature_cols]
     y_pred = model.predict(X_scen)
     y_proba = model.predict_proba(X_scen)
 
     results = []
-    for i, scenario in enumerate(scen_names):
+    for i, scenario in enumerate(df_scenarios["scenario"].values):
         cls = int(y_pred[i])
         probs = y_proba[i]
 
@@ -396,17 +296,81 @@ def run_gta6_scenario_predictions():
             "proba_high": float(probs[1]),
         })
 
-    df_results = pd.DataFrame(results)
-
-    out_path = RESULTS_SUMMARY / "gta6_scenario_predictions_binary.csv"
-    df_results.to_csv(out_path, index=False)
-
-    print("📊 GTA6 Scenario Predictions (Binary):")
-    print(df_results)
-    print(f"\n✅ Saved to {out_path}")
+    return pd.DataFrame(results)
 
 
-# ---------------------------------------------------------------------
+# ============================================================================
+# MAIN
+# ============================================================================
+
+def main():
+    """Generate GTA VI scenario predictions (OLS + Binary ML)."""
+    
+    print("=" * 80)
+    print("🎮 GTA VI SCENARIO PREDICTIONS (OLS + BINARY ML)")
+    print("=" * 80 + "\n")
+    
+    # ========================================================================
+    # PART 1: OLS PREDICTIONS
+    # ========================================================================
+    print("📊 PART 1: OLS MODEL 2 PREDICTIONS (3×3 Grid)")
+    print("-" * 80 + "\n")
+    
+    m2 = load_ols_model(model_name="model2")
+    scen_ols = build_ols_scenarios(m2, model_name="model2 (GTA Trends)")
+    
+    print("\n" + "=" * 80)
+    print("📊 OLS SCENARIO PREDICTIONS – MODEL 2")
+    print("=" * 80)
+    print(scen_ols[["market_scenario", "trend_scenario", "pred_AR_event"]].to_string())
+    
+    # Save OLS results
+    ols_out_path = RESULTS_SUMMARY / "gta_scenario_predictions.csv"
+    scen_ols.to_csv(ols_out_path, index=False)
+    print(f"\n✅ OLS scenario predictions saved to: {ols_out_path}")
+    
+    # ========================================================================
+    # PART 2: BINARY ML PREDICTIONS
+    # ========================================================================
+    print("\n" + "=" * 80)
+    print("📊 PART 2: BINARY ML PREDICTIONS (3 Scenarios)")
+    print("-" * 80 + "\n")
+    
+    # Load and prepare data
+    df_ml = load_ml_dataset()
+    X, y = build_xy_for_binary(df_ml)
+    
+    # Train binary model
+    binary_model = train_binary_model(X, y)
+    
+    # Build scenarios
+    feature_cols = list(X.columns)
+    df_scen_binary = build_binary_scenarios(feature_cols)
+    
+    # Predict
+    df_binary_results = predict_binary_scenarios(binary_model, df_scen_binary, feature_cols)
+    
+    print("\n" + "=" * 80)
+    print("📊 BINARY ML SCENARIO PREDICTIONS")
+    print("=" * 80)
+    print(df_binary_results.to_string(index=False))
+    
+    # Save binary results
+    binary_out_path = RESULTS_SUMMARY / "gta6_scenario_predictions_binary.csv"
+    df_binary_results.to_csv(binary_out_path, index=False)
+    print(f"\n✅ Binary scenario predictions saved to: {binary_out_path}")
+    
+    # ========================================================================
+    # SUMMARY
+    # ========================================================================
+    print("\n" + "=" * 80)
+    print("✅ BOTH PREDICTIONS COMPLETE")
+    print("=" * 80)
+    print(f"OLS predictions:    {ols_out_path}")
+    print(f"Binary predictions: {binary_out_path}")
+    print("=" * 80 + "\n")
+
+
 if __name__ == "__main__":
-    run_gta6_scenario_predictions()
+    main()
 

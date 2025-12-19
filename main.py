@@ -220,38 +220,6 @@ def print_final_summary():
     print(f"   │   └── *_confusion_matrix.png")
     print(f"   └── 05_summary/")
     
-    print("\n📊 DATA PROCESSING PIPELINE:")
-    print("""
-    ┌─────────────────────────────────────────────────────────────┐
-    │ 0. DATA LOADING                                             │
-    │    ↓ Download TTWO, EA, GameStocks, VIX from Yahoo Finance │
-    │    ↓ Build prices_long.csv                                 │
-    └─────────────────────────────────────────────────────────────┘
-                           ↓
-    ┌─────────────────────────────────────────────────────────────┐
-    │ 1. FEATURES ENGINEERING                                    │
-    │    ↓ compute_returns.py → prices_with_returns.csv          │
-    │    ↓ merge_event_returns.py → events_with_returns.csv      │
-    │    ↓ compute_ar_car.py → events_with_car.csv               │
-    │    ↓ car_into_labels.py → events_labeled.csv               │
-    └─────────────────────────────────────────────────────────────┘
-                           ↓
-    ┌─────────────────────────────────────────────────────────────┐
-    │ 2. ML DATASET BUILDING                                      │
-    │    ↓ build_ml_dataset.py → ml_dataset.csv                  │
-    └─────────────────────────────────────────────────────────────┘
-                     ↙       ↓          ↘
-    ┌──────────────────┐  ┌──────────────────────┐  ┌─────────────────────────────┐
-    │ 3. TRENDS        │  │ 3b-3c. GTA6          │  │ 4. ML MODELS                │
-    │ trends.py        │  │ BACKTEST             │  │    ├─ ols.py                │
-    │ ↓                │  │ ├─gta6_backtest      │  │    ├─ train_binary.py       │
-    │regression_dataset│  │ │_events.py          │  │    ├─ train_classification  │
-    │_with_gta_trends  │  │ ├─build_gta6_        │  │    ├─ gta6_prediction.py    │
-    │.csv              │  │ │backtest_features   │  │    ├─ backtest_ml.py        │
-    └──────────────────┘  │ └─ gta6_backtest     │  │    └─ backtest_ols.py       │
-                          │   _ml.csv            │  └─────────────────────────────┘
-                          └──────────────────────┘
-    """)
     
     print("\n📈 ANALYSIS OUTPUTS:")
     print("   ✅ Step 4: OLS Regression (3 models + scenario predictions)")

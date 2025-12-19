@@ -12,7 +12,7 @@ Dep. Variable:               AR_event   R-squared:                       0.189
 Model:                            OLS   Adj. R-squared:                  0.131
 Method:                 Least Squares   F-statistic:                     3.224
 Date:                Fri, 19 Dec 2025   Prob (F-statistic):           0.000926
-Time:                        14:27:09   Log-Likelihood:                 365.01
+Time:                        14:40:48   Log-Likelihood:                 365.01
 No. Observations:                 149   AIC:                            -708.0
 Df Residuals:                     138   BIC:                            -675.0
 Df Model:                          10                                         
@@ -32,8 +32,8 @@ evt_major announcement     0.0168      0.018      0.953      0.342      -0.018  
 evt_release               -0.0134      0.016     -0.842      0.401      -0.045       0.018
 evt_trailer/reveal        -0.0102      0.018     -0.576      0.565      -0.045       0.025
 ==============================================================================
-Omnibus:                       78.147   Durbin-Watson:                   1.790
-Prob(Omnibus):                  0.000   Jarque-Bera (JB):              725.212
+Omnibus:                       78.146   Durbin-Watson:                   1.790
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              725.211
 Skew:                           1.606   Prob(JB):                    3.33e-158
 Kurtosis:                      13.320   Cond. No.                         119.
 ==============================================================================
@@ -58,7 +58,7 @@ Dep. Variable:               AR_event   R-squared:                       0.227
 Model:                            OLS   Adj. R-squared:                  0.147
 Method:                 Least Squares   F-statistic:                     2.819
 Date:                Fri, 19 Dec 2025   Prob (F-statistic):            0.00101
-Time:                        14:27:09   Log-Likelihood:                 368.59
+Time:                        14:40:48   Log-Likelihood:                 368.59
 No. Observations:                 149   AIC:                            -707.2
 Df Residuals:                     134   BIC:                            -662.1
 Df Model:                          14                                         
@@ -108,7 +108,7 @@ Dep. Variable:               AR_event   R-squared:                       0.255
 Model:                            OLS   Adj. R-squared:                  0.027
 Method:                 Least Squares   F-statistic:                     1.118
 Date:                Fri, 19 Dec 2025   Prob (F-statistic):              0.376
-Time:                        14:27:09   Log-Likelihood:                 104.79
+Time:                        14:40:48   Log-Likelihood:                 104.79
 No. Observations:                  48   AIC:                            -185.6
 Df Residuals:                      36   BIC:                            -163.1
 Df Model:                          11                                         
