@@ -1,7 +1,7 @@
 # car_into_labels.py
 
 """
-Create impact labels from CAR.
+Cumulative Abnormal Returns (CAR) and Create impact labels from CAR.
 """
 
 import pandas as pd
@@ -43,10 +43,8 @@ def car_into_labels():
 
     events["date"] = pd.to_datetime(events["date"])
     
-    # ✅ ADD trading_date (same as date for now)
     events["trading_date"] = events["date"]
 
-    # 🔥 NEW: AR_event (event-day abnormal return)
     def get_ar_event(row):
         if pd.isna(row["date"]):
             return None
@@ -66,7 +64,7 @@ def car_into_labels():
     events["CAR_m1_p1"] = events.apply(
         lambda r: compute_car(r["ticker"], r["date"], -1, 1), axis=1
     )
-    # 🔥 NEW: CAR_0_1
+ 
     events["CAR_0_1"] = events.apply(
         lambda r: compute_car(r["ticker"], r["date"], 0, 1), axis=1
     )
@@ -84,9 +82,9 @@ def car_into_labels():
                 "ticker",
                 "date",
                 "trading_date",
-                "AR_event",      # 🔥 NEW
+                "AR_event",      
                 "CAR_m1_p1",
-                "CAR_0_1",       # 🔥 NEW
+                "CAR_0_1",       
                 "CAR_0_3",
                 "CAR_0_5",
             ]

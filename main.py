@@ -132,30 +132,30 @@ def run_pipeline():
 
     # ✅ STEP 5: Multiclass Classification
     print("\n" + "=" * 80)
-    print("🎯 STEP 6: MULTICLASS CLASSIFICATION MODELS")
+    print("🎯 STEP 5: MULTICLASS CLASSIFICATION MODELS")
     print("=" * 80)
     try:
         print("▶️  Running train_classification.py...")
         from eventstudy.models.train_classification import main as multiclass_main
         multiclass_main()
-        print("✅ Step 6 complete: Multiclass classification results saved\n")
+        print("✅ Step 5 complete: Multiclass classification results saved\n")
     except Exception as e:
-        print(f"❌ Step 6 failed: {e}")
+        print(f"❌ Step 5 failed: {e}")
         import traceback
         traceback.print_exc()
         return False
 
     # ✅ STEP 6: Binary Classification
     print("\n" + "=" * 80)
-    print("🤖 STEP 5: BINARY CLASSIFICATION MODELS")
+    print("🤖 STEP 6: BINARY CLASSIFICATION MODELS")
     print("=" * 80)
     try:
         print("▶️  Running train_binary.py...")
         from eventstudy.models.train_binary import main as binary_main
         binary_main()
-        print("✅ Step 5 complete: Binary classification results saved\n")
+        print("✅ Step 6 complete: Binary classification results saved\n")
     except Exception as e:
-        print(f"❌ Step 5 failed: {e}")
+        print(f"❌ Step 6 failed: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -205,8 +205,7 @@ def print_final_summary():
     print(f"\n   {RESULTS_DIR}/")
     print(f"   ├── 02_ols_regression/")
     print(f"   │   ├── ols_regression_results.txt")
-    print(f"   │   ├── ols_regression_coeffs.csv")
-    print(f"   │   └── gta_scenario_predictions.csv")
+    print(f"   │   └── ols_regression_coeffs.csv")
     print(f"   ├── 03_binary_classification/")
     print(f"   │   ├── binary_test_results.csv")
     print(f"   │   ├── binary_cv_results.csv")
@@ -223,8 +222,8 @@ def print_final_summary():
     
     print("\n📈 ANALYSIS OUTPUTS:")
     print("   ✅ Step 4: OLS Regression (3 models + scenario predictions)")
-    print("   ✅ Step 5: Binary Classification (4 models: LR, RF, GB, MLP)")
-    print("   ✅ Step 6: Multiclass Classification (4 models: LR, RF, GB, MLP)")
+    print("   ✅ Step 5: Multiclass Classification (4 models: LR, RF, GB, MLP)")
+    print("   ✅ Step 6: Binary Classification (4 models: LR, RF, GB, MLP)")
     print("   ✅ Step 7: GTA 6 Scenario Predictions (ML-based)")
     print("   ✅ Step 8: Backtests on GTA VI Events (ML & OLS)")
     print("   ✅ Confusion Matrices & Model Comparisons (PNG)")

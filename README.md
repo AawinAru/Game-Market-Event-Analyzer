@@ -3,33 +3,6 @@
 ## Research Question
 How do video game events (announcements, delays) impact Take-Two Interactive (TTWO) stock returns? Can OLS regression and machine learning predict abnormal returns?
 
-## Setup
-
-```bash
-# Create environment
-conda env create -f environment.yml
-conda activate game-market-event-analyzer
-
-# Install dependencies
-pip install -r requirements.txt
-```
-
-## Usage
-
-```bash
-# Run full pipeline
-python main.py
-
-# Expected output:
-# ✅ Data loaded: 151 events, 23,958 trading days (2010-2025)
-# ✅ OLS Model 1 R²: 0.189
-# ✅ OLS Model 2 R²: 0.227 (with GTA trends)
-# ✅ OLS Model 3 R²: 0.255 (TTWO-only)
-# ✅ Multiclass accuracy: 50.0% (Gradient Boosting)
-# ✅ Binary accuracy: 68.4% (Logistic Regression & Gradient Boosting)
-# ✅ All results & figures saved to: results/
-```
-
 ## Project Structure
 
 ```
@@ -120,7 +93,8 @@ conda activate game-market-event-analyzer
 
 ### Run Full Pipeline
 # 4. Execute all steps (data → features → models → backtest → visualization)
-python main.py | tee pipeline_output.log
+python main.py 
+python main.py | tee pipeline_output.log # if you want to see the whole terminal output
 
 ```bash
 # Or run individual steps
@@ -304,20 +278,6 @@ CAR = Cumulative Abnormal Return over event window
 - [ ] Time-series features (LSTM for sequential patterns)
 - [ ] Causal inference (propensity matching)
 
-## Installation & Quick Start
-
-```bash
-# 1. Clone and navigate
-cd capstone_project/game-market-event-analyzer
-
-# 2. Create environment
-conda env create -f environment.yml
-conda activate game-market-event-analyzer
-
-# 3. Run pipeline
-python main.py | tee pipeline_output.log
-
-```
 
 ## Output Files
 
@@ -345,18 +305,3 @@ Data: yfinance, pytrends
 ```
 
 Full list: `requirements.txt`
-
-## References
-
-- **Event Study:** Campbell, Lo & MacKinlay (1997)
-- **AR Calculation:** Fama et al. (1969)
-- **ML Models:** scikit-learn documentation
-- **Time Series:** statsmodels documentation
-
----
-
-**Status:** ✅ Complete & Validated  
-**Last Updated:** December 2025  
-**Data Period:** 2010-2025  
-**Events:** 151 game announcements  
-**Pipeline Steps:** 8 complete stages  

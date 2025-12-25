@@ -259,7 +259,7 @@ def run_backtest_gb():
     print(f"\n✅ Saved ML backtest results to: {out_path}\n")
 
 
-# ✅ ADD THIS NEW FUNCTION
+
 def run_backtest_binary():
     """Backtest Binary Logistic Regression on GTA VI events (with class weight fix)."""
     
@@ -331,7 +331,7 @@ def run_backtest_binary():
     print(f"\n✅ Saved Binary backtest results to: {out_path}\n")
 
 
-# ✅ UPDATE MAIN FUNCTION
+
 def main():
     run_backtest_gb()      # ✅ Multiclass Gradient Boosting
     run_backtest_binary()  # ✅ Binary Logistic Regression

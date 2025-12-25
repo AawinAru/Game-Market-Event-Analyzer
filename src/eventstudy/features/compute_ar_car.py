@@ -1,7 +1,7 @@
 # compute_ar_car.py
 
 """
-Compute Abnormal Returns (AR) and Cumulative Abnormal Returns (CAR).
+Compute Abnormal Returns (AR) 
 """
 
 import pandas as pd
@@ -9,7 +9,7 @@ import numpy as np
 from pathlib import Path
 
 def compute_ar_car():
-    """Compute Abnormal Returns (AR) and Cumulative Abnormal Returns (CAR)"""
+    """Compute Abnormal Returns (AR)"""
     
     BASE_DIR = Path(__file__).resolve().parents[3]
     DATA_PROCESSED = BASE_DIR / "data" / "processed"
