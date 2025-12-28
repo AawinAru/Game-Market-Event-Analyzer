@@ -17,6 +17,7 @@
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{biblatex}
+\usepackage{enumitem}
 \addbibresource{references.bib} % Create this file for your references
 
 % Code listing settings
@@ -58,14 +59,14 @@
 \title{%
     \Large \textbf{Advanced Programming 2025} \\
     \vspace{0.5cm}
-    \LARGE \textbf{Your Project Title Here} \\
+    \LARGE \textbf{Game Market Event Analyzer} \\
     \vspace{0.3cm}
     \large Final Project Report
 }
 \author{
-    Your Name \\
-    \texttt{your.email@unil.ch} \\
-    Student ID: 12345678
+    Aawin Arulampalam \\
+    \texttt{aawin.arulampalam@unil.ch} \\
+    Student ID: 22408330
 }
 \date{\today}
 
@@ -76,159 +77,401 @@
 
 \begin{abstract}
 \noindent
-Provide a concise summary (150-200 words) of your project. Include:
-\begin{itemize}
-    \item The problem you're solving
-    \item Your approach/methodology
-    \item Key results/findings
-    \item Main contributions
-\end{itemize}
+This project investigates whether major video-game–related events generate systematic short-term stock-market reactions for publicly listed publishers, with a particular focus on announcements related to \textit{Grand Theft Auto VI} (GTA~VI). The objective is not to design a trading strategy, but to build a transparent and reproducible analytical framework to measure, explain, and contextualize abnormal returns around such events.
+
+Using an event-study methodology, abnormal returns (AR) and cumulative abnormal returns (CAR) are computed for 151 firm-level events between 2010 and 2025, covering major publishers including Take-Two Interactive, Electronic Arts, Nintendo, Activision Blizzard and Ubisoft. These reactions are analyzed through a combination of econometric and machine-learning approaches. First, OLS regressions are used to explain event-day abnormal returns using market conditions, event characteristics, sentiment proxies, volatility regimes, and Google Trends attention measures. Second, machine-learning classifiers are evaluated in both multiclass (Low/Medium/High impact) and binary (High vs.\ Not High impact) settings.
+
+Empirical results show that OLS models are useful for interpretation and scenario analysis but exhibit weak out-of-sample predictive power. Multiclass classification proves unstable due to overlapping impact categories and limited data. Reframing the problem as a binary classification task yields more robust results, with logistic regression providing the most stable performance. Overall, the project contributes a reusable and extensible pipeline for analyzing event-driven market reactions in the video-game industry.
 \end{abstract}
 
 \vspace{0.5cm}
-\noindent\textbf{Keywords:} data science, Python, machine learning, [add your keywords]
+\noindent\textbf{Keywords:} event study, abnormal returns, machine learning, financial markets, video-game industry, GTA VI
 
 \newpage
 \tableofcontents
 \newpage
-
 % ================== MAIN CONTENT ==================
-
 \section{Introduction}
 \label{sec:introduction}
 
-Introduce your project and its context. This section should include:
-\begin{itemize}
-    \item Background and motivation
-    \item Problem statement
-    \item Objectives and goals
-    \item Report organization
-\end{itemize}
+Grand Theft Auto VI (GTA VI) is one of the most anticipated entertainment releases of the decade. Beyond the gaming community, it is financially relevant because Take-Two Interactive (TTWO), the publisher of Rockstar Games, is expected to benefit directly from major GTA-related milestones such as trailers, delays, and the final release. Given the economic importance of the Grand Theft Auto franchise for Take-Two Interactive, it is natural to ask whether such announcements generate systematic short-term stock-market reactions.
+
+The project is motivated by the observation that some GTA-related announcements have coincided with sharp short-term price movements in TTWO’s stock; for example, following the first GTA VI delay announcement in May 2025, TTWO’s stock declined by approximately 8\% over the same week, as reported by financial analysts  (Leon, 2025). This raises the question of whether such reactions are systematic or idiosyncratic. Since markets are noisy and respond to multiple information sources simultaneously, the objective is not to construct a trading strategy. Instead, the goal is to build a transparent and reproducible pipeline that (1) measures historical abnormal returns around major video-game events and (2) frames plausible short-term market reaction scenarios for GTA~VI under different market conditions.
+
+The research question is:
+
+\textbf{How do major video-game events influence the short-term stock-market performance of publishers, and can past patterns help estimate the expected impact of GTA VI’s release?}
+
+To address this question, an event-study framework is used to compute abnormal returns (AR) and cumulative abnormal returns (CAR) around each event. These reactions are then analyzed using two complementary approaches: (i) an interpretable OLS regression to explain AR using event and market features (including volatility regimes and Google Trends), and (ii) classification models that predict impact categories (low/medium/high and High vs.\ Not High), with a strict hold-out backtest on the first GTA VI delay announcement on May~2, 2025 that is fully excluded from model training.  Given the noisy nature of short-horizon returns and the limited sample size, binary classification (High vs.\ Not High impact) is emphasized as the primary predictive framework, while multiclass models are reported for exploratory purposes. Results are presented through bear, base, and bull scenarios rather than a single point estimate.
 
 \section{Literature Review / Related Work}
 \label{sec:literature}
 
-Discuss relevant prior work, existing solutions, or theoretical background. For data science projects, this might include:
-\begin{itemize}
-    \item Previous approaches to similar problems
-    \item Relevant algorithms or methodologies
-    \item Datasets used in related studies
-\end{itemize}
+Financial markets react to new information as investors update expectations about future cash flows and risk. Firm-specific announcements can therefore trigger immediate price adjustments as market participants reassess valuation. This mechanism motivates the use of event-study methods to analyze market reactions to major video-game announcements.
+
+The event-study methodology was formalized by Fama et al.\ (1969) and later reviewed by MacKinlay (1997). The approach compares realized returns around an event to an expected (“normal”) return generated by a benchmark model, with the difference defining the abnormal return (AR). Abnormal returns can be aggregated over short event windows to obtain cumulative abnormal returns (CAR). Under the semi-strong form of market efficiency, publicly available information should be incorporated into prices rapidly, justifying the focus on narrow event windows (Bevilacqua et al., 2020).
+
+This framework is applied here to GTA- and Rockstar-related events such as trailers, delays, leaks, and major announcements. Compared to traditional applications focusing on corporate actions or earnings announcements, this setting is more attention-driven. For this reason, the analysis incorporates a proxy for public attention based on Google Trends data. Prior research shows that investor attention measures, including search intensity, are associated with abnormal returns and trading activity (Da et al., 2011).
 
 \section{Methodology}
 \label{sec:methodology}
 
 \subsection{Data Description}
-Describe your dataset(s):
-\begin{itemize}
-    \item Source and collection method
-    \item Size and characteristics
-    \item Features/variables
-    \item Data quality issues
+
+This project relies on a multi-source dataset combining financial market data, curated event information, and external attention indicators. The final dataset covers the period 2010--2025 and focuses on major announcements affecting Take-Two Interactive (TTWO), the publisher of Rockstar Games and the Grand Theft Auto (GTA) franchise.
+
+\subsubsection{Data Sources}
+
+\begin{itemize}[topsep=2pt]
+    \item \textbf{Financial market data} were collected using the \texttt{yfinance} API and include daily adjusted prices and returns for TTWO, major video-game publishers (EA, ATVI, UBI, NTDOY), the S\&P 500 index (market benchmark), and the VIX volatility index.
+    \item \textbf{Event data} consist of a manually curated dataset of 151 corporate and product-related events (earnings announcements, game releases, trailers, delays, leaks, and major public announcements) affecting major video-game publishers, with a particular focus on GTA-related events. An additional GTA VI first delay in May 2025 is excluded from model estimation and used exclusively as a strict hold-out backtest event.
+
+Event identification and timing were compiled using a combination of equity research reports (WUTIS) and primary company sources, including official investor relations releases, earnings call transcripts, and press communications from publishers such as Take-Two Interactive and Rockstar Games. These sources were used to ensure that selected events correspond to information that was publicly available and economically relevant at the time of release.
+
+    \item \textbf{Attention data} were obtained from Google Trends using the \texttt{pytrends} API, capturing search interest for ``GTA'', ``GTA 6'', ``GTA VI'', and ``Rockstar Games''.
+
+    Weekly Google Trends series were converted to daily frequency via forward-fill and standardized using z-scores to ensure comparability across variables.
 \end{itemize}
 
-\subsection{Approach}
-Detail your technical approach:
-\begin{itemize}
-    \item Algorithms used
-    \item Data preprocessing steps
-    \item Model architecture (if applicable)
-    \item Evaluation metrics
+
+
+\subsubsection{Dataset Structure}
+
+Table~\ref{tab:dataset_overview} summarizes the main datasets constructed throughout the pipeline.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{p{5cm} c c}
+\textbf{Dataset} & \textbf{Rows} & \textbf{Description} \\
+\hline
+prices\_long.csv & 23,959 & Daily prices for all tickers (2010--2025) \\
+events\_labeled.csv & 151 & Events with AR, CAR windows, and impact labels \\
+ml\_dataset.csv & 151 & Final ML dataset with engineered features \\
+backtest.csv & 1 & GTA VI delay used as a strict hold-out backtest \\
+regression\_dataset\_ with\_gta\_trends.csv & 151 & Regression dataset including trend z-scores \\
+\end{tabular}
+\caption{Overview of main datasets}
+\label{tab:dataset_overview}
+\end{table}
+
+\subsubsection{Data Quality Issues}
+
+The dataset is limited in size and heterogeneous in nature. Event data are manually curated from public disclosures and company sources, which may introduce subjectivity in event classification and timing. Financial returns are noisy, and some events may overlap with broader market or firm-specific news, making attribution imperfect. Event dates falling on non-trading days are aligned to the next trading session, and Google Trends data observed at weekly frequency are forward-filled and standardized to daily values. Rare event categories are consolidated to improve statistical stability, while extreme abnormal returns are retained as they reflect genuine market reactions. These limitations motivate cautious interpretation of the results.
+
+\subsubsection{Key Variables}
+
+\textbf{Financial variables} include daily stock returns, market returns, abnormal returns (AR), and cumulative abnormal returns (CAR) computed over short event windows. Market uncertainty is captured using the VIX level, its 30-day moving average, and regime indicators (low, medium, high).
+\\
+\textbf{Event-level variables} include event type, sentiment, Rockstar indicator, and a GTA franchise indicator. Sparse event categories were consolidated into four broad groups (corporate, release, marketing, negative) to improve statistical stability.
+\\
+\textbf{Attention variables} consist of standardized Google Trends z-scores for GTA- and Rockstar-related search terms.
+
+\subsubsection{Label Construction}
+
+Impact labels are based on CAR(-1,+1):
+\begin{itemize}[topsep=2pt]
+    \item \textbf{Low}: $|CAR| < 1\%$
+    \item \textbf{Medium}: $1\% \le |CAR| < 3\%$
+    \item \textbf{High}: $|CAR| \ge 3\%$
 \end{itemize}
 
-\subsection{Implementation}
-Discuss the implementation details:
-\begin{itemize}
-    \item Programming languages and libraries
-    \item System architecture
-    \item Key code components
+These labels are used both as a multiclass target (Low/Medium/High) and as a binary target distinguishing High vs.\ Not High impact.
+
+\subsection{Analytical Approach}
+
+The analysis combines event-study techniques, econometric modeling, and machine-learning classification to quantify and evaluate short-term market reactions.
+
+\subsubsection{Event Study and Feature Engineering}
+
+Abnormal returns are computed using the Market Model:
+\[
+E[r_i] = \alpha_i + \beta_i r_m,
+\]
+where parameters are estimated using two years of daily data prior to each event. Abnormal returns are aggregated into CAR windows to capture short-term reactions.
+
+Event metadata and sentiment are converted into dummy variables, and Google Trends series are transformed into standardized daily indicators. The final feature set differs slightly between regression and ML tasks but always includes market conditions, event characteristics, and attention measures.
+
+\subsubsection{Econometric Modeling}
+
+Three OLS regression models are estimated to explain abnormal returns:
+\begin{itemize}[topsep=2pt]
+    \item \textbf{Model 1}: Baseline model (all publishers, no trend variables)
+    \item \textbf{Model 2}: All publishers with GTA-related trend variables
+    \item \textbf{Model 3}: TTWO-only model with GTA trends
 \end{itemize}
 
-Example code snippet:
-\begin{lstlisting}[caption={Example data preprocessing function}]
-def preprocess_data(df):
-    """
-    Preprocess the input dataframe.
-    
-    Args:
-        df: Input pandas DataFrame
-    
-    Returns:
-        Preprocessed DataFrame
-    """
-    # Remove missing values
-    df = df.dropna()
-    
-    # Normalize numerical features
-    scaler = StandardScaler()
-    df[numerical_cols] = scaler.fit_transform(df[numerical_cols])
-    
-    return df
-\end{lstlisting}
+Models include a constant term and categorical controls. Leave-One-Out Cross-Validation (LOOCV) is used to assess robustness in a small-sample setting, with MAE, MSE, and $R^2$ reported for comparison.
+
+\subsubsection{Machine Learning Classification}
+
+Two classification tasks are considered:
+\begin{enumerate}[topsep=2pt]
+    \item \textbf{Multiclass classification} (Low, Medium, High impact)
+    \item \textbf{Binary classification} (High vs.\ Not High impact)
+\end{enumerate}
+
+To assess robustness and overfitting in a small and noisy dataset, multiple model families are evaluated. Logistic Regression is used as a linear baseline, while Random Forest and Gradient Boosting are employed to capture potential non-linear effects. A Neural Network is included as a high-capacity model. This comparison allows the effect of model complexity on generalization performance to be assessed rather than focusing on maximizing predictive accuracy.  Given the limited sample size and noisy nature of short-horizon returns, binary classification is emphasized as the primary predictive framework, while multiclass results are treated as exploratory.
+
+Model evaluation relies on accuracy, macro F1-score, confusion matrices, stratified 5-fold cross-validation, and overfitting diagnostics.
+
+\subsubsection{Backtesting on GTA VI Events}
+
+Both OLS and ML models are evaluated using a strict hold-out backtest on a single GTA~VI-related event (a delay in May 2025), which is fully excluded from model training. This design avoids information leakage and provides a genuinely out-of-sample assessment of whether models estimated on historical industry-wide events can generalize to a new, franchise-specific GTA~VI announcement.
+
+\section{Implementation}
+
+The project is implemented in Python 3.12 using \texttt{pandas}, \texttt{numpy}, \texttt{scikit-learn}, \texttt{statsmodels}, \texttt{yfinance}, and \texttt{pytrends}. The codebase is organized into modular scripts covering data collection, feature engineering, modeling, and evaluation. A single \texttt{main.py} script orchestrates the full pipeline from raw data download to final backtest outputs, ensuring full reproducibility.
+
+\subsection{System architecture}
+ Raw price and event data are first ingested and aligned, then transformed into abnormal and cumulative abnormal returns using an event-study framework. These outputs feed a feature-engineering layer that constructs both regression and classification datasets. Finally, econometric and machine-learning models are trained, evaluated, and applied to scenario analysis and a strict hold-out backtest, with all intermediate and final outputs saved automatically for reproducibility.
+
+\section{Codebase and Reproducibility}
+
+The codebase is maintained using \textbf{Git} with a clear directory structure separating raw data, processed data, results, and source code. All experiments are reproducible through a single command (\texttt{main.py}) that executes the full pipeline from data download to final figures and tables.
+
+Dependencies are explicitly specified in an \texttt{environment.yml} file, allowing the project to be reproduced in a clean virtual environment. Fixed random seeds are used throughout for deterministic train–test splits and model estimation. Results, logs, and figures are automatically exported to the \texttt{results/} directory to ensure transparency and traceability.
+
+\subsection{Key code component}
+For readability, detailed code implementations are provided in the Appendix~B.
 
 \section{Results}
 \label{sec:results}
 
-Present your findings with appropriate visualizations and tables.
+This section presents the empirical findings from the event-study analysis, econometric regressions, and machine-learning models. Results are organized around three objectives: (i) explaining event-day abnormal returns using OLS regressions, (ii) exploring impact prediction using multiclass classification, and (iii) refining prediction to a binary high-impact framework and applying it to GTA~VI backtests and scenarios.
 
 \subsection{Experimental Setup}
-Describe your experimental environment:
-\begin{itemize}
-    \item Hardware specifications
-    \item Software versions
-    \item Hyperparameters
+
+All experiments were conducted on an Apple MacBook Air (2019) equipped with a 1.6\,GHz Intel Core i5 processor and 8\,GB of RAM. Given the modest data size (approximately 24{,}000 daily price observations and 151 firm-level events), all computations completed within seconds without GPU acceleration.
+
+The pipeline is implemented entirely in Python using open-source libraries. Reproducibility is ensured through fixed random seeds, deterministic train--test splits, explicit hold-out backtests, and systematic export of logs, tables, and figures to the \texttt{results/} directory.
+
+\subsection{OLS Regression Results}
+
+Three OLS specifications are estimated with event-day abnormal return ($AR_{\text{event}}$) as the dependent variable:
+
+\begin{itemize}[itemsep=2pt]
+    \item \textbf{Model 1 (Baseline):} market return, event-type dummies, sentiment dummies, and a Rockstar indicator.
+    \item \textbf{Model 2 (All publishers + GTA trends):} Model~1 augmented with Google Trends z-scores (GTA, GTA6, GTAVI, Rockstar).
+    \item \textbf{Model 3 (TTWO-only):} Model~2 estimated only on Take-Two Interactive events.
 \end{itemize}
 
-\subsection{Performance Evaluation}
+Table~\ref{tab:ols_results} reports in-sample fit and Leave-One-Out Cross-Validation (LOOCV) performance.
 
 \begin{table}[H]
 \centering
-\caption{Model Performance Metrics}
-\label{tab:performance}
-\begin{tabular}{|l|c|c|c|}
+\caption{OLS performance for event-day abnormal returns}
+\begin{tabular}{lccccc}
 \hline
-\textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} \\
+Model & $R^2$ & Adj.\ $R^2$ & LOO-MAE & LOO-MSE & LOO-$R^2$ \\
 \hline
-Baseline & 0.75 & 0.72 & 0.78 \\
-Your Model & 0.85 & 0.83 & 0.87 \\
+Model 1 (Baseline) & 0.189 & 0.131 & 0.01585 & 0.000512 & \textbf{0.048} \\
+Model 2 (+ GTA trends) & 0.227 & 0.147 & 0.01664 & 0.000558 & -0.037 \\
+Model 3 (TTWO-only) & 0.255 & 0.027 & 0.02600 & 0.001335 & -0.338 \\
 \hline
 \end{tabular}
+\label{tab:ols_results}
 \end{table}
 
-\subsection{Visualizations}
+\paragraph{Interpretation.}
 
-Include relevant plots and figures. For example:
+\textbf{Model~1} explains approximately 19\% of the cross-sectional variation in event-day abnormal returns and achieves a positive LOOCV $R^2$ of 4.8\%. While economically modest, this indicates limited but non-zero out-of-sample explanatory power relative to a constant benchmark, making it the most statistically stable OLS specification.
 
-\begin{figure}[H]
+\textbf{Model~2} improves in-sample fit by incorporating GTA-related attention measures, increasing $R^2$ to 22.7\%. However, its LOOCV $R^2$ becomes negative, indicating that the additional trend variables increase variance without improving generalization. Despite this limitation, Model~2 is retained for conditional scenario analysis, where explicit modeling of GTA-related attention is essential.
+
+\textbf{Model~3} achieves a higher in-sample $R^2$ but suffers from a sharp decline in adjusted $R^2$ and strongly negative LOOCV performance. This behavior reflects overfitting driven by a small sample size (48 events) and severe multicollinearity. The TTWO-only specification is therefore reported for completeness but is not suitable for inference or prediction.
+
+Overall, OLS results are informative for understanding average directional effects and constructing conditional scenarios, but they are not appropriate for precise short-horizon prediction.
+
+\subsection{Multiclass Classification: Low / Medium / High Impact}
+
+Following an initial regression-based analysis, multiclass classification was explored as a machine-learning extension of the project, as it naturally reflects the three impact categories (Low, Medium, High) derived from cumulative abnormal returns.
+
+\begin{table}[H]
 \centering
-% \includegraphics[width=0.8\textwidth]{figures/results_plot.png}
-\caption{Your results visualization}
-\label{fig:results}
+\caption{Multiclass classification performance}
+\begin{tabular}{lcccc}
+\hline
+Model & Accuracy & F1 (macro) & CV Acc. & CV F1 \\
+\hline
+Logistic Regression & 0.447 & 0.388 & 0.504 & 0.461 \\
+Random Forest & 0.447 & 0.428 & 0.470 & 0.447 \\
+Gradient Boosting & \textbf{0.500} & \textbf{0.506} & 0.390 & 0.384 \\
+Neural Network (MLP) & 0.342 & 0.222 & 0.357 & 0.250 \\
+\hline
+\end{tabular}
+\label{tab:multiclass_results}
+\end{table}
+
+\paragraph{Interpretation.}
+Multiclass prediction proves substantially challenging in this setting. Although Gradient Boosting performs best among the tested models on the test set, overall accuracy and macro F1 scores remain modest, and cross-validation results indicate weak generalization. Confusion matrices reveal persistent difficulty in distinguishing Medium-impact events from High-impact events, suggesting overlapping feature patterns and limited discriminative signal given the sample size.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\linewidth]{gradient_boosting_confusion_matrix}
+    \caption{Multiclass confusion matrix (Gradient Boosting)}
+    \label{fig:binary_comparison}
 \end{figure}
+These findings motivated a reformulation of the problem into a binary classification task (High vs.\ Not High impact), which reduces label noise and yields more stable and interpretable results. As a result, multiclass models are retained for exploratory analysis only, while binary classification is emphasized as the primary predictive framework.
+
+\subsection{Binary Classification: High vs.\ Not High Impact}
+
+Binary classification models aim to predict whether an event generates a high market impact. The final dataset contains 151 observations, with 63 high-impact and 88 not-high-impact events. A naive baseline that always predicts \textit{Not High} yields an accuracy of approximately 0.58.
+
+\begin{table}[H]
+\centering
+\caption{Binary classification performance}
+\begin{tabular}{lcccc}
+\hline
+Model & Test Acc. & Test F1 & CV Acc. & CV F1 \\
+\hline
+Logistic Regression & 0.684 & 0.676 & \textbf{0.636} & \textbf{0.619} \\
+Random Forest & 0.605 & 0.582 & 0.603 & 0.574 \\
+Gradient Boosting & 0.684 & 0.681 & 0.589 & 0.577 \\
+Neural Network (MLP) & 0.553 & 0.493 & 0.536 & 0.454 \\
+\hline
+\end{tabular}
+\label{tab:binary_models}
+\end{table}
+
+\paragraph{Interpretation.}
+
+All binary models outperform the naive baseline. Logistic regression and gradient boosting achieve the highest test accuracy, but their generalization behavior differs markedly. Logistic regression exhibits stable performance across training, testing, and cross-validation, while tree-based models display substantial overfitting, with large train--test gaps.
+
+Given the limited sample size and noisy nature of event-level returns, logistic regression offers the best trade-off between performance, robustness, and interpretability and is therefore selected as the primary binary classification model. Predictions are interpreted probabilistically rather than as hard classifications.
+
+\subsection{Summary of Model Choices}
+
+\begin{itemize}[itemsep=2pt]
+    \item \textbf{OLS:} Model~1 preferred for statistical stability; Model~2 retained for interpretation and scenario analysis.
+    \item \textbf{Multiclass ML:} Gradient boosting used for exploratory analysis only.
+    \item \textbf{Binary ML:} Logistic regression selected as the primary predictive model due to robustness and generalization.
+    \item \textbf{Backtests:} Strict hold-out validation used for qualitative assessment rather than statistical inference.
+\end{itemize}
+
+\subsection{GTA VI Backtests and Scenario Analysis}
+
+\textbf{Backtests.}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{figure6_gta6_backtests}
+    \caption{GTA VI event backtests: multiclass ML, binary ML, and OLS regression}
+    \label{fig:gta6_backtests}
+\end{figure}
+
+Figure~\ref{fig:gta6_backtests} compares the out-of-sample performance of the three modeling approaches on a strict hold-out GTA~VI delay event in May~2025, which was fully excluded from model training to avoid information leakage.
+
+Panel~(A) shows the multiclass Gradient Boosting model, which incorrectly classifies the event as \textit{Medium} instead of \textit{High} impact (0/1 correct). This outcome is consistent with earlier results indicating that multiclass models struggle to clearly separate Medium and High impact events.
+
+Panel~(B) reports the binary Logistic Regression backtest. The model correctly classifies the delay event as \textit{High} impact (1/1 correct). Although based on a single observation, this result supports the earlier finding that the binary formulation yields more robust and stable predictions in small-sample, noisy event-study settings.
+
+Panel~(C) displays the OLS Model~2 prediction versus the realized abnormal return. While the model correctly predicts the negative direction of the shock, it substantially underestimates the magnitude of the abnormal return, resulting in a large absolute error (MAE $\approx 7.0\%$). This confirms that the OLS framework is informative for conditional, market-relative predictions, but struggles with extreme events and is not suitable for precise short-horizon forecasting.
+
+Overall, the backtests reinforce three conclusions: (i) multiclass ML models are unreliable in this setting, (ii) binary classification provides the most robust event-level signal, and (iii) OLS predictions should be interpreted qualitatively rather than quantitatively.
+
+\textbf{Scenario Analysis.}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{figure5_gta6_scenarios}
+    \caption{GTA VI scenario analysis: OLS abnormal returns and binary impact probabilities}
+    \label{fig:gta6_scenarios}
+\end{figure}
+Figure~\ref{fig:gta6_scenarios} presents scenario-based predictions combining market conditions (bear, base, bull) with GTA~VI attention levels measured via Google Trends. Panel~(A) reports predicted abnormal returns from OLS Model~2, which are defined \emph{relative to the market}. Consequently, higher abnormal returns in bear-market scenarios reflect relative outperformance rather than absolute price increases, and are interpreted as favorable signals for game-related news. Predicted abnormal returns range from approximately 1.8\% in low-attention scenarios to about 5.8\% in high-attention scenarios, with the strongest effects occurring when GTA~VI attention is elevated. Given that GTA VI release attention is expected to be high, the high-attention scenarios are the most relevant for interpretation. Panel~(B) reports the corresponding binary classification probabilities, assigning a High-impact probability of roughly 70\% in bull-market scenarios, while bear and base scenarios are mostly classified as \textit{Not High}. Overall, the OLS model provides a continuous, market-relative view of potential abnormal performance, whereas the binary classifier offers a more conservative and robust assessment of whether an event is likely to generate a large market reaction. Given weak out-of-sample performance, these scenarios are interpreted as conditional and illustrative rather than predictive.
 
 \section{Discussion}
 \label{sec:discussion}
 
-Analyze and interpret your results:
-\begin{itemize}
-    \item What worked well?
-    \item What were the challenges?
-    \item How do your results compare to expectations?
-    \item Limitations of your approach
+This section interprets the empirical results, explains the methodological choices made throughout the project, and discusses limitations and implications.
+
+\subsection{Methodological progression and rationale}
+
+The initial objective of the project was to explain short-term abnormal returns around video-game related events using a standard econometric framework. Accordingly, the analysis began with OLS regressions linking event-day abnormal returns to market conditions, event characteristics, sentiment indicators, and firm identifiers. This approach was chosen for its transparency, interpretability, and strong grounding in the event-study literature.
+
+While the OLS models produced economically interpretable coefficients and reasonable in-sample fit, their out-of-sample performance was weak, with Leave-One-Out Cross-Validation $R^2$ close to zero or negative. This indicated that, although OLS was useful for understanding average directional effects, it was not suitable for prediction at short horizons. This limitation motivated an extension toward machine-learning methods.
+
+The next step was multiclass classification, aimed at predicting three impact categories (Low, Medium, High) derived from cumulative abnormal returns. This formulation aligned naturally with the economic interpretation of event impact. However, empirical results showed that multiclass models struggled substantially, with low accuracy, weak cross-validation performance, and persistent confusion between Medium and High events. These failures suggested that the available features and sample size did not contain enough information to reliably separate three distinct impact levels.
+
+As a consequence, the classification task was reformulated into a binary problem (High vs.\ Not High impact). This reduction simplifies the learning task, reduces label noise, and aligns better with practical decision-making. Under this formulation, model performance improved materially, particularly for Logistic Regression, which exhibited stable train--test behavior and the strongest cross-validated results.
+
+This stepwise progression from OLS regression to multiclass classification, and finally to binary classification reflects an evidence-driven modeling strategy rather than arbitrary model selection. Each methodological change was motivated by observed empirical limitations of the previous approach.
+
+\subsection{What worked well?}
+
+The binary classification setup is the most convincing predictive component of the project. Logistic Regression emerges as the most robust model, showing consistent performance across train--test splits and cross-validation, with no meaningful signs of overfitting. In contrast, more flexible models such as Random Forests and Gradient Boosting achieve high training accuracy but fail to generalize, indicating that they primarily learn noise in this low-sample setting.
+
+The OLS framework remains valuable for interpretation and scenario construction. In particular, the model including GTA-related Google Trends provides a coherent way to study how attention and market conditions interact to shape abnormal returns, even if it cannot deliver precise forecasts.
+
+\subsection{What were the main challenges?}
+
+The dominant challenge is data scarcity. In the early stages of the project, the event dataset contained only around 30 manually collected events, which led to extremely unstable and uninformative results. To address this limitation, approximately 122 additional events were added, with a particular focus on systematically observable events such as earnings announcements. Despite this expansion, the final dataset of about 152 firm-level events remains small relative to the inherent noise of daily stock returns. This severely limits the ability of both econometric and machine-learning models to extract stable and generalizable predictive patterns, especially for fine-grained outcomes.
+
+Model instability and overfitting are recurring issues for flexible algorithms. This is clearly visible in the large train--test gaps and deteriorating cross-validation performance of tree-based and neural-network models.
+
+For the OLS regressions, multicollinearity is a structural concern. The combination of event-type dummies, sentiment indicators, and correlated Google Trends variables leads to unstable coefficient estimates and weakens statistical inference, particularly in the TTWO-only specification.
+
+Finally, backtesting is necessarily limited. The strict hold-out GTA~VI backtest relies on a single event and therefore serves only as a qualitative illustration rather than statistical validation.
+
+\subsection{How do the results compare to expectations?}
+
+The results align well with expectations given the data constraints. Adding attention variables increases in-sample explanatory power but does not improve out-of-sample performance, confirming that these variables are more descriptive than predictive.
+
+The failure of multiclass classification is also unsurprising. Distinguishing between Medium and High impact events requires a level of signal precision that is unrealistic with small samples and noisy financial returns. In contrast, the binary formulation performs meaningfully better and provides a more credible predictive target.
+
+In the scenario analysis, the highest predicted abnormal returns occur in bull-market scenarios combined with high GTA~VI attention. While abnormal returns are defined relative to the market, the results indicate that large GTA~VI-related reactions are more likely when positive attention coincides with favorable market conditions, rather than during market downturns. This pattern is consistent with the binary classifier assigning a High-impact probability only in bull scenarios.
+
+\subsection{Limitations of the approach}
+
+\begin{itemize}[itemsep=2pt]
+    \item Small sample size limits statistical power and increases sensitivity to noise.
+    \item Regression assumptions (normality, homoskedasticity) are unlikely to hold for short-horizon returns.
+    \item Multicollinearity weakens coefficient stability and inference in OLS models.
+    \item GTA~VI backtests rely on a single hold-out event and cannot support statistical conclusions.
 \end{itemize}
 
 \section{Conclusion and Future Work}
 \label{sec:conclusion}
 
 \subsection{Summary}
-Summarize your key findings and contributions.
+
+This project examined whether major video-game events generate measurable short-term stock-market reactions for publishers, and whether historical patterns can be used to form structured expectations for GTA~VI--related announcements. The project initially focused on an econometric event-study approach using OLS regressions, but was progressively extended to machine-learning models after purely regression-based predictions proved unstable.
+
+To address this question, I developed a fully reproducible end-to-end pipeline that:
+\begin{itemize}[itemsep=0pt, topsep=2pt]
+    \item collects and cleans daily price data (publisher stocks, S\&P~500 proxy, and VIX),
+    \item aligns event dates with trading dates and constructs event windows,
+    \item computes abnormal returns (AR) and cumulative abnormal returns (CAR) using a standard event-study framework,
+    \item engineers event-level features (publisher and franchise indicators, sentiment proxy, event type, market return, volatility regime, and Google Trends attention measures),
+    \item estimates OLS regression models for interpretation and scenario analysis,
+    \item evaluates machine-learning classifiers in both multiclass (Low/Medium/High) and binary (High vs.\ Not High) settings,
+    \item produces GTA~VI scenario simulations and strict hold-out backtests.
+\end{itemize}
+
+The main finding is methodological rather than predictive. While the pipeline works reliably and produces consistent outputs, short-horizon stock-market reactions to entertainment events remain highly noisy. OLS regressions are informative for explaining average directional effects and for constructing market-relative scenarios, but they do not generalize well out of sample. Multiclass classification was a natural first ML extension but proved too unstable given the dataset size and overlapping impact categories. Reframing the task as a binary classification problem yields more robust and interpretable results, with logistic regression emerging as the most stable predictive model.
+
+From a practical perspective, negative information events such as delays appear more structurally similar to historical announcements than unprecedented events like a major franchise release, making them relatively easier to contextualize within the proposed framework.
+
+Overall, the project should be viewed as a structured analytical framework for measuring and comparing event impacts rather than as a trading or forecasting system.
 
 \subsection{Future Directions}
-Suggest potential improvements or extensions:
-\begin{itemize}
-    \item Methodological improvements
-    \item Additional experiments
-    \item Real-world applications
+
+Several realistic extensions could improve the project while remaining methodologically honest.
+
+\textbf{Methodological improvements}
+\begin{itemize}[itemsep=0pt, topsep=2pt]
+    \item Address multicollinearity by simplifying the dummy structure (merging rare event categories) or by using regularized regressions (Ridge or Lasso) to stabilize coefficient estimates.
+    \item Decompose prediction into simpler tasks: first classify the sign of abnormal returns (positive vs.\ negative), then classify impact magnitude. This separation may reduce label noise.
+    \item Emphasize out-of-sample metrics (LOO-MAE, LOO-MSE, LOO-$R^2$) rather than in-sample $R^2$ when evaluating regression models.
+\end{itemize}
+
+\textbf{Additional experiments}
+\begin{itemize}[itemsep=0pt, topsep=2pt]
+    \item Test tree-based models designed for small tabular datasets (e.g., XGBoost or CatBoost) with careful cross-validation and probability calibration.
+    \item Replace random train--test splits with time-aware validation (walk-forward or expanding-window schemes), since events span more than a decade.
+    \item Expand the dataset by including more publishers (e.g., Sony, Microsoft), additional franchises, and broader event sources to improve statistical power.
+\end{itemize}
+
+\textbf{Real-world applications}
+\begin{itemize}[itemsep=0pt, topsep=2pt]
+    \item Use the pipeline as a monitoring and research tool: when a new event occurs (delay, trailer, earnings), automatically compute AR/CAR and benchmark it against historical distributions of similar events.
+    \item Develop a GTA~VI risk dashboard combining volatility regime, market conditions, and historical frequencies of high-impact outcomes to contextualize new announcements.
 \end{itemize}
 
 % ================== REFERENCES ==================
@@ -240,32 +483,162 @@ Suggest potential improvements or extensions:
 % \printbibliography[heading=none]
 
 % Or manually:
+
+
 \begin{enumerate}
-    \item Author, A. (2024). \textit{Title of Article}. Journal Name, 10(2), 123-145.
-    \item Smith, B. \& Jones, C. (2023). \textit{Book Title}. Publisher.
-    \item Dataset Source. (2024). Dataset Name. Available at: \url{https://example.com}
+    \item Leon, J. (2025, November 7). Grand Theft Auto VI Delay Fails to Faze Take-Two Stock Analysts. Bloomberg.com; Bloomberg. https://www.bloomberg.com/news/articles/2025-11-07/grand-theft-auto-vi-delay-fails-to-phase-take-two-ttwo-stock-analysts    
+    \item Fama, E. F., Fisher, L., Jensen, M. C., \& Roll, R. (1969). The Adjustment of Stock Prices to New Information. International Economic Review, 10(1), 1–21. https://doi.org/10.2307/2525569
+    \item MacKinlay, A. C. (1997). Event studies in economics and finance. Journal of Economic Literature, 35(1), 13–39. https://www.jstor.org/stable/2729691
+    \item Bevilacqua, M., Morelli, D., \& Uzan, P. S. R. (2020). Asymmetric implied market volatility and terrorist attacks. International Review of Financial Analysis, 67, 101417. https://doi.org/10.1016/j.irfa.2019.101417
+    \item Da, Z., Engelberg, J., \& Gao, P. (2011). In Search of Attention. The Journal of Finance, 66(5), 1461–1499. https://doi.org/10.1111/j.1540-6261.2011.01679.x 
+    \item WUTIS Investment Society. (2025). Take-Two Interactive Software, Inc. (TTWO): Equity research report [Equity research report]. 
+    \item Noonan, K., \& Noonan, K. (2025, August 4). Should You Buy Take-Two Interactive Software (TTWO) Stock Before Aug. 7? Here’s What History Says. | The Motley Fool. The Motley Fool. https://www.fool.com/investing/2025/08/04/should-you-buy-take-two-interactive-stock/
+    \item Bespoke Interactive. (2025). 
+    
+    Bespokepremium.com. https://www.bespokepremium.com/interactive/ticker/TTWO
+
 \end{enumerate}
+
+\section*{Use of AI Assistance.}
+\addcontentsline{toc}{section}{AI Assistance}
+This project made use of AI-based assistance tools strictly as supporting instruments during development and documentation.
+
+\begin{itemize}[itemsep=2pt]
+\item \textbf{ChatGPT} was used to help structure the project according to the course guidelines, clarify methodological requirements, and assist with the organization and wording of the written report and presentation video.
+\item \textbf{GitHub Copilot (Claude)} was used primarily for code-level assistance, including debugging, refactoring, correcting implementation errors, helping structure the \texttt{main.py} orchestration script, and resolving dependency issues in the \texttt{environment.yml} file.
+\end{itemize}
+
+All data collection, feature engineering, modeling choices, empirical analysis, result interpretation, and final validation were designed and carried out by the author. AI tools were used as productivity aids and did not replace independent reasoning, coding, or analytical decision-making.
+
 
 % ================== APPENDICES ==================
 \newpage
 \appendix
-\section{Additional Figures}
-\label{app:figures}
-
-Include supplementary figures or tables that support but aren't essential to the main narrative.
-
-\section{Code Repository}
+\section{Appendix: Code Repository}
 \label{app:code}
 
 \noindent
-\textbf{GitHub Repository:} \url{https://github.com/yourusername/project-repo}
+\textbf{GitHub Repository:} \url{https://github.com/AawinAru/Game-Market-Event-Analyzer.git}
 
-\noindent
-Provide information about:
-\begin{itemize}
-    \item Repository structure
-    \item Installation instructions
-    \item How to reproduce results
-\end{itemize}
+\paragraph{Repository structure.}
+
+The project follows a modular and reproducible directory structure. The full repository is organized as follows:
+
+\begin{verbatim}
+game-market-event-analyzer/
+├── README.md                    # Project overview and usage
+├── PROPOSAL.md                  # Original project proposal
+├── requirements.txt             # Python dependencies
+├── environment.yml              # Conda environment specification
+├── main.py                      # Full pipeline execution
+│
+├── src/eventstudy/
+│   ├── data/
+│   │   └── data_loader.py              # Load events and build prices dataset
+│   │
+│   ├── features/
+│   │   ├── compute_returns.py          # Daily return computation
+│   │   ├── merge_event_returns.py      # Align events with trading dates
+│   │   ├── compute_ar_car_returns.py   # Abnormal and cumulative returns
+│   │   ├── car_into_labels.py          # Impact labels (Low/Medium/High)
+│   │   ├── build_ml_dataset.py         # Feature engineering for ML
+│   │   └── trends.py                   # Google Trends integration
+│   │
+│   └── models/
+│       ├── ols.py                      # OLS regression models
+│       ├── train_multiclass.py         # Multiclass classifiers
+│       ├── train_binary.py             # Binary classifiers
+│       ├── backtest_ols.py             # OLS hold-out backtest
+│       ├── backtest_ml.py              # ML hold-out backtest
+│       └── gta6_prediction.py          # GTA VI scenario predictions
+│
+├── data/
+│   ├── raw/
+│   │   ├── events.csv                  # Event dataset
+│   │   ├── [Ticker]_2010_2025.csv      # Stock, market, and VIX prices
+│   │   ├── gta_trends.csv              # Google Trends data
+│   │   └── backtest.csv                # Hold-out GTA 6 delay event
+│   │
+│   └── processed/
+│       ├── prices_long.csv             # Daily price panel
+│       ├── prices_with_ar.csv          # Prices with abnormal returns
+│       ├── events_with_returns.csv     # Events matched with AR
+│       ├── events_labeled.csv           # Impact labels
+│       └── ml_dataset.csv               # Final ML dataset
+│
+├── results/
+│   ├── 02_ols_regression/
+│   ├── 03_binary_classification/
+│   ├── 04_multiclass_classification/
+│   ├── 05_summary/
+│   └── figures/
+│
+└── notebooks/
+    └── visualize_gta6.ipynb             # Exploratory visualization notebook
+\end{verbatim}
+
+\paragraph{Installation and execution.}
+
+The project is designed to be fully reproducible using a Conda environment. The recommended setup is:
+
+\begin{verbatim}
+# Navigate to project directory
+cd capstone_project/game-market-event-analyzer
+
+# Create Conda environment
+conda env create -f environment.yml
+
+# Activate environment
+conda activate game-market-event-analyzer
+
+# Run full pipeline (data → features → models → backtests → scenarios)
+python main.py 
+
+# See full pipeline
+python main.py | tee pipeline_output.log
+\end{verbatim}
+
+
+\section{Appendix: Key Code Components}
+
+\paragraph{(car\_into\_labels.py)}
+Cumulative abnormal returns (CAR) aggregate abnormal returns over a short window around the event date in order to capture the total market reaction while reducing sensitivity to daily return noise.
+
+\begin{lstlisting}[language=Python, caption={Construction of CAR-based impact labels}]
+def compute_car(ticker, event_date, start_day, end_day):
+    if pd.isna(event_date):
+        return None
+
+    event_date = pd.to_datetime(event_date)
+    start = event_date + pd.Timedelta(days=start_day)
+    end = event_date + pd.Timedelta(days=end_day)
+
+    mask = (
+        (prices["ticker"] == ticker) &
+        (prices["date"] >= start) &
+        (prices["date"] <= end)
+    )
+    return prices.loc[mask, "AR"].sum()
+
+events["CAR_m1_p1"] = events.apply(
+    lambda r: compute_car(r["ticker"], r["date"], -1, 1), axis=1
+)
+
+def label_impact(car):
+    if pd.isna(car):
+        return None
+    if abs(car) > 0.03:
+        return "High"
+    elif abs(car) > 0.01:
+        return "Medium"
+    else:
+        return "Low"
+
+events["impact_label"] = events["CAR_m1_p1"].apply(label_impact)
+events["impact_label_num"] = events["impact_label"].map(
+    {"Low": 0, "Medium": 1, "High": 2}
+)
+events["impact_high"] = (events["impact_label_num"] == 2).astype(int)
+\end{lstlisting}
 
 \end{document}
