@@ -11,8 +11,8 @@ MODEL 1 – Baseline (All Publishers, No Trends)
 Dep. Variable:               AR_event   R-squared:                       0.189
 Model:                            OLS   Adj. R-squared:                  0.131
 Method:                 Least Squares   F-statistic:                     3.224
-Date:                Thu, 25 Dec 2025   Prob (F-statistic):           0.000926
-Time:                        01:29:18   Log-Likelihood:                 365.01
+Date:                Sun, 28 Dec 2025   Prob (F-statistic):           0.000926
+Time:                        14:51:12   Log-Likelihood:                 365.01
 No. Observations:                 149   AIC:                            -708.0
 Df Residuals:                     138   BIC:                            -675.0
 Df Model:                          10                                         
@@ -32,9 +32,9 @@ evt_major announcement     0.0168      0.018      0.953      0.342      -0.018  
 evt_release               -0.0134      0.016     -0.842      0.401      -0.045       0.018
 evt_trailer/reveal        -0.0102      0.018     -0.576      0.565      -0.045       0.025
 ==============================================================================
-Omnibus:                       78.146   Durbin-Watson:                   1.790
-Prob(Omnibus):                  0.000   Jarque-Bera (JB):              725.210
-Skew:                           1.606   Prob(JB):                    3.33e-158
+Omnibus:                       78.147   Durbin-Watson:                   1.790
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              725.216
+Skew:                           1.606   Prob(JB):                    3.32e-158
 Kurtosis:                      13.320   Cond. No.                         119.
 ==============================================================================
 
@@ -57,8 +57,8 @@ MODEL 2 – All Publishers + GTA Trends
 Dep. Variable:               AR_event   R-squared:                       0.227
 Model:                            OLS   Adj. R-squared:                  0.147
 Method:                 Least Squares   F-statistic:                     2.819
-Date:                Thu, 25 Dec 2025   Prob (F-statistic):            0.00101
-Time:                        01:29:18   Log-Likelihood:                 368.59
+Date:                Sun, 28 Dec 2025   Prob (F-statistic):            0.00101
+Time:                        14:51:12   Log-Likelihood:                 368.59
 No. Observations:                 149   AIC:                            -707.2
 Df Residuals:                     134   BIC:                            -662.1
 Df Model:                          14                                         
@@ -83,7 +83,7 @@ trend_gtavi_z              0.0034      0.003      1.017      0.311      -0.003  
 trend_rockstar_z           0.0063      0.003      1.850      0.067      -0.000       0.013
 ==============================================================================
 Omnibus:                       68.358   Durbin-Watson:                   1.805
-Prob(Omnibus):                  0.000   Jarque-Bera (JB):              440.519
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              440.523
 Skew:                           1.481   Prob(JB):                     2.20e-96
 Kurtosis:                      10.886   Cond. No.                         121.
 ==============================================================================
@@ -107,8 +107,8 @@ MODEL 3 – TTWO Only + GTA Trends
 Dep. Variable:               AR_event   R-squared:                       0.255
 Model:                            OLS   Adj. R-squared:                  0.027
 Method:                 Least Squares   F-statistic:                     1.118
-Date:                Thu, 25 Dec 2025   Prob (F-statistic):              0.376
-Time:                        01:29:18   Log-Likelihood:                 104.79
+Date:                Sun, 28 Dec 2025   Prob (F-statistic):              0.376
+Time:                        14:51:12   Log-Likelihood:                 104.79
 No. Observations:                  48   AIC:                            -185.6
 Df Residuals:                      36   BIC:                            -163.1
 Df Model:                          11                                         
@@ -134,12 +134,12 @@ trend_rockstar_z           0.0064      0.005      1.276      0.210      -0.004  
 Omnibus:                       28.500   Durbin-Watson:                   1.626
 Prob(Omnibus):                  0.000   Jarque-Bera (JB):               75.096
 Skew:                           1.536   Prob(JB):                     4.93e-17
-Kurtosis:                       8.302   Cond. No.                     2.84e+17
+Kurtosis:                       8.302   Cond. No.                     3.43e+16
 ==============================================================================
 
 Notes:
 [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
-[2] The smallest eigenvalue is 8.62e-34. This might indicate that there are
+[2] The smallest eigenvalue is 5.92e-32. This might indicate that there are
 strong multicollinearity problems or that the design matrix is singular.
 
 --- Leave-One-Out Cross-Validation (AR_event) ---
