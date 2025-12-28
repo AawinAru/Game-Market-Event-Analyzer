@@ -81,20 +81,21 @@ game-market-event-analyzer/
 
 ### Installation
 
-```bash
-# 1. Navigate to project directory
-cd capstone_project/game-market-event-analyzer
+Make sure you have **Conda** installed on your system.
 
-# 2. Create Conda environment
+```bash
+# 1. Create Conda environment
 conda env create -f environment.yml
 
-# 3. Activate environment
+# 2. Activate environment
 conda activate game-market-event-analyzer
 
 ### Run Full Pipeline
-# 4. Execute all steps (data → features → models → backtest → visualization)
+# 3. Execute all steps (data → features → models → backtest → visualization)
 python main.py 
-python main.py | tee pipeline_output.log # if you want to see the whole terminal output
+
+# 4. if you want to see the whole terminal output
+python main.py | tee pipeline_output.log 
 
 ```bash
 # Or run individual steps
